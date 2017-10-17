@@ -1,0 +1,1 @@
+http://www.codeproject.com/Tips/795135/Encrypt-ConnectionString-in-Web-Config

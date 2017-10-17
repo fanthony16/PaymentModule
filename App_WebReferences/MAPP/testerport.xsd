@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://ws.com/" targetNamespace="http://ws.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Exception" type="tns:Exception" />
+  <xs:element name="savenewvals" type="tns:savenewvals" />
+  <xs:element name="savenewvalsResponse" type="tns:savenewvalsResponse" />
+  <xs:element name="sayhello" type="tns:sayhello" />
+  <xs:element name="sayhelloResponse" type="tns:sayhelloResponse" />
+  <xs:complexType name="sayhello">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="name" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="sayhelloResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="message" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="savenewvals">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="helperdefinition" type="tns:testHelper" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="testHelper">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="address1" type="xs:string" />
+      <xs:element minOccurs="0" name="address2" type="xs:string" />
+      <xs:element minOccurs="0" name="address3" type="xs:string" />
+      <xs:element minOccurs="0" name="celphone" type="xs:string" />
+      <xs:element minOccurs="0" name="city" type="xs:string" />
+      <xs:element minOccurs="0" name="firstname" type="xs:string" />
+      <xs:element minOccurs="0" name="state" type="xs:string" />
+      <xs:element minOccurs="0" name="surname" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="savenewvalsResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:testReturnVals" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="testReturnVals">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="contactid" type="xs:int" />
+      <xs:element minOccurs="0" name="dateofsave" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

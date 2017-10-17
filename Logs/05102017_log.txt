@@ -1,0 +1,4 @@
+﻿05/10/2017 12:34:02 : PAYMENT MODULE : Thread was being aborted.Application Logging
+05/10/2017 13:00:46 : PAYMENT MODULE : Thread was being aborted.
+05/10/2017 13:43:12 : PAYMENT MODULE : Thread was being aborted.
+05/10/2017 14:12:44 : PAYMENT MODULE : Thread was being aborted.Application Edit Submission

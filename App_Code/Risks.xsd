@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Risks" targetNamespace="http://tempuri.org/Risks.xsd" xmlns:mstns="http://tempuri.org/Risks.xsd" xmlns="http://tempuri.org/Risks.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Risks" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="Risks" msprop:Generator_UserDSName="Risks">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtRisk" msprop:Generator_TableClassName="dtRiskDataTable" msprop:Generator_TableVarName="tabledtRisk" msprop:Generator_RowChangedName="dtRiskRowChanged" msprop:Generator_TablePropName="dtRisk" msprop:Generator_RowDeletingName="dtRiskRowDeleting" msprop:Generator_RowChangingName="dtRiskRowChanging" msprop:Generator_RowEvHandlerName="dtRiskRowChangeEventHandler" msprop:Generator_RowDeletedName="dtRiskRowDeleted" msprop:Generator_RowClassName="dtRiskRow" msprop:Generator_UserTableName="dtRisk" msprop:Generator_RowEvArgName="dtRiskRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="RiskEventID" msprop:Generator_ColumnVarNameInTable="columnRiskEventID" msprop:Generator_ColumnPropNameInRow="RiskEventID" msprop:Generator_ColumnPropNameInTable="RiskEventIDColumn" msprop:Generator_UserColumnName="RiskEventID" type="xs:string" minOccurs="0" />
+              <xs:element name="RiskDesc" msprop:Generator_ColumnVarNameInTable="columnRiskDesc" msprop:Generator_ColumnPropNameInRow="RiskDesc" msprop:Generator_ColumnPropNameInTable="RiskDescColumn" msprop:Generator_UserColumnName="RiskDesc" type="xs:string" minOccurs="0" />
+              <xs:element name="Comments" msprop:Generator_ColumnVarNameInTable="columnComments" msprop:Generator_ColumnPropNameInRow="Comments" msprop:Generator_ColumnPropNameInTable="CommentsColumn" msprop:Generator_UserColumnName="Comments" type="xs:string" minOccurs="0" />
+              <xs:element name="ProbOccur" msprop:Generator_ColumnVarNameInTable="columnProbOccur" msprop:Generator_ColumnPropNameInRow="ProbOccur" msprop:Generator_ColumnPropNameInTable="ProbOccurColumn" msprop:Generator_UserColumnName="ProbOccur" type="xs:string" minOccurs="0" />
+              <xs:element name="Impact" msprop:Generator_ColumnVarNameInTable="columnImpact" msprop:Generator_ColumnPropNameInRow="Impact" msprop:Generator_ColumnPropNameInTable="ImpactColumn" msprop:Generator_UserColumnName="Impact" type="xs:string" minOccurs="0" />
+              <xs:element name="RiskGrade" msprop:Generator_ColumnVarNameInTable="columnRiskGrade" msprop:Generator_ColumnPropNameInRow="RiskGrade" msprop:Generator_ColumnPropNameInTable="RiskGradeColumn" msprop:Generator_UserColumnName="RiskGrade" type="xs:int" minOccurs="0" />
+              <xs:element name="RiskDate" msprop:Generator_ColumnVarNameInTable="columnRiskDate" msprop:Generator_ColumnPropNameInRow="RiskDate" msprop:Generator_ColumnPropNameInTable="RiskDateColumn" msprop:Generator_UserColumnName="RiskDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="DeptCode" msprop:Generator_ColumnVarNameInTable="columnDeptCode" msprop:Generator_ColumnPropNameInRow="DeptCode" msprop:Generator_ColumnPropNameInTable="DeptCodeColumn" msprop:Generator_UserColumnName="DeptCode" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

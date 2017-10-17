@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsBenefitEnhancement" targetNamespace="http://tempuri.org/dsBenefitEnhancement.xsd" xmlns:mstns="http://tempuri.org/dsBenefitEnhancement.xsd" xmlns="http://tempuri.org/dsBenefitEnhancement.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsBenefitEnhancement" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="dsBenefitEnhancement" msprop:Generator_UserDSName="dsBenefitEnhancement">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtBenefitEnhancement" msprop:Generator_TableClassName="dtBenefitEnhancementDataTable" msprop:Generator_TableVarName="tabledtBenefitEnhancement" msprop:Generator_TablePropName="dtBenefitEnhancement" msprop:Generator_RowDeletingName="dtBenefitEnhancementRowDeleting" msprop:Generator_RowChangingName="dtBenefitEnhancementRowChanging" msprop:Generator_RowEvHandlerName="dtBenefitEnhancementRowChangeEventHandler" msprop:Generator_RowDeletedName="dtBenefitEnhancementRowDeleted" msprop:Generator_UserTableName="dtBenefitEnhancement" msprop:Generator_RowChangedName="dtBenefitEnhancementRowChanged" msprop:Generator_RowEvArgName="dtBenefitEnhancementRowChangeEvent" msprop:Generator_RowClassName="dtBenefitEnhancementRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="txtBatchNo" msprop:Generator_ColumnVarNameInTable="columntxtBatchNo" msprop:Generator_ColumnPropNameInRow="txtBatchNo" msprop:Generator_ColumnPropNameInTable="txtBatchNoColumn" msprop:Generator_UserColumnName="txtBatchNo" type="xs:string" minOccurs="0" />
+              <xs:element name="dteSubmission" msprop:Generator_ColumnVarNameInTable="columndteSubmission" msprop:Generator_ColumnPropNameInRow="dteSubmission" msprop:Generator_ColumnPropNameInTable="dteSubmissionColumn" msprop:Generator_UserColumnName="dteSubmission" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="txtPFAName" msprop:Generator_ColumnVarNameInTable="columntxtPFAName" msprop:Generator_ColumnPropNameInRow="txtPFAName" msprop:Generator_ColumnPropNameInTable="txtPFANameColumn" msprop:Generator_UserColumnName="txtPFAName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtPFACode" msprop:Generator_ColumnVarNameInTable="columntxtPFACode" msprop:Generator_ColumnPropNameInRow="txtPFACode" msprop:Generator_ColumnPropNameInTable="txtPFACodeColumn" msprop:Generator_UserColumnName="txtPFACode" type="xs:string" minOccurs="0" />
+              <xs:element name="txtSurname" msprop:Generator_ColumnVarNameInTable="columntxtSurname" msprop:Generator_ColumnPropNameInRow="txtSurname" msprop:Generator_ColumnPropNameInTable="txtSurnameColumn" msprop:Generator_UserColumnName="txtSurname" type="xs:string" minOccurs="0" />
+              <xs:element name="txtFirstName" msprop:Generator_ColumnVarNameInTable="columntxtFirstName" msprop:Generator_ColumnPropNameInRow="txtFirstName" msprop:Generator_ColumnPropNameInTable="txtFirstNameColumn" msprop:Generator_UserColumnName="txtFirstName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtMiddleName" msprop:Generator_ColumnVarNameInTable="columntxtMiddleName" msprop:Generator_ColumnPropNameInRow="txtMiddleName" msprop:Generator_ColumnPropNameInTable="txtMiddleNameColumn" msprop:Generator_UserColumnName="txtMiddleName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtPIN" msprop:Generator_ColumnVarNameInTable="columntxtPIN" msprop:Generator_ColumnPropNameInRow="txtPIN" msprop:Generator_ColumnPropNameInTable="txtPINColumn" msprop:Generator_UserColumnName="txtPIN" type="xs:string" minOccurs="0" />
+              <xs:element name="txtGender" msprop:Generator_ColumnVarNameInTable="columntxtGender" msprop:Generator_ColumnPropNameInRow="txtGender" msprop:Generator_ColumnPropNameInTable="txtGenderColumn" msprop:Generator_UserColumnName="txtGender" type="xs:string" minOccurs="0" />
+              <xs:element name="dteDOB" msprop:Generator_ColumnVarNameInTable="columndteDOB" msprop:Generator_ColumnPropNameInRow="dteDOB" msprop:Generator_ColumnPropNameInTable="dteDOBColumn" msprop:Generator_UserColumnName="dteDOB" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="dteDOR" msprop:Generator_ColumnVarNameInTable="columndteDOR" msprop:Generator_ColumnPropNameInRow="dteDOR" msprop:Generator_ColumnPropNameInTable="dteDORColumn" msprop:Generator_UserColumnName="dteDOR" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="txtEmployerName" msprop:Generator_ColumnVarNameInTable="columntxtEmployerName" msprop:Generator_ColumnPropNameInRow="txtEmployerName" msprop:Generator_ColumnPropNameInTable="txtEmployerNameColumn" msprop:Generator_UserColumnName="txtEmployerName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtEmployerCode" msprop:Generator_ColumnVarNameInTable="columntxtEmployerCode" msprop:Generator_ColumnPropNameInRow="txtEmployerCode" msprop:Generator_ColumnPropNameInTable="txtEmployerCodeColumn" msprop:Generator_UserColumnName="txtEmployerCode" type="xs:string" minOccurs="0" />
+              <xs:element name="numRSABalance" msprop:Generator_ColumnVarNameInTable="columnnumRSABalance" msprop:Generator_ColumnPropNameInRow="numRSABalance" msprop:Generator_ColumnPropNameInTable="numRSABalanceColumn" msprop:Generator_UserColumnName="numRSABalance" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numMonthPension" msprop:Generator_ColumnVarNameInTable="columnnumMonthPension" msprop:Generator_ColumnPropNameInRow="numMonthPension" msprop:Generator_ColumnPropNameInTable="numMonthPensionColumn" msprop:Generator_UserColumnName="numMonthPension" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numCurrentRSABalance" msprop:Generator_ColumnVarNameInTable="columnnumCurrentRSABalance" msprop:Generator_ColumnPropNameInRow="numCurrentRSABalance" msprop:Generator_ColumnPropNameInTable="numCurrentRSABalanceColumn" msprop:Generator_UserColumnName="numCurrentRSABalance" type="xs:decimal" minOccurs="0" />
+              <xs:element name="numNewPension" msprop:Generator_ColumnVarNameInTable="columnnumNewPension" msprop:Generator_ColumnPropNameInRow="numNewPension" msprop:Generator_ColumnPropNameInTable="numNewPensionColumn" msprop:Generator_UserColumnName="numNewPension" type="xs:decimal" minOccurs="0" />
+              <xs:element name="txtBPD" msprop:Generator_ColumnVarNameInTable="columntxtBPD" msprop:Generator_ColumnPropNameInRow="txtBPD" msprop:Generator_ColumnPropNameInTable="txtBPDColumn" msprop:Generator_UserColumnName="txtBPD" type="xs:string" minOccurs="0" />
+              <xs:element name="imgBPD" msprop:Generator_ColumnVarNameInTable="columnimgBPD" msprop:Generator_ColumnPropNameInRow="imgBPD" msprop:Generator_ColumnPropNameInTable="imgBPDColumn" msprop:Generator_UserColumnName="imgBPD" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="dteBPD" msprop:Generator_ColumnVarNameInTable="columndteBPD" msprop:Generator_ColumnPropNameInRow="dteBPD" msprop:Generator_ColumnPropNameInTable="dteBPDColumn" msprop:Generator_UserColumnName="dteBPD" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="txtCompliance" msprop:Generator_ColumnVarNameInTable="columntxtCompliance" msprop:Generator_ColumnPropNameInRow="txtCompliance" msprop:Generator_ColumnPropNameInTable="txtComplianceColumn" msprop:Generator_UserColumnName="txtCompliance" type="xs:string" minOccurs="0" />
+              <xs:element name="imgCompliance" msprop:Generator_ColumnVarNameInTable="columnimgCompliance" msprop:Generator_ColumnPropNameInRow="imgCompliance" msprop:Generator_ColumnPropNameInTable="imgComplianceColumn" msprop:Generator_UserColumnName="imgCompliance" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="dteCompliance" msprop:Generator_ColumnVarNameInTable="columndteCompliance" msprop:Generator_ColumnPropNameInRow="dteCompliance" msprop:Generator_ColumnPropNameInTable="dteComplianceColumn" msprop:Generator_UserColumnName="dteCompliance" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="txtMD" msprop:Generator_ColumnVarNameInTable="columntxtMD" msprop:Generator_ColumnPropNameInRow="txtMD" msprop:Generator_ColumnPropNameInTable="txtMDColumn" msprop:Generator_UserColumnName="txtMD" type="xs:string" minOccurs="0" />
+              <xs:element name="imgMD" msprop:Generator_ColumnVarNameInTable="columnimgMD" msprop:Generator_ColumnPropNameInRow="imgMD" msprop:Generator_ColumnPropNameInTable="imgMDColumn" msprop:Generator_UserColumnName="imgMD" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="dteMD" msprop:Generator_ColumnVarNameInTable="columndteMD" msprop:Generator_ColumnPropNameInRow="dteMD" msprop:Generator_ColumnPropNameInTable="dteMDColumn" msprop:Generator_UserColumnName="dteMD" type="xs:dateTime" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

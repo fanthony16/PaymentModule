@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://ws.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" name="testersv3" targetNamespace="http://ws.com/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <wsp1_2:Policy xmlns:wsapw3c="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ssp="http://schemas.sun.com/2006/03/wss/server" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:sunwsp="http://java.sun.com/xml/ns/wsit/policy" wsu:Id="testerportBindingPolicy">
+    <sp:EndorsingSupportingTokens>
+      <wsp1_2:Policy>
+        <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+          <wsp1_2:Policy>
+            <sp:WssX509V3Token10 />
+          </wsp1_2:Policy>
+        </sp:X509Token>
+      </wsp1_2:Policy>
+    </sp:EndorsingSupportingTokens>
+    <sp:TransportBinding>
+      <wsp1_2:Policy>
+        <sp:AlgorithmSuite>
+          <wsp1_2:Policy>
+            <sp:Basic256 />
+          </wsp1_2:Policy>
+        </sp:AlgorithmSuite>
+        <sp:IncludeTimestamp />
+        <sp:Layout>
+          <wsp1_2:Policy>
+            <sp:Lax />
+          </wsp1_2:Policy>
+        </sp:Layout>
+        <sp:TransportToken>
+          <wsp1_2:Policy>
+            <sp:HttpsToken RequireClientCertificate="true" />
+          </wsp1_2:Policy>
+        </sp:TransportToken>
+      </wsp1_2:Policy>
+    </sp:TransportBinding>
+    <sp:Wss11 />
+    <wsapw3c:UsingAddressing />
+  </wsp1_2:Policy>
+  <wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" wsu:Id="testerportBinding_savenewvals_Input_Policy">
+    <sp:SupportingTokens />
+  </wsp:Policy>
+  <wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" wsu:Id="testerportBinding_sayhello_Input_Policy">
+    <sp:SupportingTokens />
+  </wsp:Policy>
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="https://midas-das-test.pensure-nigeria.com:7171/testersv3/testerport?xsd=1" namespace="http://ws.com/" />
+    </xsd:schema>
+  </types>
+  <message name="sayhello">
+    <part name="parameters" element="tns:sayhello" />
+  </message>
+  <message name="sayhelloResponse">
+    <part name="parameters" element="tns:sayhelloResponse" />
+  </message>
+  <message name="Exception">
+    <part name="fault" element="tns:Exception" />
+  </message>
+  <message name="savenewvals">
+    <part name="parameters" element="tns:savenewvals" />
+  </message>
+  <message name="savenewvalsResponse">
+    <part name="parameters" element="tns:savenewvalsResponse" />
+  </message>
+  <portType name="TestOnClient">
+    <operation name="sayhello">
+      <input wsam:Action="hello_to_you" message="tns:sayhello" />
+      <output wsam:Action="http://ws.com/TestOnClient/sayhelloResponse" message="tns:sayhelloResponse" />
+      <fault wsam:Action="http://ws.com/TestOnClient/sayhello/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="savenewvals">
+      <input wsam:Action="save_new_vals" message="tns:savenewvals" />
+      <output wsam:Action="http://ws.com/TestOnClient/savenewvalsResponse" message="tns:savenewvalsResponse" />
+      <fault wsam:Action="http://ws.com/TestOnClient/savenewvals/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+  </portType>
+  <binding name="testerportBinding" type="tns:TestOnClient">
+    <wsp1_2:PolicyReference URI="#testerportBindingPolicy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="sayhello">
+      <soap12:operation soapAction="hello_to_you" />
+      <input>
+        <wsp:PolicyReference URI="#testerportBinding_sayhello_Input_Policy" />
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap12:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="savenewvals">
+      <soap12:operation soapAction="save_new_vals" />
+      <input>
+        <wsp:PolicyReference URI="#testerportBinding_savenewvals_Input_Policy" />
+        <soap12:body use="literal" />
+      </input>
+      <output>
+        <soap12:body use="literal" />
+      </output>
+      <fault name="Exception">
+        <soap12:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+  </binding>
+  <service name="testersv3">
+    <port name="testerport" binding="tns:testerportBinding">
+      <soap12:address location="https://midas-das-test.pensure-nigeria.com:7171/testersv3/testerport" />
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,433 @@
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="frmApprovalControlVerified.aspx.vb" Inherits="frmApprovalControlVerified" Theme="Blue" %>
+<%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+
+      <asp:ToolkitScriptManager ID="ToolkitScriptManager2" runat="server" EnablePartialRendering="true" ></asp:ToolkitScriptManager>
+     <asp:UpdatePanel ID="updFormPanel" runat="server">
+          <ContentTemplate>
+                         
+               <div class ="bodyMainDiv" style ="width :1750px;" >
+          <div id="dvMainDvTitle" style ="padding-left :20px;"><h2><span>Pencom Approval Comfirmation...</span></h2></div>
+          <div id="dvSubbodyMainDiv" class ="SubbodyMainDiv" style="text-align:center ; float :left ;">
+               
+               <div id="dvSideBox" style="float:left; width:320px; height :300px;  padding :8px;" >
+
+
+                    <div style=" width :100%; padding : 0px; border-color:#3a4f63; border :2px solid ; margin-bottom :20px; border-radius :25px 25px 0px 0px;">
+                        <div id="Div1" style ="text-align:center ; background-color:#3a4f63; font-size :14px; height :25px; border-radius :25px 25px 0px 0px;">
+                             <span style ="color :#dde4ec;"><strong>Search Criteria</strong></span> 
+                        </div>
+                        
+                        <div style ="text-align :left  ; padding : 5px;" ><span >Select The Approval Type: </span></div>
+                        <div id="dvApprovalType" style ="padding :5px; text-align :right ;" >
+                             <asp:DropDownList ID="ddApplicationType" runat="server" Width ="300px" ValidationGroup="processing" AutoPostBack="True"></asp:DropDownList>
+                             <asp:RequiredFieldValidator ID="reqApplicationType" runat="server" ErrorMessage="*" ControlToValidate="ddApplicationType" Display="Dynamic" SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup="pencomApproval"></asp:RequiredFieldValidator>
+
+                        </div>
+
+                         
+                         <div style ="text-align :left  ; padding : 5px;" ><span >Select The Approval Batch: </span></div>
+                         <div id="Div2" style ="padding :5px; text-align :right ;" >
+                             <asp:DropDownList ID="ddApprovalBatch" runat="server" Width ="300px" ValidationGroup="processing" AutoPostBack="True"></asp:DropDownList>
+                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="*" ControlToValidate="ddExportedBatches" Display="Dynamic" SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup="pencomApproval"></asp:RequiredFieldValidator>
+
+                        </div>
+                         
+                         
+                         <div style ="text-align :left  ; padding : 5px;" ><span >Select The Export Batch: </span></div>
+                         <div id="dvExportedBatches" style ="padding :5px; text-align :right ;" >
+                             <asp:DropDownList ID="ddExportedBatches" runat="server" Width ="300px" ValidationGroup="processing" AutoPostBack="True"></asp:DropDownList>
+                             <asp:RequiredFieldValidator ID="reqExportedBatches" runat="server" ErrorMessage="*" ControlToValidate="ddExportedBatches" Display="Dynamic" SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup="pencomApproval"></asp:RequiredFieldValidator>
+
+                        </div>
+
+
+                         
+
+
+                        <div style ="text-align :right ; margin-top :10px; margin-bottom : 10px; ">
+                             <div style ="padding-right :10px;"> <asp:Button ID="btnFind" runat="server" Text="Find" ValidationGroup="RMASComfirmation" /></div>
+
+                        </div>
+            <asp:Panel ID="pnlMessage" runat ="server" Visible="False"><div style ="padding:5PX;"><span id="spnMessage" runat ="server" >.</span></div></asp:Panel>
+            
+
+
+                         <div id="dvGridRecievedDocument" runat ="server" visible ="true" class   ="dvBoxRows" style="margin-top : 0px; margin-left :7px;">
+
+                               <div id="Div16" style ="text-align:center ; background-color:#3a4f63; font-size :14px; height :25px; border-radius :25px 25px 0px 0px;">
+                             <span style ="color :#dde4ec;"><strong>Submitted Documents</strong></span> 
+                        </div>
+
+                                               <asp:Panel ID="pnlUploadDetail" Width ="98%" runat ="server" BorderStyle="Solid" Height ="290px" BorderWidth ="2px">
+                                                    <asp:GridView Width="100%" ID="gridRecievedDocument" runat="server" Visible="true" AllowPaging="True" PageSize="15" AutoGenerateColumns="False" OnRowDataBound ="gridSubmittedDocuments_RowDataBound">
+                                                         <Columns>
+
+                                                              
+
+                                                              <asp:BoundField DataField="txtDocumentName" HeaderText="Desciption" />
+                                                              <%--<asp:BoundField DataField="DocumentPath" HeaderText="" HeaderStyle-Width="0" Visible ="true" ItemStyle-Width ="0"  />--%>
+                                                              <asp:TemplateField HeaderText="">
+                                                                  <ItemTemplate>
+                                    
+                                                                      <asp:ImageButton OnClick="ViewDocumentDetails_Click" ID="btnViewDocument" runat ="server" ImageUrl="~/images/K view.png" ToolTip="View Document" OnClientClick="BtnViewDetails_Click" ItemStyle-Width ="10px" />
+                                        
+                                                                  </ItemTemplate>
+
+                                                               </asp:TemplateField>
+                                                              
+                                                         </Columns>
+
+                                                    </asp:GridView>
+                                               </asp:Panel>
+                                             
+                                          </div>
+
+
+                         <div id="dvBankDetails" style=" width :100%; padding : 0px; border-color:#3a4f63; border :2px solid ; margin-bottom :20px; border-radius :25px 25px 0px 0px;" runat="server" visible ="true" >
+                        <div id="Div17" style ="text-align:center ; background-color:#3a4f63; font-size :14px; height :25px; border-radius :25px 25px 0px 0px;">
+                             <span style ="color :#dde4ec;"><strong>Bank Details</strong></span> 
+                        </div>                                            
+
+                                          <div id="dvAccountName" class ="dvBoxRows" style="margin-top : 5px; padding-left :7px;">
+                                               <div class="dvBoxRowsFieldLabel" style="text-align :left ;">
+                                                    <span style ="font-size : medium;">Account Name :</span>
+                                               </div>
+                                               <div style ="text-align :left ;">
+                                                    <asp:TextBox ID="txtAccountName" runat="server" Width ="300px" Enabled ="false" ></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="reqAccountName" runat ="server" ErrorMessage="*" controlToValidate="txtAccountName" Display="Dynamic" SetFocusOnError="True" ValidationGroup="updateBankDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+                                               </div>
+                                          </div>
+                                          <div id="dvAccountNumber" class ="dvBoxRows" style="margin-top : 5px; padding-left :7px;">
+                                               <div class="dvBoxRowsFieldLabel" style="text-align :left ;">
+                                                    <span style ="font-size : medium; text-align :left ;">Account No :</span>
+                                               </div>
+                                               <div style ="text-align :left ;">
+                                                    <asp:TextBox ID="txtAccountNumber" runat="server" Width ="300px" Enabled ="false" ></asp:TextBox>
+                                                    <asp:RequiredFieldValidator ID="reqAccountNumber" runat ="server" ErrorMessage="*" controlToValidate="txtAccountNumber" Display="Dynamic" SetFocusOnError="True" ValidationGroup="updateBankDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+                                               </div>
+                                          </div>
+                                          <div id="dvBVN" class ="dvBoxRows" style="margin-top : 5px; padding-left :7px;">
+                                               <div class="dvBoxRowsFieldLabel" style ="text-align :left ;">
+                                                    <span style ="font-size : medium;">BV Number :</span>
+                                               </div>
+                                               <div style ="text-align :left ;">
+                                                    <asp:TextBox ID="txtBVN" runat="server" Width ="300px" Enabled ="false" ></asp:TextBox>
+                                                    
+                                               </div>
+                                          </div>
+                                          <div id="dvBank" class ="dvBoxRows" style="margin-top : 5px; padding-left :7px;">
+                                               <div class="dvBoxRowsFieldLabel" style="text-align :left ;">
+                                                    <span style ="font-size : medium;">Bank Name :</span>
+                                               </div>
+                                               <div style ="text-align :left ;">
+                                                    <asp:DropDownList ID="ddBankName" runat="server" Width="300px" AutoPostBack="True" Enabled ="false" ></asp:DropDownList>
+                                                    <%--<asp:RequiredFieldValidator ID="reqValBank" runat ="server" ErrorMessage="*" controlToValidate="ddBankName" Display="Dynamic"  SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup ="updateBankDetails" ></asp:RequiredFieldValidator>--%>
+                                               </div>
+                                               </div>
+                                          <div id="dvBankBranch" class ="dvBoxRows" style="margin-top : 5px; padding-left :7px;">
+                                               <div class="dvBoxRowsFieldLabel" style="text-align :left ;">
+                                                    <span style ="font-size : medium;">Bank Branch :</span>
+                                               </div>
+                                               <div style ="text-align :left ;">
+                                                    
+                                                    <asp:DropDownList ID="ddBankBranch" runat="server" Width="300px" ValidationGroup ="updateBankDetails" Enabled ="false" ></asp:DropDownList>
+                                                    <asp:RequiredFieldValidator ID="reqBranch" runat ="server" ErrorMessage="*" controlToValidate="ddBankBranch" Display="Dynamic"  SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup ="updateBankDetails" ></asp:RequiredFieldValidator>
+                                               </div>
+                                              
+                                          </div>
+                                          <div id ="dvUpdateButton" style ="text-align :right ; margin-top :5px; margin-bottom : 10px; ">
+                                            <div style ="padding-right :10px;"> <asp:Button ID="btnUpdateBankDetails" runat="server" Text="Update Bank Details" ValidationGroup="updateBankDetails" Visible ="false" /></div>
+
+                                       </div>
+
+
+
+
+
+
+
+            <asp:Panel ID="Panel2" runat ="server" Visible="False"><div style ="padding:5PX;"><span id="Span1" runat ="server" >.</span></div></asp:Panel>
+            
+            
+                  </div>
+
+
+
+
+            
+                  </div>
+
+
+
+            
+        </div>
+               <div class="dvMiddleBox" style="border-radius :25px 25px 0px 0px; border :2px solid; margin-top :10px; margin-bottom :10px; padding  :5px 10px 20px 10px; width :77%; " >
+
+                    <asp:Panel ID="pnlGrid" Width ="100%" runat ="server" Height ="600px"  >
+                                  <asp:GridView Width="100%" ID="gridApplications" runat="server" Visible="true" PageSize="50" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" OnRowDataBound = "gridExport_OnRowDataBound" >
+                                 
+                                 <Columns >
+                                        
+                                        
+                                        <asp:ButtonField CommandName="Select" Text="Select"/>
+
+                                        <asp:TemplateField HeaderText="Checked?">
+                                             <ItemTemplate>
+                                                  <asp:CheckBox ID="ChkPINApprovalChecked" runat="server" Enabled="true"  AutoPostBack="true"/>
+                                             </ItemTemplate>
+                                        </asp:TemplateField>
+
+                                      <asp:TemplateField HeaderText="Verified?">
+                                             <ItemTemplate>
+                                                  <asp:CheckBox ID="ChkPINApprovalVerified" runat="server" Enabled="true"  AutoPostBack="true"/>
+                                             </ItemTemplate>
+                                        </asp:TemplateField>
+
+                                      <asp:TemplateField HeaderText="Authorised?">
+                                             <ItemTemplate>
+                                                  <asp:CheckBox ID="ChkPINApprovalAuthorised" runat="server" Enabled="true"  AutoPostBack="true"/>
+                                             </ItemTemplate>
+                                        </asp:TemplateField>
+
+
+                                        <asp:BoundField DataField="txtApplicationCode" HeaderText="Application Code" ItemStyle-Width="150"/>
+                                        <asp:BoundField DataField="PIN" HeaderText="PIN" ItemStyle-Width="100"/> 
+                                        <asp:BoundField DataField="FullName" HeaderText="Full Name" ItemStyle-Width="200"/> 
+                                        <asp:BoundField DataField="Sector" HeaderText="Sector"/>
+                                        <asp:BoundField DataField="numApproved" HeaderText="Amount ToPay" DataFormatString="{0:N}" />
+                                      <asp:BoundField DataField="dteValueDate" HeaderText="Value Date" DataFormatString="{0:d}" />
+                                      <asp:BoundField DataField="dteStartPeriod" HeaderText="Start Period" DataFormatString="{0:d}" />
+                                      <asp:BoundField DataField="dteEndPeriod" HeaderText="End Period" DataFormatString="{0:d}" />
+
+                                      <asp:TemplateField HeaderText="">
+                                                   <ItemTemplate>
+                                                                      <asp:ImageButton OnClick="btnView_ApprovalComment" ID="btnViewComments" runat ="server" ImageUrl="~/images/comment_bubble2.png" ToolTip="Add/View Comment(s)" ItemStyle-Width ="10px" />
+                                        
+                                                   </ItemTemplate>
+                                                                   
+                                        </asp:TemplateField>
+
+                                      <asp:TemplateField HeaderText="">
+                                                   <ItemTemplate>
+                                                                      <asp:ImageButton OnClick="btnView_ApplicationComment" ID="btnViewApplicationComments" runat ="server" ImageUrl="~/images/comment_bubble2.png" ToolTip="View Application Comment(s)" ItemStyle-Width ="10px" />
+                                        
+                                                   </ItemTemplate>
+                                                                   
+                                        </asp:TemplateField>
+                                        
+
+                                      <asp:TemplateField HeaderText="">
+                                             <ItemTemplate>
+                                    
+                                                                      <asp:ImageButton OnClick="AddViewIACComment_Click" ID="btnAddViewIACComment" runat ="server" ImageUrl="~/images/comment_bubble2.png" ToolTip="View IAC Document Review Comment(s)" OnClientClick="AddViewIACComment_Click" ItemStyle-Width ="10px" />
+                                        
+                                             </ItemTemplate>
+                                                                   
+                                     </asp:TemplateField>
+
+                                        <%--<asp:BoundField DataField="PIN" HeaderText="Pencom PIN" DataFormatString="{0:N}" />
+                                        <asp:BoundField DataField="ValueDate" HeaderText="Value Date" DataFormatString="{0:d}" />--%>
+                                 </Columns>
+
+                                        <pagersettings mode="NextPreviousFirstLast"
+                                        firstpagetext="First"
+                                        lastpagetext="Last"
+                                        nextpagetext="Next"
+                                        previouspagetext="Prev"   
+                                        position="Bottom"/> 
+                              </asp:GridView>
+                    </asp:Panel>
+       
+       
+        <div><hr /></div>
+
+             <div id="dvTag" style ="width :100%; padding : 5px; text-align :right ; margin-bottom :50px; ">
+                  <div style="float:left ; padding-right :20px; "><asp:Button ID="btnTagAll" runat="server" Text="Tag All" /></div>
+                  
+                  <div style="float:left; padding-right :0px;"><asp:Button ID="btnUnTagAll" runat="server" Text="Un-Tag All" /></div>
+                  <div id="dvVerified" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnVerified" runat="server" Text="IC Verified" /></div>
+
+                   <div id="dvCancelCheck" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnCancelVerified" runat="server" Text="Cancel Confirmation" /></div>
+
+                  <div id="dvReject" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnReject" runat="server" Text="Reject Approval Confirmation" /></div>
+
+                  <div id="Div3" style="float:left; padding-left :20px;" runat ="server" visible="true" ><asp:Button ID="btnSchedule" runat="server" Text="DownLoad Schedule" /></div>
+
+                  <div style="float:left ;padding-left :30px; "><asp:ImageButton ID="imgDownloadSoft" runat ="server" ImageUrl="~/images/xls.png" ToolTip="Download Soft Copy Schedule" Visible="true"/>
+
+             </div>
+                       
+
+    </div>
+
+             
+              
+              
+          </div>
+     </div>
+
+              
+          
+               <asp:Button id="btnShowCommentPopup" runat="server" style="display:none" />
+   <asp:ModalPopupExtender ID="mpAppComments" runat="server" PopupControlID="pnlAppComments" TargetControlID="btnShowCommentPopup" CancelControlID="btnMPAppComments" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>            
+      
+   <asp:Panel ID="pnlAppComments" runat="server" CssClass="modalPopup" align="center" Height ="600px" style = "display:none" Width ="600px">
+
+    <div id="Div4" class ="dvSideBox" style="width :98%"> 
+        
+        <div id="Div5" style="border-color:#3a4f63; border :2px solid ; width :100%;">
+
+            <div id="Div6" class ="dvBoxHeader"><span style ="color :#dde4ec;"><strong>Benefit Approval Control Comment</strong></span></div>
+            <div id="Div7" class="dvBoxbody">
+               
+               <div class="dvBoxRows" style =" width :300px;">
+                   
+               <div style="padding-top :5px; margin-bottom  :15px;">
+                    <div style ="float :left "><span>Application ID :</span></div>
+                    <div style ="float :left "><asp:TextBox ID="txtApplicationID" runat="server" Width ="150px" Enabled="false"></asp:TextBox></div>
+               </div>
+                   
+                </div>
+                
+                <div class="dvBoxRows" style =" width :300px; padding-top :10px; ">
+                    
+                     <asp:TextBox id="txtApplicationComment" runat ="server" TextMode ="MultiLine" ValidationGroup  ="AppComment" Height="80px" Width="100%" MaxLength="70"></asp:TextBox>
+                </div>
+
+                 <div id="Div8"  class="dvBoxRows" style =" width :300px; float :left  ;text-align :right ; padding :10px;">
+                   <asp:ImageButton ID="btnAppCommentAdd" runat ="server" ImageUrl="~/images/add.png" ToolTip="Add To Comment" CausesValidation="true" ValidationGroup  ="AppComment"  />
+                     
+                    
+                </div>
+
+
+                  <div class="dvBoxRows" style =" width :570px; padding-top :10px; ">
+                    
+                       <asp:ListBox ID="lstComments" runat="server" Width ="100%" Height ="300px"></asp:ListBox>
+                </div>
+
+                 <div id="Div9"  class="dvBoxRows" style =" width :560px; float :left  ;text-align :right ; padding :10px;">
+                   <asp:ImageButton ID="btnAppCommentRemove" runat ="server" ImageUrl="~/images/add.png" ToolTip="Remove Comment" CausesValidation="true" ValidationGroup  ="AppComment"  />
+                     
+                    
+                </div>
+                 
+            </div>
+    
+    </div>
+    
+    </div>
+        
+        <br />
+
+    <asp:Button ID="btnMPAppComments" runat="server" Text="Close" />
+    </asp:Panel>
+
+
+
+
+
+
+                <asp:Button id="btnShowApplicationCommentPopup" runat="server" style="display:none" />
+       <asp:ModalPopupExtender ID="mpApplicationComments" runat="server" PopupControlID="pnlApplicationComments" TargetControlID="btnShowApplicationCommentPopup" CancelControlID="btnMPApplicationComments" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>            
+      
+                  <asp:Panel ID="pnlApplicationComments" runat="server" CssClass="modalPopup" align="center" Height ="600px" style = "display:none" Width ="600px">
+
+    <div id="Div10" class ="dvSideBox" style="width :98%"> 
+        
+        <div id="Div11" style="border-color:#3a4f63; border :2px solid ; width :100%;">
+
+            <div id="Div12" class ="dvBoxHeader"><span style ="color :#dde4ec;"><strong>Benefit Application Comment</strong></span></div>
+            <div id="Div13" class="dvBoxbody">
+               
+               <div class="dvBoxRows" style =" width :300px;">
+                   
+               <div style="padding-top :5px; margin-bottom  :15px;">
+                    <div style ="float :left "><span>Application ID :</span></div>
+                    <div style ="float :left "><asp:TextBox ID="txtApplicationIDD" runat="server" Width ="150px" Enabled="false"></asp:TextBox></div>
+               </div>
+                   
+                </div>
+                
+                <div class="dvBoxRows" style =" width :300px; padding-top :10px; ">
+                    
+                     <asp:TextBox id="txtApplicationCommentt" runat ="server" TextMode ="MultiLine" ValidationGroup  ="AppComment" Height="80px" Width="100%" MaxLength="70" Enabled ="false" ></asp:TextBox>
+                </div>
+
+                 <div id="Div14"  class="dvBoxRows" style =" width :300px; float :left  ;text-align :right ; padding :10px;">
+                   <asp:ImageButton ID="imgAddComment" runat ="server" ImageUrl="~/images/add.png" ToolTip="Add To Comment" CausesValidation="true" ValidationGroup  ="AppComment" Visible ="false"   />
+                     
+                    
+                </div>
+
+
+                  <div class="dvBoxRows" style =" width :570px; padding-top :10px; ">
+                    
+                       <asp:ListBox ID="lstApplicationComments" runat="server" Width ="100%" Height ="300px" AutoPostBack="True"></asp:ListBox>
+                </div>
+
+                 <div id="Div15"  class="dvBoxRows" style =" width :560px; float :left  ;text-align :right ; padding :10px;">
+                   <asp:ImageButton ID="imgRemoveComment" runat ="server" ImageUrl="~/images/add.png" ToolTip="Remove Comment" CausesValidation="true" ValidationGroup  ="AppComment" Visible ="false"  />
+                     
+                    
+                </div>
+                 
+            </div>
+    
+    </div>
+    
+    </div>
+        
+        <br />
+
+    <asp:Button ID="btnMPApplicationComments" runat="server" Text="Close" />
+    </asp:Panel>
+
+
+                    <asp:Button id="btnShowIACCommentPopup" runat="server" style="display:none" />
+   <asp:ModalPopupExtender ID="mpAppIACComments" runat="server" PopupControlID="pnlAppIACComments" TargetControlID="btnShowIACCommentPopup" CancelControlID="btnMPAppComments" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>                
+   <asp:Panel ID="pnlAppIACComments" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="530px">
+
+    <div id="Div18" class ="dvSideBox"> 
+        
+        <div id="Div19" style="border-color:#3a4f63; border :2px solid ;">
+
+            <div id="Div20" class ="dvBoxHeader"><span style ="color :#dde4ec;"><strong>Internal Control Document Review Comment</strong></span></div>
+            <div id="Div21" class="dvBoxbody">
+               
+               <div class="dvBoxRows" style =" width :300px;">
+                   
+                    <div style="padding-top :5px; margin-bottom  :15px;">
+                    <div style ="float :left "><span>Application ID :</span></div>
+                    <div style ="float :left "><asp:TextBox ID="txtIACApplicationID" runat="server" Width ="150px" Enabled="false"></asp:TextBox></div>
+               </div>
+                   
+               </div>
+
+                
+               <div class="dvBoxRows" style =" width :300px; padding-top :10px; ">
+                    
+                     <asp:TextBox id="txtApplicationIACComment" runat ="server" ReadOnly ="true"  TextMode ="MultiLine" ValidationGroup  ="AppCommentStatus" Height="400px" Width="95%"></asp:TextBox>
+
+                </div>
+
+            </div>
+    
+    </div>
+    
+    </div>
+        
+        <br />
+
+    <asp:Button ID="btnMPAppIACComments" runat="server" Text="Close" />
+    </asp:Panel>
+
+
+          
+          </ContentTemplate>
+     </asp:UpdatePanel>
+
+</asp:Content>

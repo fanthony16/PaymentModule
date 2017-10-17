@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsBiometricPrint" targetNamespace="http://tempuri.org/dsBiometricPrint.xsd" xmlns:mstns="http://tempuri.org/dsBiometricPrint.xsd" xmlns="http://tempuri.org/dsBiometricPrint.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsBiometricPrint" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="dsBiometricPrint" msprop:Generator_UserDSName="dsBiometricPrint">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtBiometric" msprop:Generator_TableClassName="dtBiometricDataTable" msprop:Generator_TableVarName="tabledtBiometric" msprop:Generator_TablePropName="dtBiometric" msprop:Generator_RowDeletingName="dtBiometricRowDeleting" msprop:Generator_RowChangingName="dtBiometricRowChanging" msprop:Generator_RowEvHandlerName="dtBiometricRowChangeEventHandler" msprop:Generator_RowDeletedName="dtBiometricRowDeleted" msprop:Generator_UserTableName="dtBiometric" msprop:Generator_RowChangedName="dtBiometricRowChanged" msprop:Generator_RowEvArgName="dtBiometricRowChangeEvent" msprop:Generator_RowClassName="dtBiometricRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="txtFirstName" msprop:Generator_ColumnVarNameInTable="columntxtFirstName" msprop:Generator_ColumnPropNameInRow="txtFirstName" msprop:Generator_ColumnPropNameInTable="txtFirstNameColumn" msprop:Generator_UserColumnName="txtFirstName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtMiddleName" msprop:Generator_ColumnVarNameInTable="columntxtMiddleName" msprop:Generator_ColumnPropNameInRow="txtMiddleName" msprop:Generator_ColumnPropNameInTable="txtMiddleNameColumn" msprop:Generator_UserColumnName="txtMiddleName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtOtherName" msprop:Generator_ColumnVarNameInTable="columntxtOtherName" msprop:Generator_ColumnPropNameInRow="txtOtherName" msprop:Generator_ColumnPropNameInTable="txtOtherNameColumn" msprop:Generator_UserColumnName="txtOtherName" type="xs:string" minOccurs="0" />
+              <xs:element name="txtIDNo" msprop:Generator_ColumnVarNameInTable="columntxtIDNo" msprop:Generator_ColumnPropNameInRow="txtIDNo" msprop:Generator_ColumnPropNameInTable="txtIDNoColumn" msprop:Generator_UserColumnName="txtIDNo" type="xs:string" minOccurs="0" />
+              <xs:element name="imgRThumb" msprop:Generator_ColumnVarNameInTable="columnimgRThumb" msprop:Generator_ColumnPropNameInRow="imgRThumb" msprop:Generator_ColumnPropNameInTable="imgRThumbColumn" msprop:Generator_UserColumnName="imgRThumb" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgRIndex1" msprop:Generator_ColumnVarNameInTable="columnimgRIndex1" msprop:Generator_ColumnPropNameInRow="imgRIndex1" msprop:Generator_ColumnPropNameInTable="imgRIndex1Column" msprop:Generator_UserColumnName="imgRIndex1" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgRIndex2" msprop:Generator_ColumnVarNameInTable="columnimgRIndex2" msprop:Generator_ColumnPropNameInRow="imgRIndex2" msprop:Generator_ColumnPropNameInTable="imgRIndex2Column" msprop:Generator_UserColumnName="imgRIndex2" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgRIndex3" msprop:Generator_ColumnVarNameInTable="columnimgRIndex3" msprop:Generator_ColumnPropNameInRow="imgRIndex3" msprop:Generator_ColumnPropNameInTable="imgRIndex3Column" msprop:Generator_UserColumnName="imgRIndex3" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgRIndex4" msprop:Generator_ColumnVarNameInTable="columnimgRIndex4" msprop:Generator_ColumnPropNameInRow="imgRIndex4" msprop:Generator_ColumnPropNameInTable="imgRIndex4Column" msprop:Generator_UserColumnName="imgRIndex4" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgRIndex5" msprop:Generator_ColumnVarNameInTable="columnimgRIndex5" msprop:Generator_ColumnPropNameInRow="imgRIndex5" msprop:Generator_ColumnPropNameInTable="imgRIndex5Column" msprop:Generator_UserColumnName="imgRIndex5" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgLThumb" msprop:Generator_ColumnVarNameInTable="columnimgLThumb" msprop:Generator_ColumnPropNameInRow="imgLThumb" msprop:Generator_ColumnPropNameInTable="imgLThumbColumn" msprop:Generator_UserColumnName="imgLThumb" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgLIndex1" msprop:Generator_ColumnVarNameInTable="columnimgLIndex1" msprop:Generator_ColumnPropNameInRow="imgLIndex1" msprop:Generator_ColumnPropNameInTable="imgLIndex1Column" msprop:Generator_UserColumnName="imgLIndex1" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgLIndex2" msprop:Generator_ColumnVarNameInTable="columnimgLIndex2" msprop:Generator_ColumnPropNameInRow="imgLIndex2" msprop:Generator_ColumnPropNameInTable="imgLIndex2Column" msprop:Generator_UserColumnName="imgLIndex2" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgLIndex3" msprop:Generator_ColumnVarNameInTable="columnimgLIndex3" msprop:Generator_ColumnPropNameInRow="imgLIndex3" msprop:Generator_ColumnPropNameInTable="imgLIndex3Column" msprop:Generator_UserColumnName="imgLIndex3" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgLIndex4" msprop:Generator_ColumnVarNameInTable="columnimgLIndex4" msprop:Generator_ColumnPropNameInRow="imgLIndex4" msprop:Generator_ColumnPropNameInTable="imgLIndex4Column" msprop:Generator_UserColumnName="imgLIndex4" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgLIndex5" msprop:Generator_ColumnVarNameInTable="columnimgLIndex5" msprop:Generator_ColumnPropNameInRow="imgLIndex5" msprop:Generator_ColumnPropNameInTable="imgLIndex5Column" msprop:Generator_UserColumnName="imgLIndex5" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="imgPassport" msprop:Generator_ColumnVarNameInTable="columnimgPassport" msprop:Generator_ColumnPropNameInRow="imgPassport" msprop:Generator_ColumnPropNameInTable="imgPassportColumn" msprop:Generator_UserColumnName="imgPassport" type="xs:base64Binary" minOccurs="0" />
+              <xs:element name="txtAddress" msprop:Generator_ColumnVarNameInTable="columntxtAddress" msprop:Generator_ColumnPropNameInRow="txtAddress" msprop:Generator_ColumnPropNameInTable="txtAddressColumn" msprop:Generator_UserColumnName="txtAddress" type="xs:string" minOccurs="0" />
+              <xs:element name="txtPhone" msprop:Generator_ColumnVarNameInTable="columntxtPhone" msprop:Generator_ColumnPropNameInRow="txtPhone" msprop:Generator_ColumnPropNameInTable="txtPhoneColumn" msprop:Generator_UserColumnName="txtPhone" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

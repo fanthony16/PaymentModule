@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsMandates" targetNamespace="http://tempuri.org/dsMandates.xsd" xmlns:mstns="http://tempuri.org/dsMandates.xsd" xmlns="http://tempuri.org/dsMandates.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsMandates" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="dsMandates" msprop:Generator_UserDSName="dsMandates">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dtMandates" msprop:Generator_TableClassName="dtMandatesDataTable" msprop:Generator_TableVarName="tabledtMandates" msprop:Generator_TablePropName="dtMandates" msprop:Generator_RowDeletingName="dtMandatesRowDeleting" msprop:Generator_RowChangingName="dtMandatesRowChanging" msprop:Generator_RowEvHandlerName="dtMandatesRowChangeEventHandler" msprop:Generator_RowDeletedName="dtMandatesRowDeleted" msprop:Generator_UserTableName="dtMandates" msprop:Generator_RowChangedName="dtMandatesRowChanged" msprop:Generator_RowEvArgName="dtMandatesRowChangeEvent" msprop:Generator_RowClassName="dtMandatesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Comments" msprop:Generator_ColumnVarNameInTable="columnComments" msprop:Generator_ColumnPropNameInRow="Comments" msprop:Generator_ColumnPropNameInTable="CommentsColumn" msprop:Generator_UserColumnName="Comments" type="xs:string" minOccurs="0" />
+              <xs:element name="ID_ShareMandateDetail" msprop:Generator_ColumnVarNameInTable="columnID_ShareMandateDetail" msprop:Generator_ColumnPropNameInRow="ID_ShareMandateDetail" msprop:Generator_ColumnPropNameInTable="ID_ShareMandateDetailColumn" msprop:Generator_UserColumnName="ID_ShareMandateDetail" type="xs:long" minOccurs="0" />
+              <xs:element name="status" msprop:Generator_ColumnVarNameInTable="columnstatus" msprop:Generator_ColumnPropNameInRow="status" msprop:Generator_ColumnPropNameInTable="statusColumn" msprop:Generator_UserColumnName="status" type="xs:string" minOccurs="0" />
+              <xs:element name="Stock" msprop:Generator_ColumnVarNameInTable="columnStock" msprop:Generator_ColumnPropNameInRow="Stock" msprop:Generator_ColumnPropNameInTable="StockColumn" msprop:Generator_UserColumnName="Stock" type="xs:string" minOccurs="0" />
+              <xs:element name="Broker" msprop:Generator_ColumnVarNameInTable="columnBroker" msprop:Generator_ColumnPropNameInRow="Broker" msprop:Generator_ColumnPropNameInTable="BrokerColumn" msprop:Generator_UserColumnName="Broker" type="xs:string" minOccurs="0" />
+              <xs:element name="Date_x0020_of_x0020_Mandate" msprop:Generator_ColumnVarNameInTable="columnDate_of_Mandate" msprop:Generator_ColumnPropNameInRow="Date_of_Mandate" msprop:Generator_ColumnPropNameInTable="Date_of_MandateColumn" msprop:Generator_UserColumnName="Date of Mandate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="Max_x0020__x003D_N_x003D_" msprop:Generator_ColumnVarNameInTable="_columnMax__N_" msprop:Generator_ColumnPropNameInRow="_Max__N_" msprop:Generator_ColumnPropNameInTable="_Max__N_Column" msprop:Generator_UserColumnName="Max =N=" type="xs:decimal" minOccurs="0" />
+              <xs:element name="Unit" msprop:Generator_ColumnVarNameInTable="columnUnit" msprop:Generator_ColumnPropNameInRow="Unit" msprop:Generator_ColumnPropNameInTable="UnitColumn" msprop:Generator_UserColumnName="Unit" type="xs:long" minOccurs="0" />
+              <xs:element name="TransactionStatus" msprop:Generator_ColumnVarNameInTable="columnTransactionStatus" msprop:Generator_ColumnPropNameInRow="TransactionStatus" msprop:Generator_ColumnPropNameInTable="TransactionStatusColumn" msprop:Generator_UserColumnName="TransactionStatus" type="xs:string" minOccurs="0" />
+              <xs:element name="Fund" msprop:Generator_ColumnVarNameInTable="columnFund" msprop:Generator_ColumnPropNameInRow="Fund" msprop:Generator_ColumnPropNameInTable="FundColumn" msprop:Generator_UserColumnName="Fund" type="xs:string" minOccurs="0" />
+              <xs:element name="PostedBy" msprop:Generator_ColumnVarNameInTable="columnPostedBy" msprop:Generator_ColumnPropNameInRow="PostedBy" msprop:Generator_ColumnPropNameInTable="PostedByColumn" msprop:Generator_UserColumnName="PostedBy" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

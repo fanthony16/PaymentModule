@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="PaymentModule" Class="AppDocumentsDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=enpower40db;Initial Catalog=PaymentModule_femi;User ID=ibs" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="PaymentModuleConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.tblApplicationType" Member="tblApplicationTypes">
+    <Type Name="tblApplicationType">
+      <Column Name="pkiAppTypeId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="txtDescription" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="tblApplicationType_tblAppDocumentType" Member="tblAppDocumentTypes" ThisKey="pkiAppTypeId" OtherKey="appTypeID" Type="tblAppDocumentType" />
+      <Association Name="tblApplicationType_tblMemberApplication" Member="tblMemberApplications" ThisKey="pkiAppTypeId" OtherKey="fkiAppTypeId" Type="tblMemberApplication" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblDocumentType" Member="tblDocumentTypes">
+    <Type Name="tblDocumentType">
+      <Column Name="pkiDocumentTypeID" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="txtDocumentName" Type="System.String" DbType="VarChar(300) NOT NULL" CanBeNull="false" />
+      <Association Name="tblDocumentType_tblAppDocumentType" Member="tblAppDocumentTypes" ThisKey="pkiDocumentTypeID" OtherKey="fkiDocumentTypeID" Type="tblAppDocumentType" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblAppDocumentType" Member="tblAppDocumentTypes">
+    <Type Name="tblAppDocumentType">
+      <Column Name="pkiAppDocTypeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="appTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="fkiDocumentTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="txtSector" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Association Name="tblApplicationType_tblAppDocumentType" Member="tblApplicationType" ThisKey="appTypeID" OtherKey="pkiAppTypeId" Type="tblApplicationType" IsForeignKey="true" />
+      <Association Name="tblDocumentType_tblAppDocumentType" Member="tblDocumentType" ThisKey="fkiDocumentTypeID" OtherKey="pkiDocumentTypeID" Type="tblDocumentType" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblMemberApplication" Member="tblMemberApplications">
+    <Type Name="tblMemberApplication">
+      <Column Name="pkiMemberApplicationID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="txtApplicationCode" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fkiMemberID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="txtPIN" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="txtFullName" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="txtEmployerName" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="txtSex" Type="System.String" DbType="Char(5)" CanBeNull="true" />
+      <Column Name="dteDOB" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fkiAppTypeId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="txtSector" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="dteCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="dteApplicationDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="txtStatus" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="txtCreatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="dteDOR" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dteDisengagement" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="txtComment" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="txtApplicationState" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="txtApplicationOffice" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="numFinalSalary" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="dteStatusChange" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="IsRejected" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsDocCompleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="IsSentToPencom" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="dteSentToPencom" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="txtPencomBatch" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="txtSPBatchNo" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="dteDocumentCompleted" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dteProcessing" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dteConfirmed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dtePaid" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dteApproved" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="dteTerminated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="numRSABalance" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="numLumpSum" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="numMonthlyPW" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="numPremium" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="numAnnuity" Type="System.Decimal" DbType="Decimal(18,2)" CanBeNull="true" />
+      <Column Name="dteConfirmPriceDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="txtReason" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fkiEmployerID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="txtEmployerCode" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="txtDepartment" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="txtDesignation" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="txtInsuranceCompany" Type="System.String" DbType="VarChar(300)" CanBeNull="true" />
+      <Column Name="txtLastChangedPerson" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="txtAccountName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="txtAccountNo" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="txtBVN" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="fkiBankID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="fkiBranchID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="txtCommentGroup" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="txtFundStatus" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="IsDeactivated" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="dteDeactivated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="txtDeactivatedBy" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="tblApplicationType_tblMemberApplication" Member="tblApplicationType" ThisKey="fkiAppTypeId" OtherKey="pkiAppTypeId" Type="tblApplicationType" IsForeignKey="true" />
+      <Association Name="tblSPLog_tblMemberApplication" Member="tblSPLog" ThisKey="txtSPBatchNo" OtherKey="txtBatchNo" Type="tblSPLog" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.tblSPLog" Member="tblSPLogs">
+    <Type Name="tblSPLog">
+      <Column Name="intSPLog" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="txtBatchNo" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="dteGenerated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="fkiAppTypeId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="txtCreatedBy" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Association Name="tblSPLog_tblMemberApplication" Member="tblMemberApplications" ThisKey="txtBatchNo" OtherKey="txtSPBatchNo" Type="tblMemberApplication" />
+    </Type>
+  </Table>
+</Database>

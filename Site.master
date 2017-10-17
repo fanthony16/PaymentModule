@@ -1,0 +1,148 @@
+﻿<%@ Master Language="VB" AutoEventWireup="false" CodeFile="Site.Master.vb" Inherits="Site" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+    <title></title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+     <link rel="stylesheet" href="~/styles/layout.css" type="text/css"/>  
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form runat="server">
+        
+        
+<div class="" style ="width :1450px; margin-left :30px;">
+            <div style=" float:left;  height:150px;width:300px; padding:0px; "><img alt="" src="images/surePayLogo.jpg" style=" width :100%; height :100%"/>
+                 
+
+
+            </div>
+            <div style=" height:30px;width:20px; float :left ;"></div>
+            <div style=" float:left; height:auto;width:1000px;">
+                
+                <div id="dvMenuSp" style ="height :110px; text-align :right; padding-right :0px; " ><img alt="" src="images/index_01.gif" style=""/></div>
+                
+                <div id="Div1" style =" text-align :right; padding-right :0px; " >
+                 
+                        <asp:ImageButton ID="btnLogOut" runat="server" ToolTip="Log Out" ImageUrl="~/images/logout.png" ValidationGroup="logOut" /></div>
+
+                <div id="dvMenu" style="text-align :right;  padding :2px 0px 0px 10px;">
+
+                <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
+
+                    <Items>
+                        
+                        <asp:MenuItem NavigateUrl="#" Text="Home" Value="Home">
+
+                              <asp:MenuItem NavigateUrl="~/frmApplicationLitee.aspx" Text="Log Application" Value="NewApp" />
+                              <asp:MenuItem NavigateUrl="~/frmApplicationDashBoard.aspx" Text="Application DashBoard" Value="DashBoard" />
+                              <asp:MenuItem NavigateUrl="~/frmManager.aspx" Text="Manager's DashBoard" Value="ManagerDashBoard" />
+
+                         </asp:MenuItem>
+
+                        <asp:MenuItem NavigateUrl="#" Text="Benefit Processing" Value="HeaderMainBPD" >
+
+                             <asp:MenuItem NavigateUrl="~/frmApplicationInformation.aspx" Text="Find Application" Value ="ApplicationInformation"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmCustomerAdhocDocuments.aspx" Text="Pre-Application Documentation" Value ="PreApplication"></asp:MenuItem>
+                            <asp:MenuItem NavigateUrl="#" Text="Documentation" Value ="DocumentationMain">
+                                 <asp:MenuItem NavigateUrl="~/frmApplicationList.aspx" Text="Benefit Application" Value ="NewApplicationList"></asp:MenuItem>
+                                 <asp:MenuItem NavigateUrl="~/frmApplicationUnFundedList.aspx" Text="UnFunded Public Application" Value ="PublicUnfunded"></asp:MenuItem>
+                                 
+
+                            </asp:MenuItem>
+                            <asp:MenuItem NavigateUrl="#" Text="Processing" Value ="ProcessingMain">
+                                 <asp:MenuItem NavigateUrl="~/frmProcessing.aspx" Text="Awaiting Processing" Value ="AwaitingProcessing"></asp:MenuItem>
+                                 <asp:MenuItem NavigateUrl="~/frmforSubmission.aspx" Text="For Pencom Submission" Value ="ForRMASSubmission"></asp:MenuItem>
+                                 <asp:MenuItem NavigateUrl="~/frmRMAS.aspx" Text="RMAS Submission" Value ="RMAS"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem NavigateUrl="#" Text="Confirmation" Value ="ConfirmationMain">
+                                 <asp:MenuItem NavigateUrl="~/frmConfirmation.aspx" Text="Application Comfirmation" Value ="Confirmation"></asp:MenuItem>
+                            </asp:MenuItem>
+                            <asp:MenuItem NavigateUrl="#" Text="Payment" Value ="PaymentMain">
+                                 
+                                 <asp:MenuItem NavigateUrl="~/frmApplicationApprovaList.aspx" Text="New Approval" Value ="ApprovalList"></asp:MenuItem>
+                                 <asp:MenuItem NavigateUrl="~/frmApprovalComfirmation.aspx" Text="Approval Confirmation" Value ="ApprovalConfirmation"></asp:MenuItem>
+                                  <asp:MenuItem NavigateUrl="~/frmApprovalScheduleExtract.aspx" Text="Extract Schedule To Enpower" Value ="ApprovalExport"></asp:MenuItem>
+                                 <asp:MenuItem NavigateUrl="~/frmApprovalControlCheckView.aspx" Text="Payment Authorisation Status" Value ="ApprovalControlView"></asp:MenuItem>
+                            </asp:MenuItem>
+                        </asp:MenuItem>
+                        <asp:MenuItem NavigateUrl="#" Text="Control" Value ="HeaderMainControl">
+                             
+                             <asp:MenuItem NavigateUrl="~/frmApplicationControlCheck.aspx" Text="Pre - Approval Application Check" Value ="ApplicationControlCheck"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmApprovalControlCheck.aspx" Text="Post - Approval Check" Value ="ApprovalControlCheck"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmApprovalControlVerified.aspx" Text="Post - Approval Verfication" Value ="ApprovalControlVerified"></asp:MenuItem>
+                        </asp:MenuItem>
+                        <asp:MenuItem NavigateUrl="#" Text="Finance" Value ="HeaderMainFinance">
+                             <asp:MenuItem NavigateUrl="~/frmApprovalFinanceAuthority.aspx" Text="Payment Authorisation" Value ="ApprovalFinanceCheck"></asp:MenuItem>
+                        </asp:MenuItem>
+
+                        <asp:MenuItem NavigateUrl="#" Text="Tools" Value ="HeaderToolMain">
+                   
+                             <asp:MenuItem NavigateUrl="~/frmPreference.aspx" Text="General Settings" Value ="Preference"></asp:MenuItem> 
+                             <asp:MenuItem NavigateUrl="~/frmApplicationLite.aspx" Text="New Application Lite" Value ="ApplicationLite"></asp:MenuItem> 
+                             <asp:MenuItem NavigateUrl="~/frmEnrollmentPictureStatus.aspx" Text="Pinned Enrollment Image Status" Value ="PinnedForm"></asp:MenuItem>
+
+                             <asp:MenuItem NavigateUrl="~/frmPencomTemplate.aspx" Text="Monthly Enhanced Pension Calculator" Value ="EnhancedCalc"></asp:MenuItem>
+
+                             <asp:MenuItem NavigateUrl="#" Text="Period Payment Standing Instruction" Value ="SI">
+
+                                  <asp:MenuItem NavigateUrl="~/frmStandingPensioner.aspx" Text="New Pension Entrants For Standing Instruction" Value ="NewSI"></asp:MenuItem>
+                                  <asp:MenuItem NavigateUrl="~/frmStandingPensionerConfirm.aspx" Text="New Pension Entrants For Standing Instruction - Confirmation" Value ="NewSIApproval"></asp:MenuItem>
+                                  <asp:MenuItem NavigateUrl="~/frmStandingIRun.aspx" Text="Standing Instruction - Vetting" Value ="SIVet"></asp:MenuItem>
+                                  <asp:MenuItem NavigateUrl="~/frmSIChecker1.aspx" Text="Standing Instruction - Confirmation" Value ="SIChecker"></asp:MenuItem>
+                                  <asp:MenuItem NavigateUrl="~/frmSIChecker2.aspx" Text="Standing Instruction - Confirmation" Value ="SIChecker2"></asp:MenuItem>
+
+                                  <asp:MenuItem NavigateUrl="~/frmSIApproval1.aspx" Text="Standing Instruction - Approval" Value ="SIApproval"></asp:MenuItem>
+                                  <asp:MenuItem NavigateUrl="~/frmSIApproval2.aspx" Text="Standing Instruction - Approval" Value ="SIApproval2"></asp:MenuItem>
+
+                             </asp:MenuItem>
+
+                        </asp:MenuItem>
+                        <asp:MenuItem NavigateUrl="#" Text="Common" Value ="HeaderCommonMain">
+
+                             <asp:MenuItem NavigateUrl="~/frmApplicationFind.aspx" Text="Application Find" Value ="ApplicationFind"></asp:MenuItem>
+
+                             <asp:MenuItem NavigateUrl="~/frmAdvApplicationFind.aspx" Text=" Adv - Application Find" Value ="AdvApplicationFind"></asp:MenuItem>
+
+                        </asp:MenuItem>
+                        <asp:MenuItem NavigateUrl="#" Text="Reports" Value ="HeaderReportMain">
+
+                             <asp:MenuItem NavigateUrl="~/frmGeneralReport.aspx" Text="General Report" Value ="GeneralReport"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmReports.aspx" Text="Application LifeCycle Report" Value ="ApplicationLifeCycle"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmRMU.aspx" Text="Retiree Management Reports" Value ="RMU"></asp:MenuItem>
+
+                        </asp:MenuItem>
+                    </Items>
+                    
+                </asp:Menu>
+
+                </div>
+
+            </div>
+            </div>  
+
+
+          
+            
+<div class="DivContent" style="width:1450px;">
+
+<asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"/>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+ 
+    </form>
+</body>
+</html>

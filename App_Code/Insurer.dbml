@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="EnPowerV4" Class="InsurerDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=enpowertest;Initial Catalog=EnPowerV4;User ID=ibs" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="EnPowerV4ConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Insurer" Member="Insurers">
+    <Type Name="Insurer">
+      <Column Name="InsurerID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="InsurerName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="InsurerCode" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="InsurerAddress" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Column Name="InsurerPhone" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="InsurerContactPerson" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="BankName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="AccountNumber" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="CreatedByID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DateModified" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ModifiedByID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsArchived" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+    </Type>
+  </Table>
+</Database>

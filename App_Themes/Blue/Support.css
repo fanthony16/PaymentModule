@@ -1,0 +1,322 @@
+﻿body
+{
+     -moz-user-select: none;
+font-family: 'Trebuchet MS' , Tahoma, Helvetica, Arial, sans-serif, Monospace;
+font-size: 10pt;
+}
+h1 {
+font-size: 12px;
+}
+a:link, a:visited {
+text-decoration: none;
+color: red ;
+}
+a:hover {
+color: Red;
+}
+
+
+
+
+.Header {
+top: 0px;
+left: 0px;
+position: absolute;
+width: 800px;
+background-image: url(../../Images/banner_r1_c1.jpg);
+background-repeat: repeat-x;
+}
+.Menu
+{
+top: 160px;
+left: 16px;
+width: 195px;
+position: absolute;
+}
+.Content {
+top: 145px;
+left: 160px;
+position: absolute;
+width: 600px;
+}
+.GridMain
+{
+    border-right: gainsboro thin solid;
+    border-top: gainsboro thin solid;
+    border-left: gainsboro thin solid;
+    border-bottom: gainsboro thin solid;
+    background-color: #CCCCCC;
+    width: 400px;
+    font-size: 10pt;
+}
+.GridRow
+{
+	/*background-color: #FFFAFA;*/
+     background-color: #FFFAFA;
+     /*color :blue ;*/
+
+	direction: ltr;
+}
+.GridSelectedRow
+{
+background-color: #f6f8fb;
+color:black;
+}
+.GridHeader
+{
+
+background-color: #3a4f63;
+font-weight: bold;
+text-align: left;
+color: #dde4ec;
+direction: ltr;
+}
+.UpdateProgress {
+background-color: Black;
+color: White;
+font-weight: bold;
+text-transform: uppercase;
+}
+.Button
+{
+text-align: center;
+text-transform: none;
+font-variant: normal;
+font-family: 'Times New Roman' , Tahoma;
+vertical-align: middle;
+font-weight: normal;
+text-decoration: none;
+border-bottom: #3366ff thin double;
+border-left: #3366ff thin double;
+border-top: #3366ff thin double;
+border-right: #3366ff thin double;
+}
+.BottonPassword
+{
+background-image: none;
+text-align: center;
+line-height: normal;
+text-transform: uppercase;
+background-color: red;
+font-variant: normal;
+font-family: 'Trebuchet MS';
+letter-spacing: normal;
+color: white;
+vertical-align: middle;
+font-weight: bold;
+}
+.InputBos
+{
+    border-color: #0000FF;
+    padding: 1px;
+    margin: 1px;
+    background-color: #FFFFFF;
+    font-family: 'Trebuchet MS' , Tahoma, Helvetica, Arial, sans-serif, Monospace;
+    font-size: 15pt;
+    color: #0000FF;
+    text-align: left;
+    word-spacing: normal;
+    letter-spacing: normal;
+    font-weight: bold;
+}
+
+.InputForPM
+{
+    border-color: #0000FF;
+    padding: 1px;
+    margin: 1px;
+    background-color: #FFFFFF;
+    font-family: 'Trebuchet MS' , Tahoma, Helvetica, Arial, sans-serif, Monospace;
+    font-size: 12pt;
+    color: #0000FF;
+    text-align: left;
+    word-spacing: normal;
+    letter-spacing: normal;
+    font-weight: bold;
+}
+.DropBos
+{
+    border-color: #0000FF;
+    padding: 1px;
+    margin: 1px;
+    background-color: #FFFFFF;
+    font-family: 'Trebuchet MS' , Tahoma, Helvetica, Arial, sans-serif, Monospace;
+    font-size: 8pt;
+    color: #0000FF;
+    text-align: left;
+    word-spacing: normal;
+    letter-spacing: normal;
+    font-weight: bold;
+}
+.InputBoslabel
+{
+    margin: 3px 3px 3px 3px;
+    width: 150px;
+    text-align: left;
+    float: left;
+    font-size: medium;
+}
+.Popup
+ 
+        {
+ 
+            background-color: #FFFFFF;
+ 
+            border-width: 3px;
+ 
+            border-style: solid;
+ 
+            border-color: black;
+ 
+            padding-top: 10px;
+ 
+            padding-left: 10px;
+ 
+            width: 400px;
+ 
+            height: 330px;
+ 
+        }
+.BackgroundImage
+{
+     background-image :url(../Images/background.jpg);
+}
+.Background
+ 
+        {
+ 
+            background-color: Black;
+ 
+            filter: alpha(opacity=90);
+ 
+            opacity: 0.8;
+ 
+        }
+        .TextBoxWidth
+{
+    width: 190px;
+    float: left;
+}
+.error
+{
+    background: #f8c9c9 url('../Images/error.png') no-repeat left;
+    border: 0px solid #ee9b9b;
+    color: #864d4d;
+    padding-right: 100px;
+    margin-right: 0px;
+    padding-left: 30px;
+    width: 30%;
+}
+
+.wrpSubmenu
+{
+    padding: 0px 0px 0px 0px;
+    width: 150px;
+    float: left;
+    border: thin none #000080;
+    margin: 5px 10px 0px 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    
+}
+.wrpSubmenuitem
+{
+    padding: 5px;
+    width: 150px;
+    float: left;
+    border: thin none #000080;
+    margin: 0px 0px 2px 0px;
+    -moz-border-radius: 10px 0px 0px 10px;
+    -webkit-border-radius: 10px 0px 0px 10px;
+    background-color: #4b6c9e;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    color:#696969;
+    
+}
+
+.gridPanelDefault
+{
+    border-style: solid;
+    border-width: thin;
+    padding: 5px;
+    width: 150px;
+    float: left;
+    height: 390px;
+    margin-top: 15px;
+}
+
+.gridPanel
+{
+    border-style: solid;
+    border-width: thin;
+    padding: 5px;
+    width: 150px;
+    float: left;
+    margin-top: 0px;
+}
+.wrpDetails
+{
+    padding: 5px 5px 5px 5px;
+    width: 820px;
+    float: left;
+    border: thin none #bfcbd6;
+    margin: 5px 0px 0px 0px;
+    -moz-border-radius: 0px 10px 10px 0px;
+    -webkit-border-radius: 0px 10px 10px 0px;
+
+    min-height : 380px;
+    
+}
+.dvDashBoardHeader
+{
+    padding: 8px;
+    width: 96.5%;
+    float: left;
+    border: thin none #000080;
+    margin: 0px 0px 10px 0px;
+    -moz-border-radius: 10px 0px 0px 10px;
+    -webkit-border-radius: 10px 0px 0px 10px;
+    background-color: #4b6c9e;
+    font-family: "Helvetica Neue" , "Lucida Grande" , "Segoe UI" , Arial, Helvetica, Verdana, sans-serif;
+    color: #696969;
+    text-align: center;
+}
+
+.linkBtn
+{
+    font-family: "Helvetica Neue" , "Lucida Grande" , "Segoe UI" , Arial, Helvetica, Verdana, sans-serif;
+    font-size: small;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.dvSummaryBox
+{
+    border: thin solid #4b6c9e;
+    padding: 0px;
+    margin: 5px 30px 5px 30px;
+    float: left;
+    width: 450px;
+    -moz-border-radius: 10px 10px 10px 10px;
+    -webkit-border-radius: 10px 10px 10px 10px;
+}
+
+
+.dvSummaryBoxitem
+{
+    margin: 10px 0px 10px 0px;
+    padding-top: 10px;
+}
+
+.dvSummaryBoxSubitem
+{
+    border-style: none;
+    float: left;
+    margin: 10px 0px 10px 0px;
+    width: 150px;
+    background-color: #DEE1E7;
+    font-size: small;
+    font-weight: bold;
+    color: #4b6c9e;
+}
+
+

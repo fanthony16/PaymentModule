@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="lgmtBYDATE">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="date1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date2" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYDATEResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtBYDATEResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="id" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtBYIDResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYCLIENTID">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="clientID" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="date1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date2" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYCLIENTIDResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtBYCLIENTIDResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYNARRATION">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="desc" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="date1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date2" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYNARRATIONResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtBYNARRATIONResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYAMOUNT">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="amt" type="s:double" />
+            <s:element minOccurs="1" maxOccurs="1" name="date1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date2" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtBYAMOUNTResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtBYAMOUNTResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtUploadDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lodgmentID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtUploadDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtUploadDetailsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="lodgmentID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtRefundDetailResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtReversalDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="lodgmentID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtReversalDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtReversalDetailResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefunds">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="refundID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="uDept" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="type" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtRefundsResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundByIDStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="refundID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="who" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundByIDStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtRefundByIDStatusResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundByDateStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="date1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date2" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="status" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="who" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtRefundByDateStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtRefundByDateStatusResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getEnrollmentProduction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="date1" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="date2" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getEnrollmentProductionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getEnrollmentProductionResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtSummary">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startDate" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="endDate" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtSummaryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtSummaryResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtPenaltyLodgment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="startDate" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="endDate" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="status" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="clientID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fund" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="lgmtPenaltyLodgmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="lgmtPenaltyLodgmentResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="lgmtBYDATESoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtBYDATE" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYDATESoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtBYDATEResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYIDSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtBYID" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYIDSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtBYIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYCLIENTIDSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtBYCLIENTID" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYCLIENTIDSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtBYCLIENTIDResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYNARRATIONSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtBYNARRATION" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYNARRATIONSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtBYNARRATIONResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYAMOUNTSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtBYAMOUNT" />
+  </wsdl:message>
+  <wsdl:message name="lgmtBYAMOUNTSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtBYAMOUNTResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtUploadDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtUploadDetails" />
+  </wsdl:message>
+  <wsdl:message name="lgmtUploadDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtUploadDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtRefundDetail" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtRefundDetailResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtReversalDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtReversalDetail" />
+  </wsdl:message>
+  <wsdl:message name="lgmtReversalDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtReversalDetailResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundsSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtRefunds" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundsSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtRefundsResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundByIDStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtRefundByIDStatus" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundByIDStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtRefundByIDStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundByDateStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtRefundByDateStatus" />
+  </wsdl:message>
+  <wsdl:message name="lgmtRefundByDateStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtRefundByDateStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="getEnrollmentProductionSoapIn">
+    <wsdl:part name="parameters" element="tns:getEnrollmentProduction" />
+  </wsdl:message>
+  <wsdl:message name="getEnrollmentProductionSoapOut">
+    <wsdl:part name="parameters" element="tns:getEnrollmentProductionResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtSummarySoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtSummary" />
+  </wsdl:message>
+  <wsdl:message name="lgmtSummarySoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtSummaryResponse" />
+  </wsdl:message>
+  <wsdl:message name="lgmtPenaltyLodgmentSoapIn">
+    <wsdl:part name="parameters" element="tns:lgmtPenaltyLodgment" />
+  </wsdl:message>
+  <wsdl:message name="lgmtPenaltyLodgmentSoapOut">
+    <wsdl:part name="parameters" element="tns:lgmtPenaltyLodgmentResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ContributionSoap">
+    <wsdl:operation name="getContribution">
+      <wsdl:input name="lgmtBYDATE" message="tns:lgmtBYDATESoapIn" />
+      <wsdl:output name="lgmtBYDATE" message="tns:lgmtBYDATESoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <wsdl:input name="lgmtBYID" message="tns:lgmtBYIDSoapIn" />
+      <wsdl:output name="lgmtBYID" message="tns:lgmtBYIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <wsdl:input name="lgmtBYCLIENTID" message="tns:lgmtBYCLIENTIDSoapIn" />
+      <wsdl:output name="lgmtBYCLIENTID" message="tns:lgmtBYCLIENTIDSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <wsdl:input name="lgmtBYNARRATION" message="tns:lgmtBYNARRATIONSoapIn" />
+      <wsdl:output name="lgmtBYNARRATION" message="tns:lgmtBYNARRATIONSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <wsdl:input name="lgmtBYAMOUNT" message="tns:lgmtBYAMOUNTSoapIn" />
+      <wsdl:output name="lgmtBYAMOUNT" message="tns:lgmtBYAMOUNTSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getUploadDetails">
+      <wsdl:input name="lgmtUploadDetails" message="tns:lgmtUploadDetailsSoapIn" />
+      <wsdl:output name="lgmtUploadDetails" message="tns:lgmtUploadDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getRefundDetails">
+      <wsdl:input name="lgmtRefundDetail" message="tns:lgmtRefundDetailSoapIn" />
+      <wsdl:output name="lgmtRefundDetail" message="tns:lgmtRefundDetailSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getReversalDetail">
+      <wsdl:input name="lgmtReversalDetail" message="tns:lgmtReversalDetailSoapIn" />
+      <wsdl:output name="lgmtReversalDetail" message="tns:lgmtReversalDetailSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <wsdl:input name="lgmtRefunds" message="tns:lgmtRefundsSoapIn" />
+      <wsdl:output name="lgmtRefunds" message="tns:lgmtRefundsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <wsdl:input name="lgmtRefundByIDStatus" message="tns:lgmtRefundByIDStatusSoapIn" />
+      <wsdl:output name="lgmtRefundByIDStatus" message="tns:lgmtRefundByIDStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <wsdl:input name="lgmtRefundByDateStatus" message="tns:lgmtRefundByDateStatusSoapIn" />
+      <wsdl:output name="lgmtRefundByDateStatus" message="tns:lgmtRefundByDateStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getEnrollmentProduction">
+      <wsdl:input message="tns:getEnrollmentProductionSoapIn" />
+      <wsdl:output message="tns:getEnrollmentProductionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLodgmentSummary">
+      <wsdl:input name="lgmtSummary" message="tns:lgmtSummarySoapIn" />
+      <wsdl:output name="lgmtSummary" message="tns:lgmtSummarySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getPenaltySummary">
+      <wsdl:input name="lgmtPenaltyLodgment" message="tns:lgmtPenaltyLodgmentSoapIn" />
+      <wsdl:output name="lgmtPenaltyLodgment" message="tns:lgmtPenaltyLodgmentSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ContributionSoap" type="tns:ContributionSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getContribution">
+      <soap:operation soapAction="http://tempuri.org/lgmtBYDATE" style="document" />
+      <wsdl:input name="lgmtBYDATE">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYDATE">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap:operation soapAction="http://tempuri.org/lgmtBYID" style="document" />
+      <wsdl:input name="lgmtBYID">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYID">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap:operation soapAction="http://tempuri.org/lgmtBYCLIENTID" style="document" />
+      <wsdl:input name="lgmtBYCLIENTID">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYCLIENTID">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap:operation soapAction="http://tempuri.org/lgmtBYNARRATION" style="document" />
+      <wsdl:input name="lgmtBYNARRATION">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYNARRATION">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap:operation soapAction="http://tempuri.org/lgmtBYAMOUNT" style="document" />
+      <wsdl:input name="lgmtBYAMOUNT">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYAMOUNT">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUploadDetails">
+      <soap:operation soapAction="http://tempuri.org/lgmtUploadDetails" style="document" />
+      <wsdl:input name="lgmtUploadDetails">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtUploadDetails">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundDetails">
+      <soap:operation soapAction="http://tempuri.org/lgmtRefundDetail" style="document" />
+      <wsdl:input name="lgmtRefundDetail">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefundDetail">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReversalDetail">
+      <soap:operation soapAction="http://tempuri.org/lgmtReversalDetail" style="document" />
+      <wsdl:input name="lgmtReversalDetail">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtReversalDetail">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <soap:operation soapAction="http://tempuri.org/lgmtRefunds" style="document" />
+      <wsdl:input name="lgmtRefunds">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefunds">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <soap:operation soapAction="http://tempuri.org/lgmtRefundByIDStatus" style="document" />
+      <wsdl:input name="lgmtRefundByIDStatus">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefundByIDStatus">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <soap:operation soapAction="http://tempuri.org/lgmtRefundByDateStatus" style="document" />
+      <wsdl:input name="lgmtRefundByDateStatus">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefundByDateStatus">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEnrollmentProduction">
+      <soap:operation soapAction="http://tempuri.org/getEnrollmentProduction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLodgmentSummary">
+      <soap:operation soapAction="http://tempuri.org/lgmtSummary" style="document" />
+      <wsdl:input name="lgmtSummary">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtSummary">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPenaltySummary">
+      <soap:operation soapAction="http://tempuri.org/lgmtPenaltyLodgment" style="document" />
+      <wsdl:input name="lgmtPenaltyLodgment">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtPenaltyLodgment">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ContributionSoap12" type="tns:ContributionSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getContribution">
+      <soap12:operation soapAction="http://tempuri.org/lgmtBYDATE" style="document" />
+      <wsdl:input name="lgmtBYDATE">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYDATE">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap12:operation soapAction="http://tempuri.org/lgmtBYID" style="document" />
+      <wsdl:input name="lgmtBYID">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYID">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap12:operation soapAction="http://tempuri.org/lgmtBYCLIENTID" style="document" />
+      <wsdl:input name="lgmtBYCLIENTID">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYCLIENTID">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap12:operation soapAction="http://tempuri.org/lgmtBYNARRATION" style="document" />
+      <wsdl:input name="lgmtBYNARRATION">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYNARRATION">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getContribution">
+      <soap12:operation soapAction="http://tempuri.org/lgmtBYAMOUNT" style="document" />
+      <wsdl:input name="lgmtBYAMOUNT">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtBYAMOUNT">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getUploadDetails">
+      <soap12:operation soapAction="http://tempuri.org/lgmtUploadDetails" style="document" />
+      <wsdl:input name="lgmtUploadDetails">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtUploadDetails">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundDetails">
+      <soap12:operation soapAction="http://tempuri.org/lgmtRefundDetail" style="document" />
+      <wsdl:input name="lgmtRefundDetail">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefundDetail">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getReversalDetail">
+      <soap12:operation soapAction="http://tempuri.org/lgmtReversalDetail" style="document" />
+      <wsdl:input name="lgmtReversalDetail">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtReversalDetail">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <soap12:operation soapAction="http://tempuri.org/lgmtRefunds" style="document" />
+      <wsdl:input name="lgmtRefunds">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefunds">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <soap12:operation soapAction="http://tempuri.org/lgmtRefundByIDStatus" style="document" />
+      <wsdl:input name="lgmtRefundByIDStatus">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefundByIDStatus">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRefundAuthorisation">
+      <soap12:operation soapAction="http://tempuri.org/lgmtRefundByDateStatus" style="document" />
+      <wsdl:input name="lgmtRefundByDateStatus">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtRefundByDateStatus">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getEnrollmentProduction">
+      <soap12:operation soapAction="http://tempuri.org/getEnrollmentProduction" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLodgmentSummary">
+      <soap12:operation soapAction="http://tempuri.org/lgmtSummary" style="document" />
+      <wsdl:input name="lgmtSummary">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtSummary">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPenaltySummary">
+      <soap12:operation soapAction="http://tempuri.org/lgmtPenaltyLodgment" style="document" />
+      <wsdl:input name="lgmtPenaltyLodgment">
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="lgmtPenaltyLodgment">
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Contribution">
+    <wsdl:port name="ContributionSoap" binding="tns:ContributionSoap">
+      <soap:address location="http://localhost:16974/webServices/Contributions.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ContributionSoap12" binding="tns:ContributionSoap12">
+      <soap12:address location="http://localhost:16974/webServices/Contributions.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
