@@ -1443,7 +1443,7 @@ Partial Class frmApplicationLitee
 			Try
 				If Not IsNothing(Session("user")) = True Then
 
-					boolSubmitStatus = cr.PMSubmitApplication(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"))
+					'boolSubmitStatus = cr.PMSubmitApplication(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"))
 
 					If boolSubmitStatus = True Then
 						'deleting possible duplicate document created

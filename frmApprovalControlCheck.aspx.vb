@@ -503,7 +503,7 @@ Partial Class frmApprovalControlCheck
 
 
           Dim cr As New Core
-		cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 2)
+		cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 2, 1)
           txtApplicationComment.Text = ""
           refreshCommentList(txtApplicationID.Text)
           Me.mpAppComments.Show()

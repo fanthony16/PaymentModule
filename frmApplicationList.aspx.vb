@@ -110,7 +110,8 @@ Partial Class frmApplicationList
                     ElseIf IsNothing(Session("user")) = False And IsNothing(Session("userDetails")) = False Then
                          dtusers = Session("userDetails")
                          getUserAccessMenu(Session("user"))
-                         getApprovalTypes()
+					getApprovalTypes()
+					getCheckLists()
                          PopulateApplicationStatus()
                          getApplicationForDocumentation(0)
                          getApplicationList(CInt(Context.Request.QueryString("ApplicationID")))
@@ -132,6 +133,7 @@ Partial Class frmApplicationList
 					dtusers = Session("userDetails")
 					getUserAccessMenu(Session("user"))
 					getApprovalTypes()
+					getCheckLists()
 					PopulateApplicationStatus()
 					getApplicationForDocumentation(0)
 
@@ -430,6 +432,20 @@ Partial Class frmApplicationList
 
      End Function
 
+	Protected Sub getCheckLists()
+
+		Dim i As Integer = 0, cr As New Core, dt As New DataTable
+		dt = cr.PMgetCheckList(1)
+		MsgBox("" & dt.Rows.Count)
+		Me.cbErrorCheckList.DataSource = dt
+		cbErrorCheckList.DataValueField = "intErrorID"
+		cbErrorCheckList.DataTextField = "txtDescription"
+
+		cbErrorCheckList.DataBind()
+
+		
+	End Sub
+
      Protected Sub getApprovalTypes()
 
           Dim i As Integer = 0
@@ -559,6 +575,12 @@ Partial Class frmApplicationList
 			'locking the record for review for the user
 			'cr.PMLocKRecord(row.Cells(2).Text.ToString(), Session("user"))
 
+
+
+			imgPassport.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 1, Server.MapPath("~/Logs"))
+			imgSignature.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 2, Server.MapPath("~/Logs"))
+
+
 			dt = cr.PMgetApplicationByCode(row.Cells(2).Text.ToString())
 
           'getting submitted documents per application 
@@ -642,7 +664,7 @@ Partial Class frmApplicationList
           lstComments.Items.Clear()
           Do While j < dt.Rows.Count
 
-               lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString)
+			lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString & " (" & dt.Rows(j).Item(3).ToString & " )")
                j = j + 1
 
           Loop
@@ -1030,7 +1052,7 @@ Partial Class frmApplicationList
 
 		If Not IsNothing(Session("user")) = True Then
 
-			cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1)
+			cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, cbErrorCheckList.SelectedValue)
 			txtApplicationComment.Text = ""
 			refreshCommentList(txtApplicationID.Text)
 
@@ -1048,10 +1070,11 @@ Partial Class frmApplicationList
      Protected Sub refreshCommentList(appCode As String)
           Dim cr As New Core, j As Integer, dt As DataTable
           dt = cr.PMgetApplicationComment(appCode, "PRE")
-          lstComments.Items.Clear()
+		lstComments.Items.Clear()
+		MsgBox("" & dt.Rows(0).Item(3).ToString)
           Do While j < dt.Rows.Count
 
-               lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString)
+			lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString & " (" & dt.Rows(j).Item(3).ToString & " )")
                j = j + 1
 
           Loop

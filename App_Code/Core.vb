@@ -528,8 +528,11 @@ Public Class Core
 
 			If stage = "PRE" Then
 
-				'sql = "select txtControlCheckComment from tblMemberApplication where txtApplicationCode = '" & appCode & "'"
-				sql = "select txtComment,txtCreatedBy,pkiCommentID from tblApplicationComments where txtApplicationCode = '" & appCode & "' and intAppCommentStage = 1 and isDeactived = 0 "
+
+				'				sql = "select txtComment,txtCreatedBy,pkiCommentID from tblApplicationComments where txtApplicationCode = '" & appCode & "' and intAppCommentStage = 1 and isDeactived = 0 "
+
+
+				sql = "select txtComment,txtCreatedBy,pkiCommentID,(Select txtDescription from tblReturnErrorTypes where intErrorID = a.intErrorID) ErrorCategory from tblApplicationComments a where txtApplicationCode = '" & appCode & "' and intAppCommentStage = 1 and isDeactived = 0"
 
 
 			ElseIf stage = "POST" Then
@@ -1027,7 +1030,7 @@ Public Class Core
 
 
 
-	Public Sub PMUpdateApplicationComment(comment As String, appCode As String, uName As String, uCommentStage As Integer)
+	Public Sub PMUpdateApplicationComment(comment As String, appCode As String, uName As String, uCommentStage As Integer, intErrorID As Integer)
 		Try
 
 			Dim db As New DbConnection
@@ -1039,7 +1042,7 @@ Public Class Core
 			myComm = mycon.CreateCommand
 			myComm.Transaction = sqlTran
 
-			myComm.CommandText = "insert into tblApplicationComments (intAppCommentStage,txtApplicationCode,txtComment,txtCreatedBy) values ('" & uCommentStage & "','" & appCode & "','" & comment & "', '" & uName & "')"
+			myComm.CommandText = "insert into tblApplicationComments (intAppCommentStage,txtApplicationCode,txtComment,txtCreatedBy,intErrorID) values ('" & uCommentStage & "','" & appCode & "','" & comment & "', '" & uName & "', '" & intErrorID & "')"
 			command.CommandType = CommandType.Text
 			myComm.ExecuteNonQuery()
 
@@ -1954,7 +1957,7 @@ Public Class Core
 
 	End Function
 
-	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String) As Boolean
+	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList) As Boolean
 
 
 
@@ -2002,6 +2005,26 @@ Public Class Core
 			myComm.CommandText = sqlRef
 			command.CommandType = CommandType.Text
 			myComm.ExecuteNonQuery()
+
+
+
+			''''''''''''''''''''updating the checkList for the application''''''''''''''''''''''''''
+
+
+			sqlRef = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
+			myComm.CommandText = sqlRef
+			command.CommandType = CommandType.Text
+			myComm.ExecuteNonQuery()
+
+
+
+
+			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+
 
 
 			'''''''''''''''''''''''''''''''ARL Acknowledgment'''''''''''''''''''''''''''''''''''
@@ -8442,10 +8465,96 @@ Public Class Core
 			ApplicationProperty.FieldValue = dt.Rows(0).Item("BranchName").ToString
 			ApplicationProperties.Add(ApplicationProperty)
 
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Is Funding Status Checked ? :"
+			If dt.Rows(0).Item("isFundingStatusChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isFundingStatusChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Is RSA Lagacy/AVC Checked ? :"
+			If dt.Rows(0).Item("isLegAVCChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isLegAVCChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Is DOB Comfirmed ? :"
+			If dt.Rows(0).Item("isDOBChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isDOBChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Are Names Verified ? :"
+			If dt.Rows(0).Item("isNamesChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isNamesChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Are Exit Docs Verified ? :"
+			If dt.Rows(0).Item("isExitDocChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isExitDocChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Is Data Entry Verified ? :"
+			If dt.Rows(0).Item("isDataEntryChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isDataEntryChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Is Correct Docs Uploaded ? :"
+			If dt.Rows(0).Item("isValidDocChecked").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CInt(dt.Rows(0).Item("isValidDocChecked").ToString) = 1 Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+
+			ApplicationProperties.Add(ApplicationProperty)
+
+
+
+
+
 			Return ApplicationProperties
 
 
 		Catch ex As Exception
+			MsgBox("" & ex.Message)
 
 		End Try
 
@@ -8909,7 +9018,7 @@ Public Class Core
 
 	End Function
 
-	Public Function PMgetApplicationPreference() As DataTable
+	Public Function PMgetCheckList(TypeID As Integer) As DataTable
 		Dim myPCon As New SqlClient.SqlConnection
 		Dim myComm As New SqlClient.SqlCommand
 		Dim daUser As New SqlClient.SqlDataAdapter
@@ -8920,6 +9029,39 @@ Public Class Core
 		Dim mycon As New SqlClient.SqlConnection
 		mycon = db.getConnection("PaymentModule")
 
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select intErrorID,txtDescription from tblReturnErrorTypes where intAppTypeID = '" & TypeID & "'", mycon)
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "CheckList")
+			dtUser = dsUser.Tables("CheckList")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch Ex As Exception
+			MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+
+
+	Public Function PMgetApplicationPreference() As DataTable
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
 
 		Try
 
@@ -10503,7 +10645,7 @@ Public Class Core
 
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select replace(txtfullname,'|','') Name,isnull(numApplicationAmount,0.00) ApplicationAMount,*,(select txtDescription  from dbo.tblApplicationType where pkiAppTypeId = fkiAppTypeId) TypeName,(select bankName from enpowerv4..bank where BankID  = fkibankid) BankName,(select BranchName  from enpowerv4..BankBranch where BankBranchID = fkiBranchID) BranchName,(select a.dteApproval from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) ApprovalDate, (select a.dteAcknowledgment from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) AcknowledgmentDate,(select FullName from tblUsers where UserName = c.txtCreatedBy) CreatedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Processing' and txtOldValue = 'Documentation' order by dteChanged desc) ReviewedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Confirmation' and txtOldValue = 'Processing' order by dteChanged desc) ProcessedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Send To Pencom' and txtOldValue = 'Confirmation' order by dteChanged desc) ConfirmedBy,txtControlCheckedBy from tblMemberApplication c where txtApplicationCode = @txtApplicationCode", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select replace(txtfullname,'|','') Name,isnull(numApplicationAmount,0.00) ApplicationAMount,*,(select txtDescription  from dbo.tblApplicationType where pkiAppTypeId = fkiAppTypeId) TypeName,(select bankName from enpowerv4..bank where BankID  = fkibankid) BankName,(select BranchName  from enpowerv4..BankBranch where BankBranchID = fkiBranchID) BranchName,(select a.dteApproval from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) ApprovalDate, (select a.dteAcknowledgment from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) AcknowledgmentDate,(select FullName from tblUsers where UserName = c.txtCreatedBy) CreatedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Processing' and txtOldValue = 'Documentation' order by dteChanged desc) ReviewedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Confirmation' and txtOldValue = 'Processing' order by dteChanged desc) ProcessedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Send To Pencom' and txtOldValue = 'Confirmation' order by dteChanged desc) ConfirmedBy,txtControlCheckedBy,isFundingStatusChecked,isLegAVCChecked,isDOBChecked,isNamesChecked,isExitDocChecked,isDataEntryChecked,isValidDocChecked from tblMemberApplication c where txtApplicationCode = @txtApplicationCode", mycon)
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
 			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtApplicationCode", _

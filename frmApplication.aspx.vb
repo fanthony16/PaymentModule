@@ -1236,8 +1236,8 @@ Partial Class frmApplication
 	Protected Sub btnFind_Click(sender As Object, e As EventArgs) Handles btnFind.Click
 		Try
 
-			mpCheckList.Show()
-			Exit Sub
+			'mpCheckList.Show()
+			'Exit Sub
 
 			'this is enforcing that the cut-off date is supplied when the check button is selected
 			'If chkCutOff.Checked = True And Me.txtCutOffDate.Text = "" Then
@@ -1957,14 +1957,6 @@ Partial Class frmApplication
 
 
 
-		If IsNothing(ViewState("CheckListChecked")) = False And CBool(ViewState("CheckListChecked")) = False Then
-			Me.mpCheckList.Show()
-			Exit Sub
-		Else
-		End If
-
-
-
 		If years < 50 And Me.chkOverrideAgeBarrier.Checked = True And Me.txtOtherComments.Text = "" Then
 
 			lblError.Text = "Please Enter Comment For Age Barrier Overriden"
@@ -2068,6 +2060,14 @@ Partial Class frmApplication
 			Exit Sub
 		End If
 
+
+		If IsNothing(ViewState("CheckListChecked")) = True Then '' And CBool(ViewState("CheckListChecked")) = False Then
+			Me.mpCheckList.Show()
+			Exit Sub
+		Else
+		End If
+
+
 		Dim appDetail As New ApplicationDetail, NextAppID As Integer, ApplicationCode As String, FileNumber As String, sector As String, myID As Integer
 		Dim appDocDetails As New List(Of ApplicationDocumentDetail), appAdhocDocDetails As New List(Of AdhocDocuments), appCheckList As New ApplicationCheckList
 
@@ -2106,6 +2106,8 @@ Partial Class frmApplication
 			'generating application code
 			ApplicationCode = cr.PMgetNextSPLogID(CInt(typeID), "A")
 
+
+
 			appCheckList.ApplicationCode = ApplicationCode
 			appCheckList.DataEntryChecked = 1
 			appCheckList.ExitDocChecked = 1
@@ -2113,13 +2115,10 @@ Partial Class frmApplication
 			appCheckList.LegAVCChecked = 1
 			appCheckList.NamesChecked = 1
 			appCheckList.ValidDocChecked = 1
+			appCheckList.DOBChecked = 1
 
 
-			'If IsNothing(ViewState("CheckListChecked")) = False And CBool(ViewState("CheckListChecked")) = False Then
-			'	Me.mpCheckList.Show()
-			'	Exit Sub
-			'Else
-			'End If
+			
 
 
 			If chkOverrideAgeBarrier.Checked = True Then
@@ -2653,7 +2652,7 @@ Partial Class frmApplication
 			Try
 				If Not IsNothing(Session("user")) = True Then
 
-					boolSubmitStatus = cr.PMSubmitApplication(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"))
+					boolSubmitStatus = cr.PMSubmitApplication(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"), appCheckList)
 
 					If boolSubmitStatus = True Then
 						'deleting possible duplicate document created
@@ -3432,6 +3431,7 @@ Partial Class frmApplication
 	End Sub
 
 	Protected Sub btnCheckOkay_Click(sender As Object, e As EventArgs) Handles btnCheckOkay.Click
+
 		If chkDataEntry.Checked = False Then
 			Me.mpCheckList.Show()
 		Else

@@ -1974,6 +1974,40 @@ Public Class Core
 	End Function
 
 
+	Public Function PMgetCheckList(errType As Integer) As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+		Dim mycon As New SqlClient.SqlConnection
+
+		Try
+			mycon = db.getConnection("PaymentModule")
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select intErrorID,txtDescription from tblReturnErrorTypes where intAppTypeID = @intAppTypeID", mycon)
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@intAppTypeID", SqlDbType.Int))
+			MyDataAdapter.SelectCommand.Parameters("@intAppTypeID").Value = errType
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "tblReturnErrorTypes")
+			dtUser = dsUser.Tables("tblReturnErrorTypes")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch ex As Exception
+
+		End Try
+		Return Nothing
+
+
+
+	End Function
 
 
 
@@ -3841,8 +3875,6 @@ Public Class Core
 
 	End Function
 
-
-
 	'inserting avc details temporarily for internal confirmation and approval before sending to Pencom
 	Public Sub PMInsertTempRMASRecord(avD As AVCDetails)
 
@@ -4386,11 +4418,6 @@ Public Class Core
 	End Sub
 
 
-
-
-
-
-
 	Public Function PMGetNewPensionEntrants(date1 As Date, date2 As Date) As DataTable
 
 		Dim db As New DbConnection
@@ -4474,8 +4501,6 @@ Public Class Core
 		
 
 	End Function
-
-
 
 	Public Function PMGetAVCDetails(txtPIN As String) As DataTable
 
@@ -4754,8 +4779,6 @@ Public Class Core
 		End Try
 
 	End Sub
-
-
 	'exporting payment approval into enpower for further processing
 	Public Sub PMInsertEnpowerPaymentTemp(lstApprovalExport As List(Of PencomApprovalExport))
 

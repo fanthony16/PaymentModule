@@ -2530,7 +2530,7 @@
           <div class ="bodyMainDiv" style="height:200px; width: 100%" >
           <div id="Div38" style ="padding-left :20px;"><h2><span>Application Check List</span></h2></div>
           
-          <div id="Div39" class ="SubbodyMainDiv" style="height:200px;">
+          <div id="Div39" class ="SubbodyMainDiv" style="height:auto;">
 
                <div id="dvFundingStatus" class ="dvBoxRows" style="margin-top : 2px;">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
@@ -2634,9 +2634,9 @@
 
                     <div style ="text-align :left ; padding-left : 250px;">
 
-                         <asp:Button ID="btnCheckAll" runat="server" Text="Check All" /> 
-                         <asp:Button ID="btnCheckOkay" runat="server" Text="Ok" /> 
-                         <asp:Button ID="btnCancelCheck" runat="server" Text="Cancel" />                        
+                         <asp:Button ID="btnCheckAll" runat="server" Text="Check All" CausesValidation ="true" ValidationGroup ="CheckList"  /> 
+                         <asp:Button ID="btnCheckOkay" runat="server" Text="Ok" CausesValidation ="true" ValidationGroup ="CheckList"  /> 
+                         <asp:Button ID="btnCancelCheck" runat="server" Text="Cancel"   />                        
                           
                          
                     </div>

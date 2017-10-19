@@ -1025,8 +1025,8 @@ Partial Class frmApplicationUnFundedList
 		Dim cr As New Core
 
 		If Not IsNothing(Session("user")) = True Then
-
-			cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1)
+			'the first 1 indicate pre-approval comment while the  second 1 indicate a default checklist code
+			cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, 1)
 			txtApplicationComment.Text = ""
 			refreshCommentList(txtApplicationID.Text)
 

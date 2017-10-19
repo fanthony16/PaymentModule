@@ -840,8 +840,9 @@ Partial Class frmApprovalControlVerified
           'cr.PMUpdateApplicationControlCheck(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, "o-taiwo", 0, "POST")
 
 
-          Dim cr As New Core
-		cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 2)
+		Dim cr As New Core
+		'the first 2 indicate post-approval comment while the  second 1 indicate a default checklist code
+		cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 2, 1)
           txtApplicationComment.Text = ""
           refreshCommentList(txtApplicationID.Text)
           Me.mpAppComments.Show()

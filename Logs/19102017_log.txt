@@ -1,0 +1,12 @@
+﻿19/10/2017 07:19:53 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+19/10/2017 07:19:53 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+19/10/2017 07:34:16 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+19/10/2017 07:34:16 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+19/10/2017 07:39:11 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+19/10/2017 07:39:11 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+19/10/2017 07:42:38 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+19/10/2017 07:42:38 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+19/10/2017 08:00:54 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+19/10/2017 08:00:54 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+19/10/2017 08:12:50 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+19/10/2017 08:12:50 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification

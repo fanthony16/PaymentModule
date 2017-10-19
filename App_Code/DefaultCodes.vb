@@ -2633,6 +2633,7 @@ Public Class ApplicationCheckList
 	Dim txtApplicationCode As String
 	Dim isFundingStatusChecked As Integer
 	Dim isLegAVCChecked As Integer
+	Dim isDOBChecked As Integer
 
 	Dim isNamesChecked As Integer
 	Dim isExitDocChecked As Integer
@@ -2640,11 +2641,20 @@ Public Class ApplicationCheckList
 
 	Dim isValidDocChecked As Integer
 
-	Property ApplicationCode As Integer
+	Property DOBChecked As Integer
+		Get
+			Return isDOBChecked
+		End Get
+		Set(ByVal value As Integer)
+			isDOBChecked = value
+		End Set
+	End Property
+
+	Property ApplicationCode As String
 		Get
 			Return txtApplicationCode
 		End Get
-		Set(ByVal value As Integer)
+		Set(ByVal value As String)
 			txtApplicationCode = value
 		End Set
 	End Property
