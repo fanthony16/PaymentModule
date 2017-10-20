@@ -111,7 +111,7 @@ Partial Class frmApplicationList
                          dtusers = Session("userDetails")
                          getUserAccessMenu(Session("user"))
 					getApprovalTypes()
-					getCheckLists()
+					'getCheckLists()
                          PopulateApplicationStatus()
                          getApplicationForDocumentation(0)
                          getApplicationList(CInt(Context.Request.QueryString("ApplicationID")))
@@ -133,7 +133,7 @@ Partial Class frmApplicationList
 					dtusers = Session("userDetails")
 					getUserAccessMenu(Session("user"))
 					getApprovalTypes()
-					getCheckLists()
+					'getCheckLists()
 					PopulateApplicationStatus()
 					getApplicationForDocumentation(0)
 
@@ -432,18 +432,24 @@ Partial Class frmApplicationList
 
      End Function
 
-	Protected Sub getCheckLists()
+	Protected Sub getCheckLists(AppTypeID As Integer)
 
 		Dim i As Integer = 0, cr As New Core, dt As New DataTable
-		dt = cr.PMgetCheckList(1)
-		MsgBox("" & dt.Rows.Count)
+
+		If AppTypeID = 5 Then
+			dt = cr.PMgetCheckList(AppTypeID)
+		Else
+			dt = cr.PMgetCheckList(1)
+		End If
+
+		'MsgBox("" & dt.Rows.Count)
 		Me.cbErrorCheckList.DataSource = dt
 		cbErrorCheckList.DataValueField = "intErrorID"
 		cbErrorCheckList.DataTextField = "txtDescription"
 
 		cbErrorCheckList.DataBind()
 
-		
+
 	End Sub
 
      Protected Sub getApprovalTypes()
@@ -576,17 +582,19 @@ Partial Class frmApplicationList
 			'cr.PMLocKRecord(row.Cells(2).Text.ToString(), Session("user"))
 
 
-
 			imgPassport.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 1, Server.MapPath("~/Logs"))
 			imgSignature.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 2, Server.MapPath("~/Logs"))
 
 
 			dt = cr.PMgetApplicationByCode(row.Cells(2).Text.ToString())
 
-          'getting submitted documents per application 
-          ' dtDocuments = cr.PMgetSubmittedDocument(row.Cells(4).Text.ToString(), CInt(row.Cells(2).Text.ToString().Split("-")(1)))
-          dtDocuments = cr.PMgetSubmittedDocument(row.Cells(4).Text.ToString(), CStr(row.Cells(2).Text.ToString()))
+			getCheckLists(dt.Rows(0).Item("fkiAppTypeId"))
 
+			'fkiAppTypeId
+          'getting submitted documents per application 
+			'dtDocuments = cr.PMgetSubmittedDocument(row.Cells(4).Text.ToString(), CInt(row.Cells(2).Text.ToString().Split("-")(1)))
+
+          dtDocuments = cr.PMgetSubmittedDocument(row.Cells(4).Text.ToString(), CStr(row.Cells(2).Text.ToString()))
           ViewState("ApplicationCode") = row.Cells(2).Text.ToString
           ViewState("PIN") = row.Cells(4).Text.ToString
 
@@ -1071,7 +1079,7 @@ Partial Class frmApplicationList
           Dim cr As New Core, j As Integer, dt As DataTable
           dt = cr.PMgetApplicationComment(appCode, "PRE")
 		lstComments.Items.Clear()
-		MsgBox("" & dt.Rows(0).Item(3).ToString)
+
           Do While j < dt.Rows.Count
 
 			lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString & " (" & dt.Rows(j).Item(3).ToString & " )")

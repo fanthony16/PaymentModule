@@ -2715,6 +2715,133 @@ Public Class ApplicationCheckList
 
 End Class
 
+
+Public Class ApplicationCheckListDOB
+	Dim txtApplicationCode As String
+
+	Dim isLOAAffidavitChecked As Integer
+	Dim isLOANumbersChecked As Integer
+	Dim isLOAIntroLetter As Integer
+	Dim isLOAEmployerIntroLetter As Integer
+	Dim isLOASignatories As Integer
+	Dim isPOA As Integer
+	Dim isMinorBirthCert As Integer
+	Dim isNOKMOIs As Integer
+	Dim isMOIDocs As Integer
+	Dim isNamesDOB As Integer
+	Dim isDODName As Integer
+
+	Property LOAAffidavitChecked As Integer
+		Get
+			Return isLOAAffidavitChecked
+		End Get
+		Set(ByVal value As Integer)
+			isLOAAffidavitChecked = value
+		End Set
+	End Property
+
+	Property ApplicationCode As String
+		Get
+			Return txtApplicationCode
+		End Get
+		Set(ByVal value As String)
+			txtApplicationCode = value
+		End Set
+	End Property
+
+	Property LOANumbersChecked As Integer
+		Get
+			Return isLOANumbersChecked
+		End Get
+		Set(ByVal value As Integer)
+			isLOANumbersChecked = value
+		End Set
+	End Property
+
+	Property LOAIntroLetter As Integer
+		Get
+			Return isLOAIntroLetter
+		End Get
+		Set(ByVal value As Integer)
+			isLOAIntroLetter = value
+		End Set
+	End Property
+
+	Property LOAEmployerIntroLetter As Integer
+		Get
+			Return isLOAEmployerIntroLetter
+		End Get
+		Set(ByVal value As Integer)
+			isLOAEmployerIntroLetter = value
+		End Set
+	End Property
+
+	Property LOASignatories As Integer
+		Get
+			Return isLOASignatories
+		End Get
+		Set(ByVal value As Integer)
+			isLOASignatories = value
+		End Set
+	End Property
+
+	Property POA As Integer
+		Get
+			Return isPOA
+		End Get
+		Set(ByVal value As Integer)
+			isPOA = value
+		End Set
+	End Property
+
+	Property MinorBirthCert As Integer
+		Get
+			Return isMinorBirthCert
+		End Get
+		Set(ByVal value As Integer)
+			isMinorBirthCert = value
+		End Set
+	End Property
+
+	Property NOKMOIs As Integer
+		Get
+			Return isNOKMOIs
+		End Get
+		Set(ByVal value As Integer)
+			isNOKMOIs = value
+		End Set
+	End Property
+
+	Property MOIDocs As Integer
+		Get
+			Return isMOIDocs
+		End Get
+		Set(ByVal value As Integer)
+			isMOIDocs = value
+		End Set
+	End Property
+
+	Property NamesDOB As Integer
+		Get
+			Return isNamesDOB
+		End Get
+		Set(ByVal value As Integer)
+			isNamesDOB = value
+		End Set
+	End Property
+
+	Property DODName As Integer
+		Get
+			Return isDODName
+		End Get
+		Set(ByVal value As Integer)
+			isDODName = value
+		End Set
+	End Property
+
+End Class
+
+
 Public Class ApplicationDocumentDetail
 
      Dim fkiDocumentTypeID As Integer

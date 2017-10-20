@@ -1957,7 +1957,7 @@ Public Class Core
 
 	End Function
 
-	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList) As Boolean
+	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList, AppCheckListDBA As ApplicationCheckListDOB) As Boolean
 
 
 
@@ -2010,12 +2010,23 @@ Public Class Core
 
 			''''''''''''''''''''updating the checkList for the application''''''''''''''''''''''''''
 
+			If AppDetail.AppTypeId = 5 Then
+			
 
-			sqlRef = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
+				sqlRef = "update tblMemberApplication set isLOAAffidavitChecked = '" & AppCheckListDBA.LOAAffidavitChecked & "', isLOANumbersChecked = '" & AppCheckListDBA.LOANumbersChecked & "',isLOAIntroLetter = '" & AppCheckListDBA.LOAIntroLetter & "',isLOAEmployerIntroLetter = '" & AppCheckListDBA.LOAEmployerIntroLetter & "',isLOASignatories = '" & AppCheckListDBA.LOASignatories & "',isPOA = '" & AppCheckListDBA.POA & "',isMinorBirthCert = '" & AppCheckListDBA.MinorBirthCert & "',isNOKMOIs = '" & AppCheckListDBA.NOKMOIs & "',isMOIDocs = '" & AppCheckListDBA.MOIDocs & "',isNamesDOB = '" & AppCheckListDBA.NamesDOB & "',isDODName = '" & AppCheckListDBA.NamesDOB & "' where txtapplicationCode = '" & AppCheckListDBA.ApplicationCode & "'"
 			myComm.CommandText = sqlRef
 			command.CommandType = CommandType.Text
 			myComm.ExecuteNonQuery()
 
+			Else
+
+				sqlRef = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
+				myComm.CommandText = sqlRef
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+
+			End If
 
 
 
