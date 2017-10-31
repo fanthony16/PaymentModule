@@ -2403,6 +2403,326 @@
 
 
 
+                <asp:Button id="btnPopupCheckList" runat="server" style="display:none" />
+                    <asp:ModalPopupExtender ID="mpCheckList" runat="server" PopupControlID="pnlCheckList" TargetControlID="btnPopupCheckList" CancelControlID="btnCancelCheck" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
+     <asp:Panel ID="pnlCheckList" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="300px">
+
+          <div class ="bodyMainDiv" style="height:300px; width: 100%" >
+          <div id="Div38" style ="padding-left :20px;"><h2><span>Application Check List</span></h2></div>
+          
+          <div id="Div39" class ="SubbodyMainDiv" style="height:auto;">
+
+               <div id="dvFundingStatus" class ="dvBoxRows" style="margin-top : 2px;">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 1 :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkFundingStatus" Text ="Verify funding status with DOR" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvLegAVC" class ="dvBoxRows" style="margin-top : 2px;">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 2 :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkLegAVC" Text ="Verify Legacy/AVC on RSA" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvCheckDOB" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 3 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkDOB" Text ="D.O.B  Verified with documents and database" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvNames" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 4 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkNames" Text ="Names Verified with database and all documents" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvExitDoc" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 5 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkExitDoc" Text ="Validate exit document with Employer details on database" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvDataEntry" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 6 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkDataEntry" Text ="Data entry verified" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvValidDoc" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 7 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkValidDoc" Text ="Complete and valid document upload" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="Div40" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <%--<span style ="font-size : medium;">Check 5 :</span>--%>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:Button ID="btnCheckAll" runat="server" Text="Check All" CausesValidation ="true" ValidationGroup ="CheckList"  /> 
+                         <asp:Button ID="btnCheckOkay" runat="server" Text="Ok" CausesValidation ="true" ValidationGroup ="CheckList"  /> 
+                         <asp:Button ID="btnCancelCheck" runat="server" Text="Cancel"   />                        
+                          
+                         
+                    </div>
+                    
+               </div>
+
+          </div>
+
+     </div>
+          <br />
+          <%--<div><asp:Button ID="btnCancelCheck" runat="server" Text="Cancel" /></div>--%>
+          
+    
+    </asp:Panel>
+
+               <asp:Button id="btnPopupCheckListDBA" runat="server" style="display:none" />
+               <asp:ModalPopupExtender ID="mpCheckListDBA" runat="server" PopupControlID="pnlCheckListDBA" TargetControlID="btnPopupCheckListDBA" CancelControlID="btnCancelCheckDBA" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
+     <asp:Panel ID="pnlCheckListDBA" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="200px">
+
+          <div class ="bodyMainDiv" style="height:450px; width: 100%" >
+          <div id="Div42" style ="padding-left :20px;"><h2><span>Application Check List (Death Benefit)</span></h2></div>
+          
+          <div id="Div43" class ="SubbodyMainDiv" style="height:auto;">
+
+               <div id="dvLOAAffidavit" class ="dvBoxRows" style="margin-top : 2px;">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 1 :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkLOAAffidavit" Text ="Verify LOA, POA and Affidavit verification" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvLOANumbers" class ="dvBoxRows" style="margin-top : 2px;">
+
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 2 :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkLOANumbers" Text ="Verify number of Administrators on LOA 1 0r 2 (or more)" runat="server" />              
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvLOAIntroLetter" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 3 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkLOAIntroLetter" Text ="Verify receipt of letter of introduction for 1 Administrator on LOA" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvLOAEmployerIntroLetter" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 4 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkLOAEmployerIntroLetter" Text ="Check verified letter of introduction with employer for 1 administrator (mandatory for 1 administrator on LOA)" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvLOASignatories" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+
+                         <span style ="font-size : medium;">Check 5 :</span>
+
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkLOASignatories" Text ="Verify that all administrators on LOA are signatories to Estate account" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvPOA" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 6 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkPOA" Text ="Check for POA where not all administrators are not signatories to Estate account" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvMinorBirthCert" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 7 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkMinorBirthCert" Text ="Check for Birth cert for administrator that is a minor " runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvNOKMOIs" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 8 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkNOKMOIs" Text ="Check that all administrators and NOK have MOIs obtained before Date of death " runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvMOIDocs" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 9 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkMOIDocs" Text ="Check that supporting documents are provided for all MOIs received after date of death" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvNamesDOB" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 10 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkNamesDOB" Text ="Check that names tally across all documents" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="dvDODName" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Check 11 :</span>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:CheckBox ID="chkDODName" Text ="Compare date of death and name between death certificate and LOA" runat="server" />                        
+                         
+                    </div>
+                    
+               </div>
+
+               <div id="Div53" class ="dvBoxRows" style="margin-top : 2px;">
+                    
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <%--<span style ="font-size : medium;">Check 5 :</span>--%>
+                    </div>
+
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:Button ID="btnCheckAllDBA" runat="server" Text="Check All" CausesValidation ="true" ValidationGroup ="CheckListDBA"  /> 
+                         <asp:Button ID="btnCheckOkayDBA" runat="server" Text="Ok" CausesValidation ="true" ValidationGroup ="CheckListDBA"  /> 
+                         <asp:Button ID="btnCancelCheckDBA" runat="server" Text="Cancel"   />                        
+                          
+                         
+                    </div>
+                    
+               </div>
+
+          </div>
+
+     </div>
+          <br />
+          <%--<div><asp:Button ID="btnCancelCheck" runat="server" Text="Cancel" /></div>--%>
+          
+    
+    </asp:Panel>
+
+
+
+
 
      </ContentTemplate>
      </asp:UpdatePanel>

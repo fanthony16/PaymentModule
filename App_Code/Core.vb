@@ -1108,7 +1108,7 @@ Public Class Core
 	End Sub
 
 
-	Public Sub PMUpdateApplication(AppDetail As ApplicationDetail, AppDocNew As List(Of ApplicationDocumentDetail), AppDocOLD As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String)
+	Public Sub PMUpdateApplication(AppDetail As ApplicationDetail, AppDocNew As List(Of ApplicationDocumentDetail), AppDocOLD As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, AppCheckList As ApplicationCheckList, AppCheckListDBA As ApplicationCheckListDOB)
 
 		Dim db As New DbConnection
 		Dim mycon As New SqlClient.SqlConnection
@@ -1121,41 +1121,44 @@ Public Class Core
 
 		Try
 
-		
 
-		If AppDetail.DocCompleted = 1 Then
 
-			If AppDetail.IsRetirement = True Then
+			If AppDetail.DocCompleted = 1 Then
 
-				sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',dteDocumentCompleted = '" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd") & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDOR = '" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "',IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "',numNSITFInitialAmountPaid ='" & AppDetail.NSITFInitialAmountPaid & "',numNSITFRecievedToRSA ='" & AppDetail.NSITFRecievedToRSA & "', numNSITFRequestedToRSA = '" & AppDetail.NSITFRequestedToRSA & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
+				If AppDetail.IsRetirement = True Then
 
-			Else
+					sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',dteDocumentCompleted = '" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd") & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDOR = '" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "',IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "',numNSITFInitialAmountPaid ='" & AppDetail.NSITFInitialAmountPaid & "',numNSITFRecievedToRSA ='" & AppDetail.NSITFRecievedToRSA & "', numNSITFRequestedToRSA = '" & AppDetail.NSITFRequestedToRSA & "', IsBankDetailsConfirmed = '" & AppDetail.IsBankDetailsConfirmed & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
 
-				sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',dteDocumentCompleted = '" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd") & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDisengagement = '" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "' ,IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "', numNSITFInitialAmountPaid ='" & AppDetail.NSITFInitialAmountPaid & "',numNSITFRecievedToRSA ='" & AppDetail.NSITFRecievedToRSA & "', numNSITFRequestedToRSA = '" & AppDetail.NSITFRequestedToRSA & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
+					'IsBankDetailsConfirmed()  '" & AppDetail.IsBankDetailsConfirmed & "'
+
+				Else
+
+					sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',dteDocumentCompleted = '" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd") & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDisengagement = '" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "' ,IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "', numNSITFInitialAmountPaid ='" & AppDetail.NSITFInitialAmountPaid & "',numNSITFRecievedToRSA ='" & AppDetail.NSITFRecievedToRSA & "', numNSITFRequestedToRSA = '" & AppDetail.NSITFRequestedToRSA & "', IsBankDetailsConfirmed = '" & AppDetail.IsBankDetailsConfirmed & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
+
+
+				End If
+
+			ElseIf AppDetail.DocCompleted = 0 Then
+
+				If AppDetail.IsRetirement = True Then
+
+					sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDOR = '" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "' ,IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "',IsBankDetailsConfirmed = '" & AppDetail.IsBankDetailsConfirmed & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
+
+				Else
+
+					sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDisengagement = '" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "' ,IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "',IsBankDetailsConfirmed = '" & AppDetail.IsBankDetailsConfirmed & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
+
+				End If
 
 
 			End If
-
-		ElseIf AppDetail.DocCompleted = 0 Then
-
-			If AppDetail.IsRetirement = True Then
-
-				sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDOR = '" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "' ,IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
-
-			Else
-
-				sql1 = "update tblMemberApplication set fkiMemberID = " & AppDetail.MemberID & ",fkiAppTypeId = '" & AppDetail.AppTypeId & "',txtSector ='" & AppDetail.Sector & "', dteApplicationDate = '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "',txtApplicationState = '" & AppDetail.ApplicationState & "',txtApplicationOffice = '" & AppDetail.ApplicationOffice & "',txtAccountName = '" & AppDetail.AccountName & "',txtAccountNo = '" & AppDetail.AccountNo & "', txtBVN = '" & AppDetail.BVN & "',fkiBankID = '" & AppDetail.BankID & "',fkiBranchID = '" & AppDetail.BranchID & "',txtComment ='" & AppDetail.Comment & "', txtStatus = '" & AppDetail.Status & "',IsDocCompleted = '" & AppDetail.DocCompleted & "',txtCommentGroup = '" & AppDetail.CommentGroup & "',fkiEmployerID = '" & AppDetail.EmployerID & "',numRSABalance = '" & AppDetail.RSABalance & "',dteDisengagement = '" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "',txtSex = '" & AppDetail.Sex & "',txtReason = '" & AppDetail.Reason & "', txtDepartment = '" & AppDetail.Department & "', txtDesignation = '" & AppDetail.Designation & "',txtPIN = '" & AppDetail.PIN & "',txtFullName = '" & AppDetail.FullName & "', txtEmployerCode = '" & AppDetail.EmployerCode & "', dteDOB = '" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "',txtEmployerName = '" & AppDetail.EmployerName.Replace("'", "''") & "', txtFundStatus = '" & AppDetail.FundStatus & "' ,IsSignatureConfirmed = '" & AppDetail.isSignatureConfirmed & "',IsPassportConfirmed = '" & AppDetail.IsPassportConfirmed & "' where txtApplicationCode = '" & AppDetail.ApplicationID & "'"
-
-			End If
-
-
-		End If
 
 			myComm.CommandText = sql1
 			myComm.ExecuteNonQuery()
 
 
 			'''''''''''''''''''''''''''''''inserting ARL Acknowledgment'''''''''''''''''''''''''''''''''''
+
 			If AppDetail.IsARLActRecieved = True Then
 
 				myComm.CommandText = "insert into tblARLAcknowledgment(txtApplicationCode,dteAcknowledgment) select '" & AppDetail.ApplicationID & "',GETDATE() where (select count(*) from tblARLAcknowledgment where txtApplicationCode =  '" & AppDetail.ApplicationID & "' ) = 0"
@@ -1165,6 +1168,35 @@ Public Class Core
 			Else
 
 			End If
+			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+			''''''''''''''''''''updating the checkList for the application''''''''''''''''''''''''''
+
+			If AppDetail.AppTypeId = 5 Then
+
+
+				myComm.CommandText = "update tblMemberApplication set isLOAAffidavitChecked = '" & AppCheckListDBA.LOAAffidavitChecked & "', isLOANumbersChecked = '" & AppCheckListDBA.LOANumbersChecked & "',isLOAIntroLetter = '" & AppCheckListDBA.LOAIntroLetter & "',isLOAEmployerIntroLetter = '" & AppCheckListDBA.LOAEmployerIntroLetter & "',isLOASignatories = '" & AppCheckListDBA.LOASignatories & "',isPOA = '" & AppCheckListDBA.POA & "',isMinorBirthCert = '" & AppCheckListDBA.MinorBirthCert & "',isNOKMOIs = '" & AppCheckListDBA.NOKMOIs & "',isMOIDocs = '" & AppCheckListDBA.MOIDocs & "',isNamesDOB = '" & AppCheckListDBA.NamesDOB & "',isDODName = '" & AppCheckListDBA.NamesDOB & "' where txtapplicationCode = '" & AppCheckListDBA.ApplicationCode & "'"
+				'myComm.CommandText = sqlRef
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+			Else
+
+				myComm.CommandText = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
+				'	myComm.CommandText = sqlRef
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+
+			End If
+
+
+
+			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
 
 
 			'''''''''''''''dms additions and connecting to dms server'''''''''''''''''''''''
@@ -1960,7 +1992,6 @@ Public Class Core
 	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList, AppCheckListDBA As ApplicationCheckListDOB) As Boolean
 
 
-
 		Dim db As New DbConnection
 		Dim mycon As New SqlClient.SqlConnection
 		mycon = db.getConnection("PaymentModule")
@@ -1974,22 +2005,24 @@ Public Class Core
 
 				If AppDetail.IsRetirement = True Then
 
-					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtDepartment,txtDesignation,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "')"
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtDepartment,txtDesignation,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
+
+
 
 				Else
 
-					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,txtSex,txtReason,txtDepartment,txtDesignation,dteDisengagement,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "', '" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "')"
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,txtSex,txtReason,txtDepartment,txtDesignation,dteDisengagement,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "', '" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
 
 				End If
 
 			ElseIf AppDetail.DocCompleted = 0 Then
 
 				If AppDetail.IsRetirement = True Then
-					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "')"
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
 
 				Else
 
-					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,txtSex,txtReason,txtDepartment,txtDesignation,dteDisengagement,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "')"
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,txtSex,txtReason,txtDepartment,txtDesignation,dteDisengagement,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
 
 				End If
 
@@ -2047,13 +2080,12 @@ Public Class Core
 				command.CommandType = CommandType.Text
 				myComm.ExecuteNonQuery()
 
-			Else
+			ElseIf AppDetail.IsARLActRecieved = False Then
 
-				sqlRef = "update tblMemberApplication set isARLRecieved = 1 where txtapplicationCode = '" & AppDetail.ApplicationID & "'"
-
-				myComm.CommandText = sqlRef
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+				'sqlRef = "update tblMemberApplication set isARLRecieved = 1 where txtapplicationCode = '" & AppDetail.ApplicationID & "'"
+				'myComm.CommandText = sqlRef
+				'command.CommandType = CommandType.Text
+				'myComm.ExecuteNonQuery()
 
 			End If
 			'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -6137,8 +6169,6 @@ Public Class Core
 
 	End Sub
 
-
-
 	Public Sub PMComfirmRMASSchedule(pin As String, ddate As Date, Apptype As Integer, UName As String)
 		Try
 
@@ -6573,7 +6603,6 @@ Public Class Core
 		End Try
 	End Function
 
-
 	Public Function PMgetParticipantPassport(ByVal PIN As String) As Byte()
 		Try
 			Dim conn As String = ConfigurationManager.ConnectionStrings("EnpowerV4").ConnectionString
@@ -6640,7 +6669,6 @@ Public Class Core
 		End Try
 
 	End Sub
-
 
 	Public Function PMgetRMASData(sql As String, AppType As Integer, d_ate As Date) As DataTable
 		Try
@@ -6723,7 +6751,6 @@ Public Class Core
 
 	End Function
 
-
 	Public Sub PMApplicationRollBackStatus(applicationCode As String, Status As String, UName As String)
 
 
@@ -6787,7 +6814,6 @@ Public Class Core
 			Exit Sub
 		End If
 	End Sub
-
 
 	Public Sub PMSetApplicationStatus(applicationCode As String, Status As String, UName As String)
 
@@ -6879,7 +6905,8 @@ Public Class Core
 
 			Dim ApplicationProperty As New ApplicationProperties
 			ApplicationProperty.FieldName = "Fund Type :"
-			ApplicationProperty.FieldValue = "Fund II"
+			'ApplicationProperty.FieldValue = "Fund II"
+			ApplicationProperty.FieldValue = dtPDetails.Rows(0).Item("FundType").ToString
 			ApplicationProperties.Add(ApplicationProperty)
 
 			ApplicationProperty = New ApplicationProperties
@@ -8478,10 +8505,25 @@ Public Class Core
 
 
 			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Is Funding Status Checked ? :"
-			If dt.Rows(0).Item("isFundingStatusChecked").ToString = "" Then
+			ApplicationProperty.FieldName = "Was Bank Details Confirmed ?:"
+			'ApplicationProperty.FieldValue = dt.Rows(0).Item("IsBankDetailsConfirmed").ToString
+			If dt.Rows(0).Item("IsBankDetailsConfirmed").ToString = "" Then
 				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isFundingStatusChecked").ToString) = 1 Then
+			ElseIf CBool(dt.Rows(0).Item("IsBankDetailsConfirmed")) = True Then
+				ApplicationProperty.FieldValue = True
+			Else
+				ApplicationProperty.FieldValue = False
+			End If
+			ApplicationProperties.Add(ApplicationProperty)
+
+
+
+			ApplicationProperty = New ApplicationProperties
+			ApplicationProperty.FieldName = "Was Passport Confirmed ?:"
+			'ApplicationProperty.FieldValue = dt.Rows(0).Item("IsBankDetailsConfirmed").ToString
+			If dt.Rows(0).Item("IsPassportConfirmed").ToString = "" Then
+				ApplicationProperty.FieldValue = False
+			ElseIf CBool(dt.Rows(0).Item("IsPassportConfirmed").ToString) = True Then
 				ApplicationProperty.FieldValue = True
 			Else
 				ApplicationProperty.FieldValue = False
@@ -8490,10 +8532,11 @@ Public Class Core
 
 
 			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Is RSA Lagacy/AVC Checked ? :"
-			If dt.Rows(0).Item("isLegAVCChecked").ToString = "" Then
+			ApplicationProperty.FieldName = "Was Signature Confirmed ?:"
+			'ApplicationProperty.FieldValue = dt.Rows(0).Item("IsBankDetailsConfirmed").ToString
+			If dt.Rows(0).Item("IsSignatureConfirmed").ToString = "" Then
 				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isLegAVCChecked").ToString) = 1 Then
+			ElseIf CBool(dt.Rows(0).Item("IsSignatureConfirmed").ToString) = True Then
 				ApplicationProperty.FieldValue = True
 			Else
 				ApplicationProperty.FieldValue = False
@@ -8501,64 +8544,231 @@ Public Class Core
 			ApplicationProperties.Add(ApplicationProperty)
 
 
-			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Is DOB Comfirmed ? :"
-			If dt.Rows(0).Item("isDOBChecked").ToString = "" Then
-				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isDOBChecked").ToString) = 1 Then
-				ApplicationProperty.FieldValue = True
+
+
+
+			If dt.Rows(0).Item("fkiAppTypeId") = 5 Then
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is LOA, POA and Affidavit verification checked ? :"
+				If dt.Rows(0).Item("isLOAAffidavitChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isLOAAffidavitChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is number of Administrators on LOA 1 0r 2 (or more) checked ? :"
+				If dt.Rows(0).Item("isLOANumbersChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isLOANumbersChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is receipt of letter of introduction for 1 Administrator on LOA checked ? :"
+				If dt.Rows(0).Item("isLOAIntroLetter").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isLOAIntroLetter").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is letter of introduction with employer for 1 administrator (mandatory for 1 administrator on LOA) checked ? :"
+				If dt.Rows(0).Item("isLOAEmployerIntroLetter").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isLOAEmployerIntroLetter").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Are all administrators on LOA signatories to Estate account ? :"
+				If dt.Rows(0).Item("isLOASignatories").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isLOASignatories").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Are POA checked where not all administrators are not signatories to Estate account ? :"
+				If dt.Rows(0).Item("isPOA").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isPOA").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is Birth cert for administrator that is a minor checked ? :"
+				If dt.Rows(0).Item("isMinorBirthCert").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isMinorBirthCert").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Does all administrators and NOK have MOIs obtained before Date of death ? :"
+				If dt.Rows(0).Item("isNOKMOIs").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isNOKMOIs").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Are supporting documents provided for all MOIs received after date of death ? :"
+				If dt.Rows(0).Item("isMOIDocs").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isMOIDocs").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Does names tally across all documents ? :"
+				If dt.Rows(0).Item("isNamesDOB").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isNamesDOB").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+				'-	Compare date of death and name between death certificate and LOA
+
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is date of death and name between death certificate and LOA compared ? :"
+				If dt.Rows(0).Item("isDODName").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isDODName").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
 			Else
-				ApplicationProperty.FieldValue = False
+
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is Funding Status Checked ? :"
+				If dt.Rows(0).Item("isFundingStatusChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isFundingStatusChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is RSA Lagacy/AVC Checked ? :"
+				If dt.Rows(0).Item("isLegAVCChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isLegAVCChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is DOB Comfirmed ? :"
+				If dt.Rows(0).Item("isDOBChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isDOBChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Are Names Verified ? :"
+				If dt.Rows(0).Item("isNamesChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isNamesChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Are Exit Docs Verified ? :"
+				If dt.Rows(0).Item("isExitDocChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isExitDocChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is Data Entry Verified ? :"
+				If dt.Rows(0).Item("isDataEntryChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isDataEntryChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+				ApplicationProperties.Add(ApplicationProperty)
+
+				ApplicationProperty = New ApplicationProperties
+				ApplicationProperty.FieldName = "Is Correct Docs Uploaded ? :"
+				If dt.Rows(0).Item("isValidDocChecked").ToString = "" Then
+					ApplicationProperty.FieldValue = False
+				ElseIf CBool(dt.Rows(0).Item("isValidDocChecked").ToString) = True Then
+					ApplicationProperty.FieldValue = True
+				Else
+					ApplicationProperty.FieldValue = False
+				End If
+
+				ApplicationProperties.Add(ApplicationProperty)
+
+
 			End If
-			ApplicationProperties.Add(ApplicationProperty)
-
-			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Are Names Verified ? :"
-			If dt.Rows(0).Item("isNamesChecked").ToString = "" Then
-				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isNamesChecked").ToString) = 1 Then
-				ApplicationProperty.FieldValue = True
-			Else
-				ApplicationProperty.FieldValue = False
-			End If
-			ApplicationProperties.Add(ApplicationProperty)
-
-			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Are Exit Docs Verified ? :"
-			If dt.Rows(0).Item("isExitDocChecked").ToString = "" Then
-				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isExitDocChecked").ToString) = 1 Then
-				ApplicationProperty.FieldValue = True
-			Else
-				ApplicationProperty.FieldValue = False
-			End If
-			ApplicationProperties.Add(ApplicationProperty)
-
-			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Is Data Entry Verified ? :"
-			If dt.Rows(0).Item("isDataEntryChecked").ToString = "" Then
-				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isDataEntryChecked").ToString) = 1 Then
-				ApplicationProperty.FieldValue = True
-			Else
-				ApplicationProperty.FieldValue = False
-			End If
-			ApplicationProperties.Add(ApplicationProperty)
-
-			ApplicationProperty = New ApplicationProperties
-			ApplicationProperty.FieldName = "Is Correct Docs Uploaded ? :"
-			If dt.Rows(0).Item("isValidDocChecked").ToString = "" Then
-				ApplicationProperty.FieldValue = False
-			ElseIf CInt(dt.Rows(0).Item("isValidDocChecked").ToString) = 1 Then
-				ApplicationProperty.FieldValue = True
-			Else
-				ApplicationProperty.FieldValue = False
-			End If
-
-			ApplicationProperties.Add(ApplicationProperty)
-
-
-
 
 
 			Return ApplicationProperties
@@ -9028,6 +9238,141 @@ Public Class Core
 		End Try
 
 	End Function
+
+
+	Public Function PMgetDBAInvestigationReport(AppCode As String) As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select * from tblMemberApplication a , tblDBAInvestigation b where a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = @AppCode ", mycon)
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@AppCode", _
+			    SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@AppCode").Value = AppCode
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "MemberApplication")
+			dtUser = dsUser.Tables("MemberApplication")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+
+
+	Public Sub PMSubmitDBAInvestigationReport(DBAReport As ApplicationDBAInvestigation, SubmitType As Char)
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+			If SubmitType = "U" Then
+
+				'Dim MyDataAdapter As SqlClient.SqlDataAdapter
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("update [dbo].[tblDBAInvestigation] set [txtCreatedBy] = '" & DBAReport.ApplicationCode & "',[txtNOKName]= '" & DBAReport.NOKName & "',[txtNOKAddress] = '" & DBAReport.NOKAddress & "',[txtLocation] = '" & DBAReport.Location & "',[txtDescription] = '" & DBAReport.Description & "',[txtResponderName1] = '" & DBAReport.ResponderName1 & "',[txtResponderAddress1] = '" & DBAReport.ResponderAddress1 & "',[txtResponderName2] = '" & DBAReport.ResponderName2 & "',[txtResponderAddress2] = '" & DBAReport.ResponderAddress2 & "',[txtResponderName3] = '" & DBAReport.ResponderName3 & "',[txtResponderAddress3] = '" & DBAReport.ResponderAddress3 & "' where [txtApplicationCode] = '" & DBAReport.ApplicationCode & "'", mycon)
+				'MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+				'MyDataAdapter.SelectCommand.ExecuteNonQuery()
+
+
+				Dim sql As String
+
+
+				sql = "update [dbo].[tblDBAInvestigation]  set [txtCreatedBy]= @txtCreatedBy,[txtNOKName] = @txtNOKName,[txtNOKAddress] = @txtNOKAddress,[txtLocation] = @txtLocation,[txtDescription] = @txtDescription,[txtResponderName1]= txtResponderName1,[txtResponderAddress1]= @txtResponderAddress1,[txtResponderName2] = @txtResponderName2,[txtResponderAddress2] = @txtResponderAddress2,[txtResponderName3] = @txtResponderName3,[txtResponderAddress3]=@txtResponderAddress3, dteInvestigation = @datecreation,txtPurpose = @txtPurpose,txtNOKPhone = @txtNOKPhone,txtInvestigationBy = @txtInvestigationBy where [txtApplicationCode] = @txtApplicationCode "
+
+				myComm.CommandText = sql
+				myComm.Parameters.AddWithValue("@txtApplicationCode", DBAReport.ApplicationCode)
+				myComm.Parameters.AddWithValue("@txtCreatedBy", DBAReport.CreatedBy)
+				myComm.Parameters.AddWithValue("@txtNOKName", DBAReport.NOKName)
+				myComm.Parameters.AddWithValue("@txtNOKAddress", DBAReport.NOKAddress)
+				myComm.Parameters.AddWithValue("@txtLocation", DBAReport.Location)
+				myComm.Parameters.AddWithValue("@txtDescription", DBAReport.Description)
+				myComm.Parameters.AddWithValue("@txtResponderName1", DBAReport.ResponderName1)
+				myComm.Parameters.AddWithValue("@txtResponderName2", DBAReport.ResponderName2)
+				myComm.Parameters.AddWithValue("@txtResponderName3", DBAReport.ResponderName3)
+				myComm.Parameters.AddWithValue("@txtResponderAddress1", DBAReport.ResponderAddress1)
+				myComm.Parameters.AddWithValue("@txtResponderAddress2", DBAReport.ResponderAddress2)
+				myComm.Parameters.AddWithValue("@txtResponderAddress3", DBAReport.ResponderAddress3)
+				myComm.Parameters.AddWithValue("@datecreation", Convert.ToDateTime(DBAReport.DateCreated))
+				myComm.Parameters.AddWithValue("@txtPurpose", DBAReport.Purpose)
+				myComm.Parameters.AddWithValue("@txtNOKPhone", DBAReport.NOKPhone)
+				myComm.Parameters.AddWithValue("@txtInvestigationBy", DBAReport.InvestigationBy)
+
+				myComm.Connection = mycon
+				'mycon.Open()
+				myComm.ExecuteNonQuery()
+
+
+
+			ElseIf SubmitType = "I" Then
+
+				Dim sql As String
+				sql = "INSERT INTO [dbo].[tblDBAInvestigation] ([txtApplicationCode],[txtCreatedBy],[txtNOKName],[txtNOKAddress],[txtLocation],[txtDescription],[txtResponderName1],[txtResponderAddress1],[txtResponderName2],[txtResponderAddress2],[txtResponderName3],[txtResponderAddress3],dteInvestigation,txtPurpose,txtNOKPhone,txtInvestigationBy) VALUES(@txtApplicationCode,@txtCreatedBy,@txtNOKName,@txtNOKAddress,@txtLocation,@txtDescription,@txtResponderName1,@txtResponderAddress1,@txtResponderName2,@txtResponderAddress2,@txtResponderName3,@txtResponderAddress3,@datecreation,@txtPurpose,@txtNOKPhone,@txtInvestigationBy )"
+
+				myComm.CommandText = sql
+				myComm.Parameters.AddWithValue("@txtApplicationCode", DBAReport.ApplicationCode)
+				myComm.Parameters.AddWithValue("@txtCreatedBy", DBAReport.CreatedBy)
+				myComm.Parameters.AddWithValue("@txtNOKName", DBAReport.NOKName)
+				myComm.Parameters.AddWithValue("@txtNOKAddress", DBAReport.NOKAddress)
+				myComm.Parameters.AddWithValue("@txtLocation", DBAReport.Location)
+				myComm.Parameters.AddWithValue("@txtDescription", DBAReport.Description)
+				myComm.Parameters.AddWithValue("@txtResponderName1", DBAReport.ResponderName1)
+				myComm.Parameters.AddWithValue("@txtResponderName2", DBAReport.ResponderName2)
+				myComm.Parameters.AddWithValue("@txtResponderName3", DBAReport.ResponderName3)
+				myComm.Parameters.AddWithValue("@txtResponderAddress1", DBAReport.ResponderAddress1)
+				myComm.Parameters.AddWithValue("@txtResponderAddress2", DBAReport.ResponderAddress2)
+				myComm.Parameters.AddWithValue("@txtResponderAddress3", DBAReport.ResponderAddress3)
+				myComm.Parameters.AddWithValue("@datecreation", Convert.ToDateTime(DBAReport.DateCreated))
+				myComm.Parameters.AddWithValue("@txtPurpose", DBAReport.Purpose)
+				myComm.Parameters.AddWithValue("@txtNOKPhone", DBAReport.NOKPhone)
+				myComm.Parameters.AddWithValue("@txtInvestigationBy", DBAReport.InvestigationBy)
+
+				myComm.Connection = mycon
+				'mycon.Open()
+				myComm.ExecuteNonQuery()
+
+				'DBAReport.DateCreated.ToString("yyyy-MM-dd")
+				'DateTime.Parse(date2).ToString("yyyy-MM-dd")
+
+			End If
+			mycon.Close()
+
+
+
+
+		Catch Ex As Exception
+			MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Sub
+
 
 	Public Function PMgetCheckList(TypeID As Integer) As DataTable
 		Dim myPCon As New SqlClient.SqlConnection
@@ -10656,7 +11001,7 @@ Public Class Core
 
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select replace(txtfullname,'|','') Name,isnull(numApplicationAmount,0.00) ApplicationAMount,*,(select txtDescription  from dbo.tblApplicationType where pkiAppTypeId = fkiAppTypeId) TypeName,(select bankName from enpowerv4..bank where BankID  = fkibankid) BankName,(select BranchName  from enpowerv4..BankBranch where BankBranchID = fkiBranchID) BranchName,(select a.dteApproval from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) ApprovalDate, (select a.dteAcknowledgment from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) AcknowledgmentDate,(select FullName from tblUsers where UserName = c.txtCreatedBy) CreatedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Processing' and txtOldValue = 'Documentation' order by dteChanged desc) ReviewedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Confirmation' and txtOldValue = 'Processing' order by dteChanged desc) ProcessedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Send To Pencom' and txtOldValue = 'Confirmation' order by dteChanged desc) ConfirmedBy,txtControlCheckedBy,isFundingStatusChecked,isLegAVCChecked,isDOBChecked,isNamesChecked,isExitDocChecked,isDataEntryChecked,isValidDocChecked from tblMemberApplication c where txtApplicationCode = @txtApplicationCode", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select replace(txtfullname,'|','') Name,isnull(numApplicationAmount,0.00) ApplicationAMount,*,(select txtDescription  from dbo.tblApplicationType where pkiAppTypeId = fkiAppTypeId) TypeName,(select bankName from enpowerv4..bank where BankID  = fkibankid) BankName,(select BranchName  from enpowerv4..BankBranch where BankBranchID = fkiBranchID) BranchName,(select a.dteApproval from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) ApprovalDate, (select a.dteAcknowledgment from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) AcknowledgmentDate,(select FullName from tblUsers where UserName = c.txtCreatedBy) CreatedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Processing' and txtOldValue = 'Documentation' order by dteChanged desc) ReviewedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Confirmation' and txtOldValue = 'Processing' order by dteChanged desc) ProcessedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Send To Pencom' and txtOldValue = 'Confirmation' order by dteChanged desc) ConfirmedBy,txtControlCheckedBy,isFundingStatusChecked,isLegAVCChecked,isDOBChecked,isNamesChecked,isExitDocChecked,isDataEntryChecked,isValidDocChecked,IsBankDetailsConfirmed,IsPassportConfirmed,IsSignatureConfirmed from tblMemberApplication c where txtApplicationCode = @txtApplicationCode", mycon)
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
 			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtApplicationCode", _
@@ -11503,7 +11848,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2016-12-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2016-12-31') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation from dbo.Employee a where rsapin  = @PIN", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2016-12-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2016-12-31') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation,(select fundName  from FundDefinition where FundDefinitionID = a.FundID) FundType from dbo.Employee a where rsapin  = @PIN", mycon)
 			'DateOfResignation
 			',isnull((select top 1 netAmount from payments here PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount
 

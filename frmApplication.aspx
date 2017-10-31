@@ -212,6 +212,7 @@
                         </Content>
                     </asp:AccordionPane>
 
+
                     <asp:AccordionPane ID="ContactAddress"  runat="server">
                         <Header><a href="#" class="accordionhref">Contact Address</a></Header>
                         <Content>
@@ -880,6 +881,8 @@
                             </asp:Panel>
                         </Content>
                     </asp:AccordionPane>
+
+
                     <asp:AccordionPane ID="BankDetails"  runat="server">
                         <Header><a href="#" class="accordionhref">Bank Details / Other Comments</a></Header>
                         <Content>
@@ -1035,8 +1038,7 @@
      <asp:Button id="btnPopuAVCTIN" runat="server" style="display:none" />
      <asp:Button id="btnPopupRMASDB" runat="server" style="display:none" />
      <asp:Button id="btnPopupRMASNSITF" runat="server" style="display:none" />
-     <asp:Button id="btnPopupCheckList" runat="server" style="display:none" />
-     <asp:Button id="btnPopupCheckListDBA" runat="server" style="display:none" />
+     
                
 
      <asp:ModalPopupExtender ID="mpARLDetail" runat="server" PopupControlID="pnlARL" TargetControlID="btnShowPopup" CancelControlID="btnMPMailList" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
@@ -2516,10 +2518,12 @@
     
     </asp:Panel>
 
-               <asp:ModalPopupExtender ID="mpCheckList" runat="server" PopupControlID="pnlCheckList" TargetControlID="btnPopupCheckList" CancelControlID="btnCancelCheck" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
-     <asp:Panel ID="pnlCheckList" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="200px">
 
-          <div class ="bodyMainDiv" style="height:200px; width: 100%" >
+               <asp:Button id="btnPopupCheckList" runat="server" style="display:none" />
+                    <asp:ModalPopupExtender ID="mpCheckList" runat="server" PopupControlID="pnlCheckList" TargetControlID="btnPopupCheckList" CancelControlID="btnCancelCheck" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
+     <asp:Panel ID="pnlCheckList" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="300px">
+
+          <div class ="bodyMainDiv" style="height:300px; width: 100%" >
           <div id="Div38" style ="padding-left :20px;"><h2><span>Application Check List</span></h2></div>
           
           <div id="Div39" class ="SubbodyMainDiv" style="height:auto;">
@@ -2593,7 +2597,7 @@
                <div id="dvDataEntry" class ="dvBoxRows" style="margin-top : 2px;">
                     
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
-                         <span style ="font-size : medium;">Check 5 :</span>
+                         <span style ="font-size : medium;">Check 6 :</span>
                     </div>
 
                     <div style ="text-align :left ; padding-left : 250px;">
@@ -2607,7 +2611,7 @@
                <div id="dvValidDoc" class ="dvBoxRows" style="margin-top : 2px;">
                     
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
-                         <span style ="font-size : medium;">Check 5 :</span>
+                         <span style ="font-size : medium;">Check 7 :</span>
                     </div>
 
                     <div style ="text-align :left ; padding-left : 250px;">
@@ -2644,6 +2648,7 @@
     
     </asp:Panel>
 
+               <asp:Button id="btnPopupCheckListDBA" runat="server" style="display:none" />
                <asp:ModalPopupExtender ID="mpCheckListDBA" runat="server" PopupControlID="pnlCheckListDBA" TargetControlID="btnPopupCheckListDBA" CancelControlID="btnCancelCheckDBA" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
      <asp:Panel ID="pnlCheckListDBA" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="200px">
 

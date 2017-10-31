@@ -121,7 +121,7 @@ Partial Class index
 				Dim lastSentDate As Date = CDate(dtPrefernce.Rows(0).Item("dteLastNotificationSent"))
 
 				Dim aryEmail As Array = dtPrefernce.Rows(0).Item("txtEligibilityNotificationAddresses").ToString.Split(","), i As Integer
-				'Dim aryARLEmail As Array = dtPrefernce.Rows(0).Item("txtARLNotification").ToString.Split(",")
+				Dim aryARLEmail As Array = dtPrefernce.Rows(0).Item("txtARLNotification").ToString.Split(",")
 
 				Do While i < aryEmail.Length
 					Dim emialAddy As New EmailGateway.EmailAddress
@@ -132,14 +132,15 @@ Partial Class index
 				Loop
 
 
-				'i = 0
-				'Do While i < aryARLEmail.Length
-				'	Dim emialARLAddy As New EmailGateway.EmailAddress
-				'	emialARLAddy.EmailAddress = aryARLEmail(i)
-				'	emialARLAddy.Reciever = True
-				'	emialARLAddys.Add(emialARLAddy)
-				'	i = i + 1
-				'Loop
+				'building emailAdress for ARL Applications
+				i = 0
+				Do While i < aryARLEmail.Length
+					Dim emialARLAddy As New EmailGateway.EmailAddress
+					emialARLAddy.EmailAddress = aryARLEmail(i)
+					emialARLAddy.Reciever = True
+					emialARLAddys.Add(emialARLAddy)
+					i = i + 1
+				Loop
 
 
 				Dim dt1 As DateTime = lastSentDate
@@ -184,33 +185,33 @@ Partial Class index
 					cr.PMUpdatePreference(answer)
 
 
-					'If i = dayss Then
+					If i = dayss Then
 
 
-					'	Dim dtARLNotification As New DataTable
-					'	dtARLNotification = cr.PMAgedARL(Server.MapPath("~/Logs"))
+						Dim dtARLNotification As New DataTable
+						dtARLNotification = cr.PMAgedARL(Server.MapPath("~/Logs"))
 
-					'	If dtARLNotification.Rows.Count > 0 Then
+						If dtARLNotification.Rows.Count > 0 Then
 
-					'		lstEmails = New List(Of EmailGateway.EmailAddress)
-					'		lstEmails = emialARLAddys
+							lstEmails = New List(Of EmailGateway.EmailAddress)
+							lstEmails = emialARLAddys
 
-					'		lstEmail = New EmailGateway.EmailAddress
-					'		lstEmail.EmailAddress = "o-taiwo@leadway-pensure.com"
-					'		lstEmail.Reciever = False
-					'		lstEmails.Add(lstEmail)
+							lstEmail = New EmailGateway.EmailAddress
+							lstEmail.EmailAddress = "o-taiwo@leadway-pensure.com"
+							lstEmail.Reciever = False
+							lstEmails.Add(lstEmail)
 
-					'		'building the e-mail notification to be sent to the application logger
+							'building the e-mail notification to be sent to the application logger
 
-					'		em.sendMailWithOutAttachmentAddess(mailMsgARL(dtARLNotification), "Benefit Application Aged ARL Acknowledgment Notification", lstEmails)
+							em.sendMailWithOutAttachmentAddess(mailMsgARL(dtARLNotification), "Benefit Application Aged ARL Acknowledgment Notification", lstEmails)
 
-					'	Else
+						Else
 
-					'	End If
+						End If
 
-					'Else
+					Else
 
-					'End If
+					End If
 
 
 				Loop

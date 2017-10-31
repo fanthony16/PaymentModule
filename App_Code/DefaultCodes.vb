@@ -2012,6 +2012,18 @@ Public Class ApplicationDetail
 
 	Dim dteARLAcknowledgment As Date
 	Dim blnIsARLActRecieved As Boolean
+	Dim blnIsBankDetailsConfirmed As Integer
+
+	Property IsBankDetailsConfirmed As Integer
+
+		Get
+			Return blnIsBankDetailsConfirmed
+		End Get
+		Set(ByVal value As Integer)
+			blnIsBankDetailsConfirmed = value
+		End Set
+
+	End Property
 
 	Property IsARLActRecieved As Boolean
 
@@ -2634,11 +2646,9 @@ Public Class ApplicationCheckList
 	Dim isFundingStatusChecked As Integer
 	Dim isLegAVCChecked As Integer
 	Dim isDOBChecked As Integer
-
 	Dim isNamesChecked As Integer
 	Dim isExitDocChecked As Integer
 	Dim isDataEntryChecked As Integer
-
 	Dim isValidDocChecked As Integer
 
 	Property DOBChecked As Integer
@@ -2716,9 +2726,10 @@ Public Class ApplicationCheckList
 End Class
 
 
-Public Class ApplicationCheckListDOB
-	Dim txtApplicationCode As String
 
+Public Class ApplicationCheckListDOB
+
+	Dim txtApplicationCode As String
 	Dim isLOAAffidavitChecked As Integer
 	Dim isLOANumbersChecked As Integer
 	Dim isLOAIntroLetter As Integer
@@ -2841,6 +2852,174 @@ Public Class ApplicationCheckListDOB
 
 End Class
 
+
+
+Public Class ApplicationDBAInvestigation
+
+	Dim txtApplicationCode As String
+	Dim dteCreated As Date
+	Dim txtCreatedBy As String
+	Dim txtNOKName As String
+	Dim txtNOKAddress As String
+	Dim txtNOKPhone As String
+	Dim txtLocation As String
+	Dim txtPurpose As String
+	Dim txtDescription As String
+	Dim txtResponderName1 As String
+	Dim txtResponderAddress1 As String
+	Dim txtResponderName2 As String
+	Dim txtResponderAddress2 As String
+	Dim txtResponderName3 As String
+	Dim txtResponderAddress3 As String
+	Dim txtInvestigationBy As String
+
+	Property ApplicationCode As String
+		Get
+			Return txtApplicationCode
+		End Get
+		Set(ByVal value As String)
+			txtApplicationCode = value
+		End Set
+	End Property
+
+	Property DateCreated As Date
+		Get
+			Return dteCreated
+		End Get
+		Set(ByVal value As Date)
+			dteCreated = value
+		End Set
+	End Property
+
+	Property InvestigationBy As String
+		Get
+			Return txtPurpose
+		End Get
+		Set(ByVal value As String)
+			txtPurpose = value
+		End Set
+	End Property
+
+
+	Property Purpose As String
+		Get
+			Return txtPurpose
+		End Get
+		Set(ByVal value As String)
+			txtPurpose = value
+		End Set
+	End Property
+
+
+	Property NOKPhone As String
+		Get
+			Return txtNOKPhone
+		End Get
+		Set(ByVal value As String)
+			txtNOKPhone = value
+		End Set
+	End Property
+
+	Property CreatedBy As String
+		Get
+			Return txtCreatedBy
+		End Get
+		Set(ByVal value As String)
+			txtCreatedBy = value
+		End Set
+	End Property
+
+	Property NOKName As String
+		Get
+			Return txtNOKName
+		End Get
+		Set(ByVal value As String)
+			txtNOKName = value
+		End Set
+	End Property
+
+	Property NOKAddress As String
+		Get
+			Return txtNOKAddress
+		End Get
+		Set(ByVal value As String)
+			txtNOKAddress = value
+		End Set
+	End Property
+
+	Property Location As String
+		Get
+			Return txtLocation
+		End Get
+		Set(ByVal value As String)
+			txtLocation = value
+		End Set
+	End Property
+
+	Property Description As String
+		Get
+			Return txtDescription
+		End Get
+		Set(ByVal value As String)
+			txtDescription = value
+		End Set
+	End Property
+
+	Property ResponderName1 As String
+		Get
+			Return txtResponderName1
+		End Get
+		Set(ByVal value As String)
+			txtResponderName1 = value
+		End Set
+	End Property
+
+	Property ResponderAddress1 As String
+		Get
+			Return txtResponderAddress1
+		End Get
+		Set(ByVal value As String)
+			txtResponderAddress1 = value
+		End Set
+	End Property
+
+	Property ResponderName2 As String
+		Get
+			Return txtResponderName2
+		End Get
+		Set(ByVal value As String)
+			txtResponderName2 = value
+		End Set
+	End Property
+
+	Property ResponderAddress2 As String
+		Get
+			Return txtResponderAddress2
+		End Get
+		Set(ByVal value As String)
+			txtResponderAddress2 = value
+		End Set
+	End Property
+
+	Property ResponderName3 As String
+		Get
+			Return txtResponderName3
+		End Get
+		Set(ByVal value As String)
+			txtResponderName3 = value
+		End Set
+	End Property
+
+	Property ResponderAddress3 As String
+		Get
+			Return txtResponderAddress3
+		End Get
+		Set(ByVal value As String)
+			txtResponderAddress3 = value
+		End Set
+	End Property
+
+End Class
 
 Public Class ApplicationDocumentDetail
 

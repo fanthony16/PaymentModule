@@ -1,12 +1,17 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="frmApplicationList.aspx.vb" Inherits="frmApplicationList" Theme ="Blue"%>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
+      <script type = "text/javascript">
+           function SetTarget() {
+                document.forms[0].target = "_blank";
+           }
+        </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
      <asp:ToolkitScriptManager ID="ToolkitScriptManager2" runat="server" EnablePartialRendering="true" ></asp:ToolkitScriptManager>
-     <asp:UpdatePanel ID="updFormPanel" runat="server">
-          <ContentTemplate>
+     <%--<asp:UpdatePanel ID="updFormPanel" runat="server">
+          <ContentTemplate>--%>
                
                <div class ="bodyMainDiv" >
           <div id="dvMainDvTitle" style ="padding-left :20px;"><h2><span>Benefit Application List...</span></h2></div>
@@ -25,7 +30,7 @@
                              <asp:RequiredFieldValidator ID="reqApprovalType" runat="server" ErrorMessage="*" ControlToValidate="ddApprovalType" Display="Dynamic" SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup="processing"></asp:RequiredFieldValidator>
 
                         </div>
-                        <div style ="text-align :right ; padding :5px;"><asp:Button ID="btnFind" runat="server" Text="Find" ValidationGroup="processing" /></div>
+                        <div style ="text-align :right ; padding :5px;"><asp:Button ID="btnFind" runat="server" Text="Find" ValidationGroup="processingggg" /></div>
             <asp:Panel ID="pnlMessage" runat ="server" Visible="False"><div style ="padding:5PX;"><span id="spnMessage" runat ="server" >.</span></div></asp:Panel>
             
             
@@ -95,7 +100,19 @@
                                        </asp:TemplateField>
 
 
-                                       <asp:TemplateField HeaderText="">
+                                      <asp:TemplateField HeaderText="">
+                                                                
+                                                                 <ItemTemplate>
+                                    
+                                                                      <asp:ImageButton OnClick="BtnViewInvestigationDetails_Click" ID="btnDBAInvestigation" runat ="server" ImageUrl="~/images/edit (1).png" ToolTip="View Investigation Report" OnClientClick="SetTarget();" ItemStyle-Width ="10px" />
+                                        
+                                                                  </ItemTemplate>
+                                                                   
+                                       </asp:TemplateField>
+
+
+                                      <asp:TemplateField HeaderText="">
+
                                                                   <ItemTemplate>
                                     
                                                                       <asp:ImageButton OnClick="AddViewIACComment_Click" ID="btnAddViewIACComment" runat ="server" ImageUrl="~/images/comment_bubble2.png" ToolTip="View IAC Comment(s)" OnClientClick="AddViewIACComment_Click" ItemStyle-Width ="10px" />
@@ -104,10 +121,9 @@
                                                                    
                                         </asp:TemplateField>
 
-                                        <%--<asp:BoundField DataField="ExitDate" HeaderText="Exit Date" DataFormatString="{0:d}" />--%>
+
+
                                         
-                                        <%--<asp:BoundField DataField="PIN" HeaderText="Pencom PIN" DataFormatString="{0:N}" />
-                                        <asp:BoundField DataField="ValueDate" HeaderText="Value Date" DataFormatString="{0:d}" />--%>
                   
                                  </Columns>
                     
@@ -284,7 +300,7 @@
 
 
                <asp:Button id="btnShowApplicationSummary" runat="server" style="display:none" />
-       <asp:ModalPopupExtender ID="mpApplicationSummary" runat="server" PopupControlID="pnlAppSummary" TargetControlID="btnShowApplicationSummary" CancelControlID="btnMPAppComments" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>            
+       <asp:ModalPopupExtender ID="mpApplicationSummary" runat="server" PopupControlID="pnlAppSummary" TargetControlID="btnShowApplicationSummary" CancelControlID="btnCloseApplicationSummary" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>            
                   <asp:Panel ID="pnlAppSummary" runat="server" CssClass="modalPopup" align="center" Height ="300px" style = "display:none" Width ="600px">
 
     <div id="Div8" class ="dvSideBox" style="width :98%"> 
@@ -370,7 +386,7 @@
 
 
                
-         </ContentTemplate>
-     </asp:UpdatePanel>
+<%--         </ContentTemplate>
+     </asp:UpdatePanel>--%>
 </asp:Content>
 

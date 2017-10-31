@@ -1719,6 +1719,142 @@ Partial Class frmEditApplication
           ViewState("EmployerCode") = row.Cells(3).Text.ToString
      End Sub
 
+	Protected Sub btnCheckAll_Click(sender As Object, e As EventArgs) Handles btnCheckAll.Click
+
+		Me.chkDataEntry.Checked = True
+		Me.chkLegAVC.Checked = True
+		Me.chkNames.Checked = True
+		Me.chkValidDoc.Checked = True
+		Me.chkExitDoc.Checked = True
+		chkDOB.Checked = True
+		chkFundingStatus.Checked = True
+
+		Me.mpCheckList.Show()
+
+	End Sub
+
+	Protected Sub btnCheckOkay_Click(sender As Object, e As EventArgs) Handles btnCheckOkay.Click
+
+		If chkDataEntry.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		If chkLegAVC.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		If chkNames.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		If chkValidDoc.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		If chkExitDoc.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		If chkDOB.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		If chkFundingStatus.Checked = False Then
+			Me.mpCheckList.Show()
+		Else
+		End If
+
+		ViewState("CheckListChecked") = True
+
+	End Sub
+
+	Protected Sub btnCheckOkayDBA_Click(sender As Object, e As EventArgs) Handles btnCheckOkayDBA.Click
+
+		If chkLOAAffidavit.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkLOANumbers.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkLOAIntroLetter.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkLOAEmployerIntroLetter.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkLOASignatories.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkPOA.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkMinorBirthCert.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkNOKMOIs.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkMOIDocs.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkNamesDOB.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		If chkDODName.Checked = False Then
+			Me.mpCheckListDBA.Show()
+		Else
+		End If
+
+		ViewState("CheckListChecked") = True
+
+
+	End Sub
+
+	Protected Sub btnCheckAllDBA_Click(sender As Object, e As EventArgs) Handles btnCheckAllDBA.Click
+
+		Me.chkLOAAffidavit.Checked = True
+		Me.chkLOAEmployerIntroLetter.Checked = True
+		Me.chkLOAIntroLetter.Checked = True
+		Me.chkLOANumbers.Checked = True
+		Me.chkLOASignatories.Checked = True
+		Me.chkMinorBirthCert.Checked = True
+		Me.chkMOIDocs.Checked = True
+		'Me.chk.Checked = True
+		Me.chkNamesDOB.Checked = True
+		Me.chkNOKMOIs.Checked = True
+		Me.chkPOA.Checked = True
+		Me.chkDODName.Checked = True
+
+		Me.mpCheckListDBA.Show()
+
+	End Sub
+
      Protected Sub btnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
 
           If Not IsNothing(ViewState("ApprovalTypeCollection")) = True Then
@@ -1780,8 +1916,27 @@ Partial Class frmEditApplication
           End If
 
 
+		If typeID = 5 Then
+
+			If IsNothing(ViewState("CheckListChecked")) = True Then '' And CBool(ViewState("CheckListChecked")) = False Then
+				mpCheckListDBA.Show()
+				Exit Sub
+			Else
+			End If
+
+		Else
+
+			If IsNothing(ViewState("CheckListChecked")) = True Then '' And CBool(ViewState("CheckListChecked")) = False Then
+				Me.mpCheckList.Show()
+				Exit Sub
+			Else
+			End If
+
+		End If
+
+
           Dim appDetail As New ApplicationDetail, NextAppID As Integer, cr As New Core, ApplicationCode As String, sector As String, myID As Integer
-          Dim appDocDetails As New List(Of ApplicationDocumentDetail), appAdhocDocDetails As New List(Of AdhocDocuments)
+		Dim appDocDetails As New List(Of ApplicationDocumentDetail), appAdhocDocDetails As New List(Of AdhocDocuments), appCheckList As New ApplicationCheckList, appCheckListDBA As New ApplicationCheckListDOB
 
           'NextAppID = cr.PMgetNextApplicationID()
           If Page.IsValid And IsNothing(ViewState("EmployeeID")) = False Then
@@ -1928,6 +2083,34 @@ Partial Class frmEditApplication
                appDetail.Sector = Me.txtSector.Text
               
 
+				If typeID = 5 Then
+
+					appCheckListDBA.ApplicationCode = CStr(ViewState("appCode"))
+					appCheckListDBA.LOAAffidavitChecked = 1
+					appCheckListDBA.LOAEmployerIntroLetter = 1
+					appCheckListDBA.LOAIntroLetter = 1
+					appCheckListDBA.LOANumbersChecked = 1
+					appCheckListDBA.LOASignatories = 1
+					appCheckListDBA.MinorBirthCert = 1
+					appCheckListDBA.MOIDocs = 1
+					appCheckListDBA.NamesDOB = 1
+					appCheckListDBA.NOKMOIs = 1
+					appCheckListDBA.POA = 1
+					appCheckListDBA.DODName = 1
+
+				Else
+
+					appCheckList.ApplicationCode = CStr(ViewState("appCode"))
+					appCheckList.DataEntryChecked = 1
+					appCheckList.ExitDocChecked = 1
+					appCheckList.FundingStatusChecked = 1
+					appCheckList.LegAVCChecked = 1
+					appCheckList.NamesChecked = 1
+					appCheckList.ValidDocChecked = 1
+					appCheckList.DOBChecked = 1
+
+				End If
+
 
 
                     If IsNothing(ViewState("RMAS")) = False And typeID = 2 Then
@@ -2026,7 +2209,15 @@ Partial Class frmEditApplication
                appDetail.ApplicationState = ddApplicationState.SelectedItem.Text.ToString
 
                     appDetail.Sex = Me.txtSex.Text
-                    appDetail.Comment = Me.txtOtherComments.Text
+				appDetail.Comment = Me.txtOtherComments.Text
+
+
+				If Me.chkBankConfirmed.Checked = True Then
+					appDetail.IsBankDetailsConfirmed = 1
+				Else
+					appDetail.IsBankDetailsConfirmed = 0
+				End If
+
 
 
 				''''''''''''''''''''''''''ARL Notification'''''''''''''''''''''''''''''''''''''
@@ -2036,20 +2227,16 @@ Partial Class frmEditApplication
 					appDetail.IsARLActRecieved = True
 					appDetail.ARLAcknowledgmentDate = CDate(Me.txtApplicationDate.Text)
 
-				ElseIf Me.rdARLRecieved.Checked = True Then
+				ElseIf Me.rdARLRecieved.Checked = False Then
 
 					appDetail.IsARLActRecieved = False
 
 				End If
 
+
 				'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-
-
-
-
-
-               appDetail.AccountName = Me.txtAccountName.Text
+				appDetail.AccountName = Me.txtAccountName.Text
                appDetail.AccountNo = Me.txtAccountNumber.Text
                appDetail.BVN = Me.txtBVN.Text
                If Not IsNothing(ViewState("BankTypeCollection")) = True Then
@@ -2112,9 +2299,9 @@ Partial Class frmEditApplication
                                    appAdhocDocDetail.RecievedBy = Session("user")
 							appAdhocDocDetail.RecievedDate = Now
 
-							'appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+							appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-							appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "\\P-MIDAS2\NPM_Data\ApplicationDocuments\"
+							'appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "\\P-MIDAS2\NPM_Data\ApplicationDocuments\"
 
                                    appAdhocDocDetail.IsVerified = CInt((row.Cells(5).Text))
                                    appAdhocDocDetails.Add(appAdhocDocDetail)
@@ -2131,9 +2318,9 @@ Partial Class frmEditApplication
 								isAllDocumentScanned = True
 							End If
 
-							'appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+							appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-							appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "\\P-MIDAS2\NPM_Data\ApplicationDocuments\"
+							'appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "\\P-MIDAS2\NPM_Data\ApplicationDocuments\"
 							'\\P-MIDAS2\NPM_Data
 							appDocDetail.IsVerified = CInt((row.Cells(5).Text))
 							appDocDetails.Add(appDocDetail)
@@ -2247,7 +2434,7 @@ Partial Class frmEditApplication
 				If IsNothing(Session("user")) = True Then
 					Response.Redirect("Login.aspx")
 				Else
-					cr.PMUpdateApplication(appDetail, appDocDetails, appDocDetailsOLD, appAdhocDocDetails, Session("user"))
+					cr.PMUpdateApplication(appDetail, appDocDetails, appDocDetailsOLD, appAdhocDocDetails, Session("user"), appCheckList, appCheckListDBA)
 					cr.PMCleanDuplicateDocument(appDetail.ApplicationID)
 				End If
 

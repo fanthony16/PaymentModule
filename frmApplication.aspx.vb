@@ -2060,6 +2060,7 @@ Partial Class frmApplication
 			Exit Sub
 		End If
 
+
 		If typeID = 5 Then
 
 			If IsNothing(ViewState("CheckListChecked")) = True Then '' And CBool(ViewState("CheckListChecked")) = False Then
@@ -2075,7 +2076,6 @@ Partial Class frmApplication
 				Exit Sub
 			Else
 			End If
-
 
 		End If
 		
@@ -2457,6 +2457,13 @@ Partial Class frmApplication
 			appDetail.BVN = Me.txtBVN.Text
 			appDetail.Comment = Me.txtOtherComments.Text
 
+			If Me.chkBankConfirmed.Checked = True Then
+				appDetail.IsBankDetailsConfirmed = 1
+			Else
+				appDetail.IsBankDetailsConfirmed = 0
+			End If
+
+
 
 			''''''''''''''''''''''''''ARL Notification'''''''''''''''''''''''''''''''''''''
 
@@ -2465,7 +2472,7 @@ Partial Class frmApplication
 				appDetail.IsARLActRecieved = True
 				appDetail.ARLAcknowledgmentDate = CDate(Me.txtApplicationDate.Text)
 
-			ElseIf Me.rdARLRecieved.Checked = True Then
+			ElseIf Me.rdARLRecieved.Checked = False Then
 
 				appDetail.IsARLActRecieved = False
 

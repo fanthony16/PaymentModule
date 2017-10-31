@@ -8,6 +8,33 @@ Partial Class frmApplicationList
      Inherits System.Web.UI.Page
      Dim ApprovalTypeCollection As New Hashtable
 
+
+	Protected Sub BtnViewInvestigationDetails_Click(sender As Object, e As EventArgs)
+
+		Dim btnViewApplicationLog As New ImageButton, appCode As String
+		btnViewApplicationLog = sender
+		Dim i As GridViewRow
+		i = btnViewApplicationLog.NamingContainer
+		appCode = Me.gridProcessing.Rows(i.RowIndex).Cells(2).Text
+
+		Dim typeID As Integer
+		ApprovalTypeCollection = ViewState("ApprovalTypeCollection")
+		'typeID = (CInt(ApprovalTypeCollection.Item(Me.gridProcessing.Rows(i.RowIndex).Cells(4).Text)))
+		typeID = (CInt(ApprovalTypeCollection.Item(Me.ddApprovalType.SelectedItem.Text)))
+
+		If typeID = 5 Then
+			Response.Redirect(String.Format("frmDBAInvestigation.aspx?ApplicationCode={0}&ApplicationTypeID={1}", Server.UrlEncode(appCode), Server.UrlEncode(typeID)))
+		Else
+
+		End If
+
+
+
+		'  Response.Redirect(String.Format("frmApplicationConfirmation.aspx?ApplicationCode={0}&ReturnPage={1}", Server.UrlEncode(appDetail.ApplicationID), Server.UrlEncode("ApplicationDashBoard")))
+
+	End Sub
+
+
      Protected Sub BtnViewDetails_Click(sender As Object, e As EventArgs)
 
           Dim btnViewApplicationLog As New ImageButton, appCode As String
@@ -167,7 +194,24 @@ Partial Class frmApplicationList
 
 				End If
 
+
+
+				If dt.Rows(e.Row.RowIndex).Item("fkiAppTypeId").ToString = "5" Then
+
+					Dim imgInvestigation As ImageButton = TryCast(e.Row.FindControl("btnDBAInvestigation"), ImageButton)
+					imgInvestigation.Enabled = True
+
+				Else
+
+					Dim imgInvestigation As ImageButton = TryCast(e.Row.FindControl("btnDBAInvestigation"), ImageButton)
+					imgInvestigation.Enabled = False
+
+				End If
+
+
+
 			End If
+
 		Else
 		End If
 
@@ -221,7 +265,8 @@ Partial Class frmApplicationList
 			dmsDocumentID = dt.Rows(i.RowIndex).Item("DocumentID").ToString()
 			dmsDocumentExt = dt.Rows(i.RowIndex).Item("DocumentExtension").ToString()
 
-               'testing if the file still exist in the saved file path
+			'testing if the file still exist in the saved file path
+
 			If File.Exists(documentPath) = True Then
 
 				DownLoadDocument(documentPath)

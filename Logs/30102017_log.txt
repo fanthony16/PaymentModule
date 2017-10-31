@@ -1,0 +1,20 @@
+﻿30/10/2017 09:31:42 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 09:31:43 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 10:15:10 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 10:15:10 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 10:48:07 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 10:48:07 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 10:52:38 : PAYMENT MODULE : Thread was being aborted.Application Edit Submission
+30/10/2017 10:58:52 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 10:58:52 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 11:21:50 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 11:21:50 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 11:26:14 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 11:26:14 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 11:39:40 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 11:39:40 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 11:42:18 : PAYMENT MODULE : Thread was being aborted.Application Edit Submission
+30/10/2017 12:40:04 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 12:40:04 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
+30/10/2017 12:43:44 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
+30/10/2017 12:43:44 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification
