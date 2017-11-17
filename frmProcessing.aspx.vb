@@ -1386,7 +1386,6 @@ Partial Class frmProcessing
 
 
 						cr.PMSetPriceDate(grow.Cells(2).Text, DateTime.Parse(Me.txtPriceDateBatch.Text).ToString("yyyy-MM-dd"), grow.Cells(4).Text, fundType, pAmount)
-
 						cr.PMSetApplicationStatus(grow.Cells(2).Text, "Confirmation", Session("user"))
 
 
@@ -1425,6 +1424,10 @@ Partial Class frmProcessing
 						End If
 
 						cr.PMSetPriceDate(grow.Cells(2).Text, DateTime.Parse(Me.txtPriceDateBatch.Text).ToString("yyyy-MM-dd"), grow.Cells(4).Text, fundType, pAmount)
+						cr.PMSetApplicationStatus(grow.Cells(2).Text, "Confirmation", Session("user"))
+
+					ElseIf Me.txtPriceDateBatch.Text <> "" And CInt(ApprovalTypeCollection.Item(Me.ddApprovalType.SelectedItem.Text)) = 17 Then
+
 						cr.PMSetApplicationStatus(grow.Cells(2).Text, "Confirmation", Session("user"))
 
 					End If

@@ -447,6 +447,9 @@ Partial Class frmApprovalComfirmation
 		ElseIf apptypeID = 15 Then
 			BindFieldAnnuity()
 
+		ElseIf apptypeID = 17 Then
+
+			BindFieldEnhanced()
           Else
                BindField()
           End If
@@ -454,7 +457,50 @@ Partial Class frmApprovalComfirmation
           getApprovalConfirmationRequest()
 
      End Sub
+	Protected Sub BindFieldEnhanced()
 
+		Dim bfieldAppCode As New BoundField()
+		bfieldAppCode.HeaderText = "Application Code"
+		bfieldAppCode.DataField = "txtApplicationCode"
+		Me.gridApplications.Columns.Add(bfieldAppCode)
+
+		Dim bfieldPIN As New BoundField()
+		bfieldPIN.HeaderText = "PIN"
+		bfieldPIN.DataField = "txtPIN"
+		gridApplications.Columns.Add(bfieldPIN)
+
+		Dim bfieldName As New BoundField()
+		bfieldName.HeaderText = "Full Name"
+		bfieldName.DataField = "txtFullName"
+		bfieldName.ItemStyle.Width = 150
+		gridApplications.Columns.Add(bfieldName)
+
+		Dim bfieldEmployerName As New BoundField()
+		bfieldEmployerName.HeaderText = "Employer Name"
+		bfieldEmployerName.DataField = "txtEmployerName"
+		bfieldEmployerName.ItemStyle.Width = 150
+		gridApplications.Columns.Add(bfieldEmployerName)
+
+		Dim bfieldValueDate As New BoundField()
+		bfieldValueDate.HeaderText = "Value Date"
+		bfieldValueDate.DataField = "ValueDate"
+		bfieldValueDate.DataFormatString = "{0:d}"
+		gridApplications.Columns.Add(bfieldValueDate)
+
+		Dim bfieldApprovedAmount As New BoundField()
+		bfieldApprovedAmount.HeaderText = "Approved Amount"
+		bfieldApprovedAmount.DataField = "ApprovedAmount"
+		bfieldApprovedAmount.DataFormatString = "{0:N}"
+		gridApplications.Columns.Add(bfieldApprovedAmount)
+
+		'Dim bfieldAmountToPay As New BoundField()
+		'bfieldAmountToPay.HeaderText = "Amount ToPay"
+		'bfieldAmountToPay.DataField = "AmountToPay"
+		'bfieldAmountToPay.DataFormatString = "{0:N}"
+		'gridApplications.Columns.Add(bfieldAmountToPay)
+
+
+	End Sub
      Protected Sub BindField()
 
           Dim bfieldAppCode As New BoundField()
@@ -784,22 +830,25 @@ Partial Class frmApprovalComfirmation
 					dtColumn = New DataColumn("monthly-annuity")
 					dtApprovalPINs.Columns.Add(dtColumn)
 
-
 					dtColumn = New DataColumn("LumpSumToPay")
 					dtApprovalPINs.Columns.Add(dtColumn)
 
 					dtColumn = New DataColumn("AnnuityToPay")
 					dtApprovalPINs.Columns.Add(dtColumn)
 
+				ElseIf typeID = 17 Then
 
-                    Else
+					dtColumn = New DataColumn("ApprovedAmount")
+					dtApprovalPINs.Columns.Add(dtColumn)
+
+				Else
 
 
-                         dtColumn = New DataColumn("ApprovedAmount")
-                         dtApprovalPINs.Columns.Add(dtColumn)
+					dtColumn = New DataColumn("ApprovedAmount")
+					dtApprovalPINs.Columns.Add(dtColumn)
 
-                         dtColumn = New DataColumn("AmountToPay")
-                         dtApprovalPINs.Columns.Add(dtColumn)
+					dtColumn = New DataColumn("AmountToPay")
+					dtApprovalPINs.Columns.Add(dtColumn)
                     End If
 
 
@@ -842,10 +891,13 @@ Partial Class frmApprovalComfirmation
 					newCustomersRow("LumpSumToPay") = dt.Rows(i).Item("LumpSumToPay")
 					newCustomersRow("AnnuityToPay") = dt.Rows(i).Item("AnnuityToPay")
 
+				ElseIf typeID = 17 Then
 
-                    Else
-                         newCustomersRow("ApprovedAmount") = dt.Rows(i).Item("ApprovedAmount")
-                         newCustomersRow("AmountToPay") = dt.Rows(i).Item("AmountToPay")
+					newCustomersRow("ApprovedAmount") = dt.Rows(i).Item("ApprovedAmount")
+
+				Else
+					newCustomersRow("ApprovedAmount") = dt.Rows(i).Item("ApprovedAmount")
+					newCustomersRow("AmountToPay") = dt.Rows(i).Item("AmountToPay")
                     End If
 
 

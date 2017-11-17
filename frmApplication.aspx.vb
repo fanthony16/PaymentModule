@@ -102,7 +102,6 @@ Partial Class frmApplication
 
 	End Sub
 
-
 	Protected Sub btnAddRecievedDoc_Click(sender As Object, e As EventArgs) Handles btnAddRecievedDoc.Click
 
 		Try
@@ -602,6 +601,7 @@ Partial Class frmApplication
 					PopulateCommentGroup()
 
 
+
 				Else
 				End If
 
@@ -861,9 +861,15 @@ Partial Class frmApplication
 				  Select New With {o.pkiDocumentTypeID, o.txtDocumentName}
 		For Each a In query
 
-			lstDocument.Add(a.txtDocumentName)
-			DocumentCollection.Add(a.txtDocumentName, a.pkiDocumentTypeID)
+			If lstDocument.Contains(a.txtDocumentName) = False Then
 
+				lstDocument.Add(a.txtDocumentName)
+				DocumentCollection.Add(a.txtDocumentName, a.pkiDocumentTypeID)
+
+			Else
+
+			End If
+			
 		Next
 		ViewState("DocumentCollection") = DocumentCollection
 		Return lstDocument
@@ -880,6 +886,7 @@ Partial Class frmApplication
 		Dim lstOfficeLocation As New List(Of String)
 		lstOfficeLocation = myOfficeLocation.getStateOfficeLocation(myStateID)
 		ddPFAOfficeLocation.Items.Clear()
+
 		Do While i < lstOfficeLocation.Count
 
 			If ddPFAOfficeLocation.Items.Count = 0 Then
@@ -3585,4 +3592,6 @@ Partial Class frmApplication
 		Me.mpCheckListDBA.Show()
 
 	End Sub
+
+	
 End Class

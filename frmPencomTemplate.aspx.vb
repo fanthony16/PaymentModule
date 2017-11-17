@@ -66,13 +66,15 @@ Partial Class frmPencomTemplate
 		Dim dt As New DataTable, cr As New Core, i As Integer, txtMonthPencomm As Double, txtSexx As String, txtRSABalancee As Double, txtAgee As Double, txtNetInterestt As String, txtNxDxx As String, txtNcc As String, txtRecommendedAmountt As String, txtVariancee As String, txtFreqq As String, ds As New dsBenefitEnhancement, txtYearNumber As String
 
 		Dim mycon As New SqlClient.SqlConnection, db As New DbConnection
-		mycon = db.getConnection("Enpowerv4")
+		mycon = db.getConnection("PaymentModule")
 
 		txtFreqq = 12
 		dt = cr.PMgetRetireeForEnhencement()
 
+		'MsgBox("" & dt.Rows.Count)
 
 		Do While i < dt.Rows.Count
+
 			Dim newBERow As DataRow, dtPersion As New DataTable
 			dtPersion = cr.getPMPersonInformation(dt.Rows(i).Item(1).ToString)
 
@@ -137,15 +139,15 @@ Partial Class frmPencomTemplate
 
 
 
+			Dim ddate As Date = CDate("2016-12-31")
 
-			
 			Try
 				Dim MyDataAdapter As SqlClient.SqlDataAdapter
-				MyDataAdapter = New SqlClient.SqlDataAdapter("INSERT INTO [dbo].[tblPencomFormat]([txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],[dteDOB] ,[dteDOR],[txtEmployerName],[txtEmployerCode],[numRSABalance],[numMonthPension],[numCurrentRSABalance],[numNewPension],[NxDxNc])	VALUES('" & dtPersion.Rows(0).Item("Surname") & "','" & dtPersion.Rows(0).Item("FirstName") & "','" & dtPersion.Rows(0).Item("MiddleName") & "','" & dtPersion.Rows(0).Item("rsapin") & "','" & dtPersion.Rows(0).Item("sex") & "','" & dtPersion.Rows(0).Item("dateofbirth").ToString & "','" & dtPersion.Rows(0).Item("DateOfResignation").ToString & "','" & dtPersion.Rows(0).Item("EmployerName") & "','" & dtPersion.Rows(0).Item("EmployerCode") & "','" & dtPersion.Rows(0).Item("YearEndRFBalance") & "','" & dtPersion.Rows(0).Item("LastPensionAmount") & "','" & dtPersion.Rows(0).Item("RFBalance") & "','" & CDbl(txtRecommendedAmountt.Replace(",", "")) & "','" & CDbl(txtYearNumber.Replace(",", "")) & "')", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("INSERT INTO [dbo].[tblPensionEnhancement]([txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],[dteDOB] ,[dteDOR],[txtEmployerName],[txtEmployerCode],[numRSABalance],[numMonthPension],[numCurrentRSABalance],[numNewPension],[NxDxNc],dterunfor)	VALUES('" & dtPersion.Rows(0).Item("Surname") & "','" & dtPersion.Rows(0).Item("FirstName") & "','" & dtPersion.Rows(0).Item("MiddleName") & "','" & dtPersion.Rows(0).Item("rsapin") & "','" & dtPersion.Rows(0).Item("sex") & "','" & dtPersion.Rows(0).Item("dateofbirth").ToString & "','" & dtPersion.Rows(0).Item("DateOfResignation").ToString & "','" & dtPersion.Rows(0).Item("EmployerName") & "','" & dtPersion.Rows(0).Item("EmployerCode") & "','" & dtPersion.Rows(0).Item("YearEndRFBalance") & "','" & dtPersion.Rows(0).Item("LastPensionAmount") & "','" & dtPersion.Rows(0).Item("RFBalance") & "','" & CDbl(txtRecommendedAmountt.Replace(",", "")) & "','" & CDbl(txtYearNumber.Replace(",", "")) & "','" & DateTime.Parse(ddate).ToString("yyyy-MM-dd HH:MM") & "')", mycon)
 				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 				MyDataAdapter.SelectCommand.ExecuteNonQuery()
 
-
+				'DateTime.Parse(Now).ToString("yyyy-MM-dd HH:MM")
 
 
 			Catch Ex As Exception

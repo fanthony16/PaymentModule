@@ -39,6 +39,7 @@
                               <asp:MenuItem NavigateUrl="~/frmApplicationLitee.aspx" Text="Log Application" Value="NewApp" />
                               <asp:MenuItem NavigateUrl="~/frmApplicationDashBoard.aspx" Text="Application DashBoard" Value="DashBoard" />
                               <asp:MenuItem NavigateUrl="~/frmManager.aspx" Text="Manager's DashBoard" Value="ManagerDashBoard" />
+                              <asp:MenuItem NavigateUrl="~/frmEnhancementApplication.aspx" Text="Penion Enhancement" Value="Enhancement" />
 
                          </asp:MenuItem>
 

@@ -1,0 +1,8 @@
+﻿
+Partial Class frmPensionEnhancementConfirm
+    Inherits System.Web.UI.Page
+
+	Protected Sub gridApplications_SelectedIndexChanged(sender As Object, e As EventArgs) Handles gridApplications.SelectedIndexChanged
+
+	End Sub
+End Class

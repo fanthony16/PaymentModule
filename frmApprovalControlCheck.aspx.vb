@@ -439,7 +439,6 @@ Partial Class frmApprovalControlCheck
 
 		Dim cr As New Core, dt As New DataTable
 		Dim apptypeID As Integer = getApprovalType(Me.ddApplicationType.SelectedValue)
-		'dt = cr.PMgetPencomApprovalBatchByType(0, Me.ddExportedBatches.SelectedItem.Text, True)
 		dt = cr.PMgetPencomApprovalBatchByType(apptypeID, Me.ddExportedBatches.SelectedItem.Text, True, "C")
           ViewState("BatchApprovals") = dt
           BindGrid(dt)

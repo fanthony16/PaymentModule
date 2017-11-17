@@ -1001,6 +1001,18 @@ Partial Class frmApprovalFinanceAuthority
 				command.CommandType = CommandType.Text
 				myComm.ExecuteNonQuery()
 
+
+				myComm.CommandText = "insert into tblSIPensioneer (txtPIN,txtFullName,numPWAmount,numPension,intBankID,intBankBranchID,txtBankAccount,txtFrequency,dteAnniversary,txtStatus,txtApplicationcode) select a.txtPIN,replace(a.txtfullName,'|','') as FullName, Enpowerv4.[dbo].[GetFundBalanceByDate](a.fkiMemberID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance ,numApplicationAmount,a.fkibankid,a.fkibranchid,a.txtAccountNo,1 as Frequency,cast(getdate() as date) as Anniversary,'P',b.txtApplicationcode from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c where a.txtapplicationcode = b.txtapplicationcode and c.txtPIN = a.txtPIN  AND b.txtapplicationcode = '" & appCode & "' AND fkiAppTypeId = 17 and not exists (select * from tblSIPensioneer where txtpin = a.txtPencomBatch )"
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+
+
+				myComm.CommandText = "update d set d.numPension = a.numApplicationAmount,d.intBankID = a.fkibankid,d.intBankBranchID = a.fkibranchid,d.txtBankAccount = a.txtAccountNo,txtFrequency = 1,dteAnniversary = cast(getdate() as date),txtStatus = 'P',txtApplicationcode = a.txtApplicationcode,txtFullName = replace(a.txtfullName,'|','') from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c,tblSIPensioneer d where a.txtapplicationcode = b.txtapplicationcode and c.txtPIN = a.txtPIN and d.txtpin = a.txtpin AND b.txtapplicationcode = '" & appCode & "' AND fkiAppTypeId = 17"
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+
 			End If
 
 

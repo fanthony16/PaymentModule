@@ -1,8 +1,7 @@
-﻿<%@ Page Title="" Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="frmApprovalControlCheck.aspx.vb" Inherits="frmApprovalControlCheck" Theme="Blue" %>
+﻿<%@ Page Title="" Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="frmPensionEnhancementConfirm.aspx.vb" Inherits="frmPensionEnhancementConfirm" Theme ="Blue"  %>
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="asp"%>
-
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server"></asp:Content>
-
+<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 
      <asp:ToolkitScriptManager ID="ToolkitScriptManager2" runat="server" EnablePartialRendering="true" ></asp:ToolkitScriptManager>

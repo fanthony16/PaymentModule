@@ -780,6 +780,67 @@ Partial Class frmApplicationApprovals
 
      End Sub
 
+	Protected Sub BindFieldEnhanced()
+
+		Dim bfieldAppCode As New BoundField()
+		bfieldAppCode.HeaderText = "Application Code"
+		'bfieldAppCode.DataField = "txtApplicationCode"
+		bfieldAppCode.DataField = "ApplicationCode"
+		gridRMAS.Columns.Add(bfieldAppCode)
+
+		Dim bfieldPIN As New BoundField()
+		bfieldPIN.HeaderText = "PIN"
+		'bfieldPIN.DataField = "txtPIN"
+		bfieldPIN.DataField = "PIN"
+		gridRMAS.Columns.Add(bfieldPIN)
+
+		Dim bfieldName As New BoundField()
+
+		bfieldName.HeaderText = "Name"
+		'bfieldName.DataField = "txtFullName"
+		bfieldName.DataField = "Name"
+		bfieldName.ItemStyle.Width = 150
+		gridRMAS.Columns.Add(bfieldName)
+
+		'Dim bfieldRDate As New BoundField()
+		'bfieldRDate.HeaderText = "Retirement Date"
+		'bfieldRDate.DataField = "RetirementDate"  'RetirementDate
+		'bfieldRDate.DataFormatString = "{0:d}"
+		'gridRMAS.Columns.Add(bfieldRDate)
+
+		Dim bfieldAmount As New BoundField()
+		bfieldAmount.HeaderText = "Approved Amount"
+		'bfieldAmount.DataField = "Amount"
+		bfieldAmount.DataField = "ApprovedAmount"
+		bfieldAmount.DataFormatString = "{0:N}"
+		gridRMAS.Columns.Add(bfieldAmount)
+
+		Dim bfieldAccName As New BoundField()
+		bfieldAccName.HeaderText = "Account Name"
+		'bfieldAccName.DataField = "txtAccountName"
+		bfieldAccName.DataField = "AccountName"
+		gridRMAS.Columns.Add(bfieldAccName)
+
+		Dim bfieldAccNo As New BoundField()
+		bfieldAccNo.HeaderText = "AccountNo"
+		'bfieldAccNo.DataField = "txtAccountNo"
+		bfieldAccNo.DataField = "AccountNo"
+		gridRMAS.Columns.Add(bfieldAccNo)
+
+		Dim bfieldBankName As New BoundField()
+		bfieldBankName.HeaderText = "Bank Name"
+		'bfieldBankName.DataField = "fkiBankID"
+		bfieldBankName.DataField = "BankName"
+		gridRMAS.Columns.Add(bfieldBankName)
+
+		Dim bfieldBranchName As New BoundField()
+		bfieldBranchName.HeaderText = "Branch Name"
+		bfieldBranchName.DataField = "BankBranch"
+		'bfieldBranchName.DataField = "fkiBranchID"
+		gridRMAS.Columns.Add(bfieldBranchName)
+
+
+	End Sub
 
      Protected Sub BindFieldEnloc()
 
@@ -1135,6 +1196,9 @@ Partial Class frmApplicationApprovals
 						Case Is = 16
 							BindFieldEnloc()
 
+						Case Is = 17
+							BindFieldEnhanced()
+
 						Case Is = 2
 							BindFieldHardShip()
 
@@ -1205,9 +1269,11 @@ Partial Class frmApplicationApprovals
 						lstApprovalPerson.Disengagement = dt.Rows(j).Item("dteDisengagement")
 
 					ElseIf AppType = 8 Then
+
 						lstApprovalPerson.RetirementDate = dt.Rows(j).Item("dteDOR")
 
 					ElseIf AppType = 1 Then
+
 						lstApprovalPerson.RetirementDate = dt.Rows(j).Item("dteDOR")
 
 					ElseIf AppType = 7 Then
@@ -1313,6 +1379,9 @@ Partial Class frmApplicationApprovals
 					ElseIf AppType = 6 Then
 						lstApprovalPerson.RetirementDate = dt.Rows(j).Item("dteDOR")
 
+					ElseIf AppType = 17 Then
+
+						lstApprovalPerson.ApprovedAmount = dt.Rows(j).Item("ApprovedAmount")
 
 					End If
 
@@ -1788,6 +1857,10 @@ Partial Class frmApplicationApprovals
 
 				ElseIf IsNothing(ViewState("ApprovalDetails")) = True And typeID = 16 Then
 					Me.MPApprovalHardShip.Show()
+
+				ElseIf IsNothing(ViewState("ApprovalDetails")) = True And typeID = 17 Then
+					Me.MPApprovalHardShip.Show()
+
 				ElseIf IsNothing(ViewState("ApprovalDetails")) = True And typeID = 7 Then
 
 					Me.MPApprovalHardShip.Show()
@@ -1906,6 +1979,18 @@ Partial Class frmApplicationApprovals
                          lstApprovedApp.AmountToPay = CDbl(grow.Cells(6).Text.ToString())
 
                          lstApprovedApp.ApprovalOrderID = (grow.RowIndex + 1)
+					lstApprovedApps.Add(lstApprovedApp)
+
+				ElseIf cb.Checked = True And TypeID = 17 Then
+
+					Dim lstApprovedApp As New ApplicationDetail
+					lstApprovedApp.ApplicationID = grow.Cells(1).Text.ToString()
+					lstApprovedApp.PIN = grow.Cells(2).Text.ToString()
+					lstApprovedApp.AppTypeId = getApprovalType(Me.ddApplicationType.SelectedValue)
+					lstApprovedApp.PencomBatch = Me.txtBatchRef.Text
+					lstApprovedApp.ApprovedAmount = CDbl(grow.Cells(4).Text.ToString())
+
+					lstApprovedApp.ApprovalOrderID = (grow.RowIndex + 1)
 					lstApprovedApps.Add(lstApprovedApp)
 
 				ElseIf cb.Checked = True And TypeID = 16 Then
@@ -2339,8 +2424,10 @@ Partial Class frmApplicationApprovals
 				mpEditEnblocApproval.Show()
 			ElseIf chk = 1 And typeID = 11 Then
 				mpEditEnblocApproval.Show()
-               ElseIf chk = 1 Then
-                    mpEditApprovedAmount.Show()
+			ElseIf chk = 1 And typeID = 17 Then
+
+			ElseIf chk = 1 Then
+				mpEditApprovedAmount.Show()
                End If
 
           Catch ex As Exception
@@ -3026,8 +3113,12 @@ Partial Class frmApplicationApprovals
 						lstApprovalPerson.ValueDate = vDate
 					End If
 
-                         
 
+				ElseIf AppType = 17 Then
+
+					'lstApprovalPerson.RetirementDate = dt.Rows(j).Item("dteDOR")
+					lstApprovalPerson.ApprovedAmount = CDbl(dt.Rows(j).Item("ApprovedAmount"))
+					' calculating the current value of the participant on the fund platform
 
 				ElseIf AppType = 7 Then
 
