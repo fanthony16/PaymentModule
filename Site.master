@@ -85,7 +85,7 @@
                              <asp:MenuItem NavigateUrl="~/frmApplicationLite.aspx" Text="New Application Lite" Value ="ApplicationLite"></asp:MenuItem> 
                              <asp:MenuItem NavigateUrl="~/frmEnrollmentPictureStatus.aspx" Text="Pinned Enrollment Image Status" Value ="PinnedForm"></asp:MenuItem>
 
-                             <asp:MenuItem NavigateUrl="~/frmPencomTemplate.aspx" Text="Monthly Enhanced Pension Calculator" Value ="EnhancedCalc"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmPencomTemplate2.aspx" Text="Monthly Enhanced Pension Calculator" Value ="EnhancedCalc"></asp:MenuItem>
 
                              <asp:MenuItem NavigateUrl="#" Text="Period Payment Standing Instruction" Value ="SI">
 

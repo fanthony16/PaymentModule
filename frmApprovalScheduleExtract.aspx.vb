@@ -402,6 +402,7 @@ Partial Class frmApprovalScheduleExtract
 
           Dim apptypeID As Integer = getApprovalTypeID(Me.ddApplicationType.SelectedValue)
 		Dim extractBatch As String = ""
+
 		extractBatch = UCase(LTrim(RTrim(Me.txtPencomBatch.Text))) & Year(Now.Date).ToString & Month(Now.Date).ToString & Day(Now.Date).ToString & Second(Now).ToString
 		Try
 
@@ -415,12 +416,12 @@ Partial Class frmApprovalScheduleExtract
                     Dim cr As New Core
                     Dim lst As New PencomApprovalExport
 
-
                     dt = cr.PMgetApprovalPaymentSchedule(LTrim(RTrim(Me.txtPencomBatch.Text)), grow.Cells(2).Text.ToString, apptypeID)
                     Do While i < dt.Rows.Count
                          lst = New PencomApprovalExport
 
-                         lst.EnpowerExportBatch = extractBatch
+
+						lst.EnpowerExportBatch = extractBatch
                          If dt.Rows(i).Item("PlatForm").ToString = "RSA" Then
                               lst.FundID = "1"
                          ElseIf dt.Rows(i).Item("PlatForm").ToString = "RF" Then

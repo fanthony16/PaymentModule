@@ -35,6 +35,39 @@ Partial Class frmPencomTemplate
 
 	End Function
 
+
+	Private Function calNewInterate() As Double
+
+		'		MsgBox("Okay")
+		Dim C12 As Double
+		Dim C13 As Double
+		Dim C14 As Double
+
+
+
+		'If CInt(Me.txtAge.Text) < 65 Then
+		'	Me.txtInterest.Text = "8%"
+		'Else
+		'	Me.txtInterest.Text = "10%"
+		'End If
+
+		C12 = FormatNumber(CDbl(Me.txtManagement.Text.Split("%")(0)) / 100, 5)
+		C13 = FormatNumber(CDbl(Me.txtRegulator.Text.Split("%")(0)) / 100, 5)
+		C14 = FormatNumber(CDbl(Me.txtInterest.Text.Split("%")(0)) / 100, 5)
+
+		'txtNetInterest.Text = FormatNumber(((1 - (C12 + C13)) * C14) * 100, 2)
+
+		'txtNetInterest.Text = ((1 - (C12 + C13)) * C14)
+
+		'Return ((1 - (C12 + C13)) * C14)
+
+		Return C14 * (1 - (C12 + C13))
+
+
+	End Function
+
+
+
 	Private Function calInterate(intAge As Integer) As Double
 
 		'		MsgBox("Okay")
@@ -223,6 +256,10 @@ Partial Class frmPencomTemplate
 
 	End Sub
 
+	Protected Sub getNewCalculator()
+
+	End Sub
+
 	Protected Sub btnFind_Click(sender As Object, e As EventArgs) Handles btnFind.Click
 
 		BatchProcessing()
@@ -239,10 +276,8 @@ Partial Class frmPencomTemplate
 		End If
 
 
-
 		Dim dt As New DataTable, cr As New Core
 		dt = cr.getPMPersonInformation(Me.txtPIN.Text)
-
 
 
 		If dt.Rows(0).Item("AgeAtRetirement") = 0 Then
@@ -258,7 +293,12 @@ Partial Class frmPencomTemplate
 		Me.txtRSABalance.Text = CDbl(dt.Rows(0).Item("YearEndRFBalance"))
 		Me.txtAge.Text = dt.Rows(0).Item("AgeAtRetirement")
 
+		'''net interest for odd format
 		txtNetInterest.Text = FormatNumber(calInterate(CInt(dt.Rows(0).Item("AgeAtRetirement"))) * 100, 2)
+
+		'''net interest for new format
+		'txtNetInterest.Text = FormatNumber(calNewInterate() * 100, 2)
+
 
 		If Me.txtSex.Text = "M" Then
 			Me.txtNxDx.Text = FormatNumber(cr.getNxDx(1, CInt(txtAge.Text)), 10)
@@ -273,13 +313,20 @@ Partial Class frmPencomTemplate
 		txtVariance.Text = FormatNumber((-1 * Financial.Pmt(calInterate(CInt(dt.Rows(0).Item("AgeAtRetirement"))) / 12, 2 * Me.txtNc.Text * Me.txtFreq.Text, Me.txtRSABalance.Text, 0, 1)) - dt.Rows(0).Item("LastPensionAmount"), 2)
 
 
+
 		If CDbl(Me.txtVariance.Text.Replace(",", "")) < 0 Then
 			Me.txtStatus.Text = "Depletion"
+
 		ElseIf CDbl(Me.txtVariance.Text.Replace(",", "")) > (dt.Rows(0).Item("LastPensionAmount") * 0.01) Then
 			Me.txtStatus.Text = "Surplus"
+
 		Else
 			Me.txtStatus.Text = "No Change"
+
 		End If
+
+
+
 
 
 	End Sub

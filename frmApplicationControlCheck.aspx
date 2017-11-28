@@ -164,7 +164,7 @@
     <div class="dvMiddleBox" >
 
         <asp:Panel ID="pnlGrid" Width ="100%" runat ="server" BorderStyle="Solid" BorderWidth ="2px" Height ="500px" >
-                            <asp:GridView Width="100%" ID="gridApplication" runat="server" Visible="true" PageSize="50" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" OnRowDataBound ="gridApplication_RowDataBound">
+                            <asp:GridView Width="100%" ID="gridApplication" runat="server" Visible="true" PageSize="100" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" OnRowDataBound ="gridApplication_RowDataBound">
                             <Columns>
                                         <asp:ButtonField CommandName="Select" Text="Select"/>
                                         <asp:TemplateField HeaderText="Is Okay?">

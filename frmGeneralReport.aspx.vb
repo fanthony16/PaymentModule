@@ -81,6 +81,7 @@ Partial Class frmGeneralReport
 				Me.ddReportType.Items.Add("Unprocessed Approvals")
 				Me.ddReportType.Items.Add("UnRecieved Approvals")
 				Me.ddReportType.Items.Add("pencom benefit report")
+				Me.ddReportType.Items.Add("AVC Report")
 
 				getUserAccessMenu(Session("user"))
 
@@ -241,6 +242,11 @@ Partial Class frmGeneralReport
 
 			dt = cr.PMgetApplicationSummary(CDate(Me.txtStartDate.Text), CDate(Me.txtEndDate.Text), 10)
 			cr.ExtractCSV(dt, "Benefit Pencom Report")
+
+		ElseIf ddReportType.SelectedIndex = 11 Then
+
+			dt = cr.PMgetApplicationSummary(CDate(Me.txtStartDate.Text), CDate(Me.txtEndDate.Text), 11)
+			cr.ExtractCSV(dt, "AVC Report")
 
 		ElseIf ddReportType.SelectedIndex = 9 Then
 
