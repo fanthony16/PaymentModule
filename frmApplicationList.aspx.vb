@@ -959,6 +959,9 @@ Partial Class frmApplicationList
 			refresh()
 			getApplicationList()
 
+			imgPassport.ImageUrl = Nothing
+			imgSignature.ImageUrl = Nothing
+
           Catch ex As Exception
 
           End Try

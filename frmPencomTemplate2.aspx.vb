@@ -63,22 +63,23 @@ Partial Class frmPencomTemplate2
 		End If
 
 		Me.txtNc.Text = FormatNumber(Me.txtNxDx.Text - (11 / 24), 6)
+		Dim lstNumbers As New List(Of Double), lstNumbers2 As New List(Of Double), recommendedAmount As Double
+		recommendedAmount = FormatNumber((-1 * Financial.Pmt(calInterate() / 12, 2 * Me.txtNc.Text * Me.txtFreq.Text, Me.txtRSABalance.Text, 0, 1)), 2)
 
-		Me.txtRecommendedAmount.Text = FormatNumber((-1 * Financial.Pmt(calInterate() / 12, 2 * Me.txtNc.Text * Me.txtFreq.Text, Me.txtRSABalance.Text, 0, 1)), 2)
+		txtMaxEnhanced.Text = FormatNumber((-1 * Financial.Pmt(calInterate() / 12, 2 * Me.txtNc.Text * Me.txtFreq.Text, Me.txtRSABalance.Text, 0, 1)), 2)
 
-		Dim lstNumbers As New List(Of Double), lstNumbers2 As New List(Of Double)
+		lstNumbers.Add(recommendedAmount)
 
-		lstNumbers.Add(Me.txtRecommendedAmount.Text)
-		lstNumbers.Add(txtMonthPencom.Text * (1 + 1.5))
+		lstNumbers.Add(txtMonthPencom.Text * (1.5))
 
-		lstNumbers2.Add(txtMaxEnhanced.Text)
+		lstNumbers2.Add(Me.txtMonthPencom.Text)
 		lstNumbers2.Add(lstNumbers.Min())
 
-		txtMaxEnhanced.Text = lstNumbers2.Max().ToString("#,##.00")
+
+		txtRecommendedAmount.Text = lstNumbers2.Max().ToString("#,##.00")
 
 		lstNumbers = New List(Of Double)
 		lstNumbers.Clear()
-
 
 		lstNumbers.Add(0)
 		lstNumbers.Add(CDbl(txtRSABalance.Text) + Financial.PV(calInterate() / 12, 2 * Me.txtNc.Text * CInt(Me.txtFreq.Text), CDbl(Me.txtMonthPencom.Text), 0, 1))

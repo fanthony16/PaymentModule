@@ -6,6 +6,19 @@ Partial Class index
 	End Sub
      Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
 		Dim dtusers As New DataTable, dtAppPreference As New DataTable, cr As New Core
+
+
+		Dim appStr = "ANN-003"
+
+		If appStr.Substring(0, 3) = "ANN" Then
+			MsgBox("" & appStr.Substring(0, 3))
+		ElseIf appStr.Substring(0, 3) = "LPW" Then
+			MsgBox("" & appStr.Substring(0, 3))
+		End If
+
+
+
+
           If Page.IsPostBack = False Then
 
                If IsNothing(Session("user")) = True Then

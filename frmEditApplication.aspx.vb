@@ -2434,7 +2434,7 @@ Partial Class frmEditApplication
 				If IsNothing(Session("user")) = True Then
 					Response.Redirect("Login.aspx")
 				Else
-					cr.PMUpdateApplication(appDetail, appDocDetails, appDocDetailsOLD, appAdhocDocDetails, Session("user"), appCheckList, appCheckListDBA)
+					cr.PMUpdateApplication(appDetail, appDocDetails, appDocDetailsOLD, appAdhocDocDetails, Session("user"), appCheckList, appCheckListDBA, Server.MapPath("~/Logs"))
 					cr.PMCleanDuplicateDocument(appDetail.ApplicationID)
 				End If
 
