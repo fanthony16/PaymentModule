@@ -2929,6 +2929,7 @@ Public Class Core
 	End Function
 
 
+	' <summary>
 
 	Public Function PMgetPencomEnhancement(rdate As Date) As DataTable
 
