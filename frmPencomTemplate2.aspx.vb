@@ -12,6 +12,7 @@ Partial Class frmPencomTemplate2
 		txtFreqq = 12
 
 		dtEnhancement = cr.PMgetRetireeForEnhencement()
+
 		Dim txtReviewDate As Date, txtFreq As Double = 12
 		txtReviewDate = CDate("2016-12-31")
 
@@ -50,7 +51,15 @@ Partial Class frmPencomTemplate2
 			'''''''''''''
 			'IFRS Version
 			'''''''''
-			txtRSABalance = FormatNumber(CDbl(dt.Rows(0).Item("YearEndRFBalance")) * 2.2104, 2)
+
+			'MsgBox("" & cr.getPMIFRSBalance(dtEnhancement.Rows(i).Item("EmployeeID")))
+
+			'MsgBox("" & CDbl(cr.getPMIFRSBalance(dtEnhancement.Rows(i).Item("EmployeeID")) * 2.2104))
+
+			'Exit Sub
+			txtRSABalance = FormatNumber(CDbl(cr.getPMIFRSBalance(dtEnhancement.Rows(i).Item("EmployeeID")) * 2.2104), 2)
+
+			'txtRSABalance = FormatNumber(CDbl(dt.Rows(0).Item("YearEndRFBalance")) * 2.2104, 2)
 
 			txtNetInterest = FormatNumber(calInterate() * 100, 2)
 
@@ -62,6 +71,7 @@ Partial Class frmPencomTemplate2
 
 			txtNcc = FormatNumber(txtNxDxx - (11 / 24), 6)
 			Dim lstNumbers As New List(Of Double), lstNumbers2 As New List(Of Double), recommendedAmount As Double
+
 			recommendedAmount = FormatNumber((-1 * Financial.Pmt(calInterate() / 12, 2 * txtNcc * txtFreq, txtRSABalance, 0, 1)), 2)
 
 			txtMaxEnhancedd = FormatNumber((-1 * Financial.Pmt(calInterate() / 12, 2 * txtNcc * txtFreq, txtRSABalance, 0, 1)), 2)
@@ -90,10 +100,20 @@ Partial Class frmPencomTemplate2
 			Dim ddate As Date = CDate("2016-12-31")
 
 			Try
-				Dim MyDataAdapter As SqlClient.SqlDataAdapter
-				MyDataAdapter = New SqlClient.SqlDataAdapter("INSERT INTO [dbo].[tblPensionEnhancementIFRS]([txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],[dteDOB] ,[dteDOR],[txtEmployerName],[txtEmployerCode],[numRSABalance],[numMonthPension],[intAge],[Nc],[NxDxNc],[numEnhancement],[numMaxEnhancement],[numReserve],[numSurplus],dterunfor)	VALUES('" & dt.Rows(0).Item("Surname") & "','" & dt.Rows(0).Item("FirstName") & "','" & dt.Rows(0).Item("MiddleName") & "','" & dt.Rows(0).Item("rsapin") & "','" & dt.Rows(0).Item("sex") & "','" & dt.Rows(0).Item("dateofbirth").ToString & "','" & dt.Rows(0).Item("DateOfResignation").ToString & "','" & dt.Rows(0).Item("EmployerName") & "','" & dt.Rows(0).Item("EmployerCode") & "','" & dt.Rows(0).Item("YearEndRFBalance") & "','" & dt.Rows(0).Item("LastPensionAmount") & "','" & age & "','" & txtNcc & "','" & txtNxDxx & "','" & txtRecommendedAmountt & "','" & txtMaxEnhancedd & "','" & txtReservee & "','" & txtSurplus & "','" & DateTime.Parse(ddate).ToString("yyyy-MM-dd HH:MM") & "')", mycon)
+				'NGAP
+				'Dim MyDataAdapter As SqlClient.SqlDataAdapter
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("INSERT INTO [dbo].[tblPensionEnhancementIFRS]([txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],[dteDOB] ,[dteDOR],[txtEmployerName],[txtEmployerCode],[numRSABalance],[numMonthPension],[intAge],[Nc],[NxDxNc],[numEnhancement],[numMaxEnhancement],[numReserve],[numSurplus],dterunfor)	VALUES('" & dt.Rows(0).Item("Surname") & "','" & dt.Rows(0).Item("FirstName") & "','" & dt.Rows(0).Item("MiddleName") & "','" & dt.Rows(0).Item("rsapin") & "','" & dt.Rows(0).Item("sex") & "','" & dt.Rows(0).Item("dateofbirth").ToString & "','" & dt.Rows(0).Item("DateOfResignation").ToString & "','" & dt.Rows(0).Item("EmployerName") & "','" & dt.Rows(0).Item("EmployerCode") & "','" & dt.Rows(0).Item("YearEndRFBalance") & "','" & dt.Rows(0).Item("LastPensionAmount") & "','" & age & "','" & txtNcc & "','" & txtNxDxx & "','" & txtRecommendedAmountt & "','" & txtMaxEnhancedd & "','" & txtReservee & "','" & txtSurplus & "','" & DateTime.Parse(ddate).ToString("yyyy-MM-dd HH:MM") & "')", mycon)
+				'MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+				'MyDataAdapter.SelectCommand.ExecuteNonQuery()
+
+				'IFRS
+				Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+				MyDataAdapter = New SqlClient.SqlDataAdapter("INSERT INTO [dbo].[tblPensionEnhancementIFRS]([txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],[dteDOB] ,[dteDOR],[txtEmployerName],[txtEmployerCode],[numRSABalance],[numMonthPension],[intAge],[Nc],[NxDxNc],[numEnhancement],[numMaxEnhancement],[numReserve],[numSurplus],dterunfor)	VALUES('" & dt.Rows(0).Item("Surname") & "','" & dt.Rows(0).Item("FirstName") & "','" & dt.Rows(0).Item("MiddleName") & "','" & dt.Rows(0).Item("rsapin") & "','" & dt.Rows(0).Item("sex") & "','" & dt.Rows(0).Item("dateofbirth").ToString & "','" & dt.Rows(0).Item("DateOfResignation").ToString & "','" & dt.Rows(0).Item("EmployerName") & "','" & dt.Rows(0).Item("EmployerCode") & "','" & txtRSABalance & "','" & dt.Rows(0).Item("LastPensionAmount") & "','" & age & "','" & txtNcc & "','" & txtNxDxx & "','" & txtRecommendedAmountt & "','" & txtMaxEnhancedd & "','" & txtReservee & "','" & txtSurplus & "','" & DateTime.Parse(ddate).ToString("yyyy-MM-dd HH:MM") & "')", mycon)
 				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 				MyDataAdapter.SelectCommand.ExecuteNonQuery()
+
+
+
 
 				'DateTime.Parse(Now).ToString("yyyy-MM-dd HH:MM")
 

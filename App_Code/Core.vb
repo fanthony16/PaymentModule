@@ -94,7 +94,7 @@ Public Class Core
 		Try
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
 
-			MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select  distinct EmployeeID,(select top 1 rsapin from employee a where a.employeeid = b.EmployeeID ) PIN  from payments b where PaymentTypeID in (1,3,33,17) and month(valuedate) = 12 and year(valuedate)=2014 and IsConfirmed = 1 and isArchived = 0 and IsReversed = 0) select * from tab a where  not exists (select * from SurePay..tblPensionEnhancementIFRS where txtPIN = a.pin) and ltrim(rtrim(a.pin)) like 'PEN%'", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select  distinct EmployeeID,(select top 1 rsapin from employee a where a.employeeid = b.EmployeeID ) PIN  from payments b where PaymentTypeID in (1,3,33,17) and month(valuedate) = 12 and year(valuedate)=2014 and IsConfirmed = 1 and isArchived = 0 and IsReversed = 0) select * from tab a where  not exists (select * from SurePay..tblPensionEnhancementIFRS where txtPIN = a.pin) and ltrim(rtrim(a.pin)) like 'PEN%' ", mycon)
 
 
 			'MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select  distinct top 2 EmployeeID,(select top 1 rsapin from employee a where a.employeeid = b.EmployeeID ) PIN  from payments b where PaymentTypeID in (3,33,17) and month(valuedate) = 12 and year(valuedate)=2016 and IsConfirmed = 1 and isArchived = 0 and IsReversed = 0) select * from tab a where  not exists (select * from SurePay..tblPensionEnhancement where txtPIN = a.pin)", mycon)
@@ -11984,6 +11984,56 @@ Public Class Core
 	End Function
 
 
+	Public Function getPMIFRSBalance(memberID As Integer) As Decimal
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("EnpowerV4")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select employeeid,sum(isnull(-unitvalue, 0)) [unitvalue] from Payments where isnull(isConfirmed,0) = 1 and isnull(isArchived,0) = 0 and fundid= 2 and cast (valuedate as date) < '2017-01-01' and employeeid =  @memberID group by employeeid union all select employeeid,sum(isnull(unitvalue, 0)) [unitvalue] from contributions where isnull(isConfirmed,0) = 1 and isarchived=0 and fundid=2 and cast(valuedate as date) < '2017-01-01' and employeeid = @memberID group by employeeid ) select sum(unitvalue) [Unit Balance]  from tab a join employee b on a.EmployeeID=b.EmployeeID group by rsapin,a.employeeid", mycon)
+
+
+			'DateOfResignation
+			',isnull((select top 1 netAmount from payments here PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@memberID", _
+			    SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@memberID").Value = memberID
+
+			'TotalNSITFValueRSA,TotalNSITFValueRF
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "PersonalDetails")
+			dtUser = dsUser.Tables("PersonalDetails")
+			mycon.Close()
+
+			If dtUser.Rows.Count > 0 Then
+				Return dtUser.Rows(0).Item(0)
+			Else
+				Return 0.0
+			End If
+
+
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+
 
 	'finding perticipant detailed full information 
 	Public Function getPMPersonInformation(PIN As String) As DataTable
@@ -12002,6 +12052,8 @@ Public Class Core
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
 			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2016-12-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2009-02-01') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation,(select fundName  from FundDefinition where FundDefinitionID = a.FundID) FundType,DateRetired from dbo.Employee a where rsapin  = @PIN", mycon)
+
+
 			'DateOfResignation
 			',isnull((select top 1 netAmount from payments here PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount
 
