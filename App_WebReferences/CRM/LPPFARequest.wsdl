@@ -1,0 +1,788 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="CreateCase">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:CaseRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CaseRequest">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="caseid" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="casegroup" type="tns:casegroup" />
+          <s:element minOccurs="0" maxOccurs="1" name="casegroupidentifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="casesubject" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="casemessage" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="userId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="phone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CaseDocument" type="tns:ArrayOfCaseDocument" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="casegroup">
+        <s:restriction base="s:string">
+          <s:enumeration value="Anonymous" />
+          <s:enumeration value="Employer" />
+          <s:enumeration value="Employee" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfCaseDocument">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CaseDocument" nillable="true" type="tns:CaseDocument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CaseDocument">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Doc" type="s:base64Binary" />
+          <s:element minOccurs="0" maxOccurs="1" name="FileName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateCaseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CreateCaseResult" type="tns:CaseResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CaseResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LPPFAResponse">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CaseId" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="LPPFAResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCaseStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:CaseStatus" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CaseStatus">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="caseid" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetCaseStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCaseStatusResult" type="tns:CaseStatusResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CaseStatusResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LPPFAResponse">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="CaseStatusId" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DropBenefitApplication">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:NPMOnlineApplicationDetail" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NPMOnlineApplicationDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="aVCApplicationAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="accountName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="accountNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="customerBankID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="customerBankBranchID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="applicationDocuments" type="tns:ArrayOfApplicationDocumentDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateDisengagement" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateRetirement" nillable="true" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="retirementGround" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="reason" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="tIN" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="applicationTypeName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pIN" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="appTypeId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="createdBy" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="department" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="designation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="stateId" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="sourceId" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfApplicationDocumentDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ApplicationDocumentDetail" nillable="true" type="tns:ApplicationDocumentDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ApplicationDocumentDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="documentHashValue" type="s:base64Binary" />
+          <s:element minOccurs="0" maxOccurs="1" name="isVerified" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="documentLocation" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="documentTypeName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="documentTypeID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="dateReceived" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="receivedBy" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="memberApplicationID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="documentSource" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ext" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DropBenefitApplicationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DropBenefitApplicationResult" type="tns:BenefitApplicationResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BenefitApplicationResponse">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="benefitapplicationid" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DropBenefitApplicationSurepay">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:NPMOnlineApplicationDetail" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DropBenefitApplicationSurepayResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DropBenefitApplicationSurepayResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBenefitApplicationStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:BenefitApplicationStatus" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BenefitApplicationStatus">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="benefitapplicationid" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetBenefitApplicationStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBenefitApplicationStatusResult" type="tns:BenefitAppStatusResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="BenefitAppStatusResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LPPFAResponse">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="StatusId" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetParticipantAccountOfficer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RSAPIN" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetParticipantAccountOfficerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetParticipantAccountOfficerResult" type="tns:AccountOfficer" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AccountOfficer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ExtensionData" type="tns:ExtensionDataObject" />
+          <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MobilePhone" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="status" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ExtensionDataObject" />
+      <s:element name="LogProspect">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="m" type="tns:Prospect" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Prospect">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="formName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="firstname" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="middlename" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="lastname" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="title" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidgender" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidmobileno" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidrelationshipstatus" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidbirthday" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidstateoforigin" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidlga" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pidnationality" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="pididentificationmode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="organization" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="organisationaddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="organisationstate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="organisationlga" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="organisationfile" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="dateofemployment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="stateofposting" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="currentpfa" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="employmentdetailspin" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kintitle" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinlastname" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinfirstname" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinrelationship" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kingender" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinaddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinstate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinlga" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="kinmobileno" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="image" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="LogProspectResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogProspectResult" type="tns:ProspectResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ProspectResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:LPPFAResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetBanks">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetBanksResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBanksResult" type="tns:ArrayOfBankCls" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBankCls">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BankCls" nillable="true" type="tns:BankCls" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BankCls">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="BankName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetBankBranch">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetBankBranchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBankBranchResult" type="tns:ArrayOfBankBranch" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfBankBranch">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BankBranch" nillable="true" type="tns:BankBranch" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BankBranch">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="BranchName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SortCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="BankID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="BranchStateID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetBankBranchUsingBankId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="bankId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBankBranchUsingBankIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBankBranchUsingBankIdResult" type="tns:ArrayOfBankBranch" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBenefitApplicationType">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetBenefitApplicationTypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetBenefitApplicationTypeResult" type="tns:ArrayOfApprovalType" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfApprovalType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ApprovalType" nillable="true" type="tns:ApprovalType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ApprovalType">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="approvalID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="approvalName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetRequiredDocument">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="sector" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetRequiredDocumentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetRequiredDocumentResult" type="tns:ArrayOfPaymentRequiredDocument" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPaymentRequiredDocument">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PaymentRequiredDocument" nillable="true" type="tns:PaymentRequiredDocument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PaymentRequiredDocument">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="DocumentID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="DocumentName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ApplicationTypeID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetExitReason">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="appTypeId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetExitReasonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetExitReasonResult" type="tns:ArrayOfString" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateCaseSoapIn">
+    <wsdl:part name="parameters" element="tns:CreateCase" />
+  </wsdl:message>
+  <wsdl:message name="CreateCaseSoapOut">
+    <wsdl:part name="parameters" element="tns:CreateCaseResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCaseStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCaseStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetCaseStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCaseStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="DropBenefitApplicationSoapIn">
+    <wsdl:part name="parameters" element="tns:DropBenefitApplication" />
+  </wsdl:message>
+  <wsdl:message name="DropBenefitApplicationSoapOut">
+    <wsdl:part name="parameters" element="tns:DropBenefitApplicationResponse" />
+  </wsdl:message>
+  <wsdl:message name="DropBenefitApplicationSurepaySoapIn">
+    <wsdl:part name="parameters" element="tns:DropBenefitApplicationSurepay" />
+  </wsdl:message>
+  <wsdl:message name="DropBenefitApplicationSurepaySoapOut">
+    <wsdl:part name="parameters" element="tns:DropBenefitApplicationSurepayResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBenefitApplicationStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBenefitApplicationStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetBenefitApplicationStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBenefitApplicationStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetParticipantAccountOfficerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetParticipantAccountOfficer" />
+  </wsdl:message>
+  <wsdl:message name="GetParticipantAccountOfficerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetParticipantAccountOfficerResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogProspectSoapIn">
+    <wsdl:part name="parameters" element="tns:LogProspect" />
+  </wsdl:message>
+  <wsdl:message name="LogProspectSoapOut">
+    <wsdl:part name="parameters" element="tns:LogProspectResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBanksSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBanks" />
+  </wsdl:message>
+  <wsdl:message name="GetBanksSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBanksResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBankBranchSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBankBranch" />
+  </wsdl:message>
+  <wsdl:message name="GetBankBranchSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBankBranchResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBankBranchUsingBankIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBankBranchUsingBankId" />
+  </wsdl:message>
+  <wsdl:message name="GetBankBranchUsingBankIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBankBranchUsingBankIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBenefitApplicationTypeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBenefitApplicationType" />
+  </wsdl:message>
+  <wsdl:message name="GetBenefitApplicationTypeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBenefitApplicationTypeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRequiredDocumentSoapIn">
+    <wsdl:part name="parameters" element="tns:GetRequiredDocument" />
+  </wsdl:message>
+  <wsdl:message name="GetRequiredDocumentSoapOut">
+    <wsdl:part name="parameters" element="tns:GetRequiredDocumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetExitReasonSoapIn">
+    <wsdl:part name="parameters" element="tns:GetExitReason" />
+  </wsdl:message>
+  <wsdl:message name="GetExitReasonSoapOut">
+    <wsdl:part name="parameters" element="tns:GetExitReasonResponse" />
+  </wsdl:message>
+  <wsdl:portType name="LPPFARequestSoap">
+    <wsdl:operation name="CreateCase">
+      <wsdl:input message="tns:CreateCaseSoapIn" />
+      <wsdl:output message="tns:CreateCaseSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCaseStatus">
+      <wsdl:input message="tns:GetCaseStatusSoapIn" />
+      <wsdl:output message="tns:GetCaseStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DropBenefitApplication">
+      <wsdl:input message="tns:DropBenefitApplicationSoapIn" />
+      <wsdl:output message="tns:DropBenefitApplicationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DropBenefitApplicationSurepay">
+      <wsdl:input message="tns:DropBenefitApplicationSurepaySoapIn" />
+      <wsdl:output message="tns:DropBenefitApplicationSurepaySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBenefitApplicationStatus">
+      <wsdl:input message="tns:GetBenefitApplicationStatusSoapIn" />
+      <wsdl:output message="tns:GetBenefitApplicationStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetParticipantAccountOfficer">
+      <wsdl:input message="tns:GetParticipantAccountOfficerSoapIn" />
+      <wsdl:output message="tns:GetParticipantAccountOfficerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LogProspect">
+      <wsdl:input message="tns:LogProspectSoapIn" />
+      <wsdl:output message="tns:LogProspectSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBanks">
+      <wsdl:input message="tns:GetBanksSoapIn" />
+      <wsdl:output message="tns:GetBanksSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBankBranch">
+      <wsdl:input message="tns:GetBankBranchSoapIn" />
+      <wsdl:output message="tns:GetBankBranchSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBankBranchUsingBankId">
+      <wsdl:input message="tns:GetBankBranchUsingBankIdSoapIn" />
+      <wsdl:output message="tns:GetBankBranchUsingBankIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBenefitApplicationType">
+      <wsdl:input message="tns:GetBenefitApplicationTypeSoapIn" />
+      <wsdl:output message="tns:GetBenefitApplicationTypeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRequiredDocument">
+      <wsdl:input message="tns:GetRequiredDocumentSoapIn" />
+      <wsdl:output message="tns:GetRequiredDocumentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExitReason">
+      <wsdl:input message="tns:GetExitReasonSoapIn" />
+      <wsdl:output message="tns:GetExitReasonSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LPPFARequestSoap" type="tns:LPPFARequestSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateCase">
+      <soap:operation soapAction="http://tempuri.org/CreateCase" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCaseStatus">
+      <soap:operation soapAction="http://tempuri.org/GetCaseStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DropBenefitApplication">
+      <soap:operation soapAction="http://tempuri.org/DropBenefitApplication" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DropBenefitApplicationSurepay">
+      <soap:operation soapAction="http://tempuri.org/DropBenefitApplicationSurepay" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBenefitApplicationStatus">
+      <soap:operation soapAction="http://tempuri.org/GetBenefitApplicationStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetParticipantAccountOfficer">
+      <soap:operation soapAction="http://tempuri.org/GetParticipantAccountOfficer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogProspect">
+      <soap:operation soapAction="http://tempuri.org/LogProspect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBanks">
+      <soap:operation soapAction="http://tempuri.org/GetBanks" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBankBranch">
+      <soap:operation soapAction="http://tempuri.org/GetBankBranch" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBankBranchUsingBankId">
+      <soap:operation soapAction="http://tempuri.org/GetBankBranchUsingBankId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBenefitApplicationType">
+      <soap:operation soapAction="http://tempuri.org/GetBenefitApplicationType" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequiredDocument">
+      <soap:operation soapAction="http://tempuri.org/GetRequiredDocument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExitReason">
+      <soap:operation soapAction="http://tempuri.org/GetExitReason" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="LPPFARequestSoap12" type="tns:LPPFARequestSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateCase">
+      <soap12:operation soapAction="http://tempuri.org/CreateCase" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCaseStatus">
+      <soap12:operation soapAction="http://tempuri.org/GetCaseStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DropBenefitApplication">
+      <soap12:operation soapAction="http://tempuri.org/DropBenefitApplication" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DropBenefitApplicationSurepay">
+      <soap12:operation soapAction="http://tempuri.org/DropBenefitApplicationSurepay" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBenefitApplicationStatus">
+      <soap12:operation soapAction="http://tempuri.org/GetBenefitApplicationStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetParticipantAccountOfficer">
+      <soap12:operation soapAction="http://tempuri.org/GetParticipantAccountOfficer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LogProspect">
+      <soap12:operation soapAction="http://tempuri.org/LogProspect" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBanks">
+      <soap12:operation soapAction="http://tempuri.org/GetBanks" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBankBranch">
+      <soap12:operation soapAction="http://tempuri.org/GetBankBranch" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBankBranchUsingBankId">
+      <soap12:operation soapAction="http://tempuri.org/GetBankBranchUsingBankId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBenefitApplicationType">
+      <soap12:operation soapAction="http://tempuri.org/GetBenefitApplicationType" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRequiredDocument">
+      <soap12:operation soapAction="http://tempuri.org/GetRequiredDocument" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExitReason">
+      <soap12:operation soapAction="http://tempuri.org/GetExitReason" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LPPFARequest">
+    <wsdl:port name="LPPFARequestSoap" binding="tns:LPPFARequestSoap">
+      <soap:address location="http://p-midas2:90/LPPFAToCRMService/LPPFARequest.asmx" />
+    </wsdl:port>
+    <wsdl:port name="LPPFARequestSoap12" binding="tns:LPPFARequestSoap12">
+      <soap12:address location="http://p-midas2:90/LPPFAToCRMService/LPPFARequest.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

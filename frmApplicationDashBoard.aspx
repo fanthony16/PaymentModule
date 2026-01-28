@@ -35,8 +35,6 @@
 
                     <div style=" width :100%; padding : 0px; border-color:#3a4f63; border :2px solid ; margin-bottom :20px;" runat ="server" visible ="false"   >
                         <div id="Div1" style ="text-align:center ; background-color:#3a4f63; font-size :14px; height :25px;"><span style ="color :#dde4ec;"><strong>Email Validation</strong></span> </div>
-                        
-
             <div style ="text-align :right ; padding : 5px;" ><span >Enter The Nos Of Email to Validate: </span></div>
             <div id="divEmailAddy" style ="padding :5px; text-align :right ;" ><asp:TextBox ID="txtEmailCount" Width ="285px" runat ="server"></asp:TextBox><asp:RequiredFieldValidator ID="reqEmailCount" runat="server" ErrorMessage="*" ControlToValidate="txtEmailCount" Display="Dynamic" SetFocusOnError="True" ValidationGroup="EmailCount" Font-Bold="True" ForeColor="Red"></asp:RequiredFieldValidator><asp:CompareValidator ID="compareEmailCount" runat="server" ErrorMessage="Please Enter Number Only" Display="Dynamic" ValidationGroup="EmailCount" Type="Integer" Operator="DataTypeCheck" ControlToValidate="txtEmailCount" Font-Bold="True" Font-Italic="True" ForeColor="Red"></asp:CompareValidator></div>
             <div style ="text-align :right ; padding :5px;"><asp:Button ID="btnValidate" runat="server" Text="Validate" ValidationGroup="EmailCount" /></div>
@@ -130,7 +128,7 @@
                             <div style ="text-align:center ; height :40px; margin-top:20px;"><span id="lblPercentTotalUndocumented" runat ="server"  style ="color :#3a4f63; font-size :30px;"><strong>0%</strong></span></div>
                             <div style =" float :left ; margin-top:20px;">
                                  <div style="float :left ; padding-right :250px;padding-left :10px;text-align:left  ; height :40px; ">
-<asp:ImageButton ID="btnNewApplication" runat ="server" ImageUrl="~/images/add.png" ToolTip="Log New Application" ValidationGroup="new"  />
+<asp:ImageButton ID="btnNewApplication" runat ="server" ImageUrl="~/images/add.png" ToolTip="Log New Application" ValidationGroup="new" Visible ="false"   />
                                  </div>
                                  <div style="float :left ; padding-right :0px;text-align:left  ; height :40px; ">
 <asp:ImageButton ID="btnViewNewApplication" runat ="server" ImageUrl="~/images/K view.png" ToolTip="View All Pending Logs" ValidationGroup="Cancel" Enabled ="true" />

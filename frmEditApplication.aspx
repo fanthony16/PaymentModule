@@ -869,7 +869,7 @@
 
                                          <div id="Div22" class ="dvBoxRows" >
 
-                                             <asp:Button ID="btnSubmit" runat="server" Text="Submit Application" ValidationGroup ="SubmittingApplicatiom" />
+                                             <asp:Button ID="btnSubmit" runat="server" Text="Submit Application" ValidationGroup ="SubmittingApplicatiom" Visible ="false" />
 
                                          </div>
                                          <div>
@@ -912,7 +912,7 @@
      <asp:Button id="btnPopupRMASAnnuity" runat="server" style="display:none" />
      <asp:Button id="btnPopupRMASDB" runat="server" style="display:none" />
      <asp:Button id="btnPopuAVCTIN" runat="server" style="display:none" />
-               <asp:Button id="btnPopupRMASNSITF" runat="server" style="display:none" />
+     <asp:Button id="btnPopupRMASNSITF" runat="server" style="display:none" />
                
                
 
@@ -1330,13 +1330,12 @@
 
 
                <asp:ModalPopupExtender ID="MPRMASPW" runat="server" PopupControlID="pnlRMASPW" TargetControlID="btnPopupRMASPW" CancelControlID="btnMPRMASPW" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
-     <asp:Panel ID="pnlRMASPW" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="780px">
+     <asp:Panel ID="pnlRMASPW" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="1050px">
 
-          <div class ="bodyMainDiv" style="height:750px; width: 100%" >
+          <div class ="bodyMainDiv" style="height:1150px; width: 100%" >
           <div id="Div20" style ="padding-left :20px;"><h2><span>Program Withdrawal RMAS Details</span></h2></div>
           
-          <div id="Div24" class ="SubbodyMainDiv" style="height:730px;">
-
+          <div id="Div24" class ="SubbodyMainDiv" style="height:1150px;">
 
                <div id="dvBasicSalaryPW" class ="dvBoxRows" style="margin-top : 5px; ">
 
@@ -1439,7 +1438,6 @@
                     </div>
 
                </div>
-
                <div id="dvAnnualTotalEmolument" class ="dvBoxRows" style="margin-top : 5px; ">
 
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
@@ -1454,7 +1452,6 @@
                     </div>
 
                </div>
-
                <div id="dvRetirementDatePW" class ="dvBoxRows" style="margin-top : 2px;">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Retirement Date :</span>
@@ -1496,7 +1493,6 @@
                                                             </asp:UpdatePanel>
                                                     </asp:Panel>
                </div>
-
                <div id="dvRetirementGround" class ="dvBoxRows" style="margin-top : 2px; ">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Retirement Ground :</span>
@@ -1506,7 +1502,6 @@
                          <asp:RequiredFieldValidator ID="reqRetirementGround" runat ="server" ErrorMessage="*" controlToValidate="ddRetirementGroundPW" Display="Dynamic" SetFocusOnError="True" ValidationGroup="PWDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
                     </div>
                </div>
-
                <div id="dvValueDate" class ="dvBoxRows" style="margin-top : 5px;">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Value Date :</span>
@@ -1548,7 +1543,6 @@
                                                             </asp:UpdatePanel>
                                                     </asp:Panel>
                </div>
-
                <div id="dvAcruedRight" class ="dvBoxRows" style="margin-top : 5px; ">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Accrued Right :</span>
@@ -1561,7 +1555,6 @@
 
                     </div>
                </div>
-
                <div id="dvRSABalancPWe" class ="dvBoxRows" style="margin-top : 5px; ">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">RSA Balance :</span>
@@ -1574,7 +1567,6 @@
 
                     </div>
                </div>
-
                <div id="dvRecommendedLumpSum" class ="dvBoxRows" style="margin-top : 5px; ">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Recommended LumpSum :</span>
@@ -1587,7 +1579,6 @@
 
                     </div>
                </div>
-
                <div id="dvMonthlyDrawDown" class ="dvBoxRows" style="margin-top : 5px; ">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Monthly Drawn Down :</span>
@@ -1600,6 +1591,108 @@
 
                     </div>
                </div>
+
+
+               <div id="dvReviewedSalary" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Reviewed Salary :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtReviewedSalary" runat="server" Width="300px" Text ="0.00" ValidationGroup="PWDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqtxtReviewedSalary" runat ="server" ErrorMessage="*" controlToValidate="txtReviewedSalary" Display="Dynamic" SetFocusOnError="True" ValidationGroup="PWDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compReviewedSalary" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtReviewedSalary" Display="Dynamic" Operator="DataTypeCheck" Type="Double"></asp:CompareValidator>
+
+                    </div>
+               </div>
+               <div id="dvPensionArrears" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Pension Arrears :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtPensionArrears" runat="server" Width="300px" Text ="0.00" ValidationGroup="PWDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqPensionArrears" runat ="server" ErrorMessage="*" controlToValidate="txtPensionArrears" Display="Dynamic" SetFocusOnError="True" ValidationGroup="PWDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="comPensionArrears" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtPensionArrears" Display="Dynamic" Operator="DataTypeCheck" Type="Double"></asp:CompareValidator>
+
+                    </div>
+               </div>
+               <div id="dvMonthArrears" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Months Of Arrears :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtMonthArrears" runat="server" Width="300px" Text ="" ValidationGroup="PWDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqMonthArrears" runat ="server" ErrorMessage="*" controlToValidate="txtMonthArrears" Display="Dynamic" SetFocusOnError="True" ValidationGroup="PWDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compMonthArrears" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtMonthArrears" Display="Dynamic" Operator="DataTypeCheck" Type="Integer" ValidationGroup="PWDetails"></asp:CompareValidator>
+
+                    </div>
+               </div>
+               <div id="dvFrequency" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Pension Frequency :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtPensionFrequency" runat="server" Width="300px" Text ="" ValidationGroup="PWDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqPensionFrequency" runat ="server" ErrorMessage="*" controlToValidate="txtPensionFrequency" Display="Dynamic" SetFocusOnError="True" ValidationGroup="PWDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compPensionFrequency" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtPensionFrequency" Display="Dynamic" Operator="DataTypeCheck" Type="Integer"></asp:CompareValidator>
+
+                    </div>
+               </div>
+               <div id="dvSalaryStructure" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Salary Structure :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:DropDownList ID="ddSS" runat="server" Width ="300px">
+                                   <asp:ListItem></asp:ListItem>
+                                   <asp:ListItem>CONHESS</asp:ListItem>
+                                   <asp:ListItem>CONMESS</asp:ListItem>
+                                   <asp:ListItem>CONPASS</asp:ListItem>
+                                   <asp:ListItem>CONPCASS</asp:ListItem>
+                                   <asp:ListItem>CONPOSS</asp:ListItem>
+                                   <asp:ListItem>CONPSS</asp:ListItem>
+                                   <asp:ListItem>CONRAISS</asp:ListItem>
+                                   <asp:ListItem>CONTEDISS</asp:ListItem>
+                                   <asp:ListItem>CONTISS</asp:ListItem>
+                                   <asp:ListItem>CONUASS</asp:ListItem>
+                                   <asp:ListItem>TOPSAL</asp:ListItem>
+                          </asp:DropDownList>
+
+                    </div>
+               </div>
+               <div id="dvGradeLevel" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Grade Level :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtGradeLevel" runat="server" Width="300px" Text ="" ValidationGroup="PWDetails"></asp:TextBox>
+                    </div>
+               </div>
+               <div id="dvStep" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Step :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtStep" runat="server" Width="300px" Text ="" ValidationGroup="PWDetails"></asp:TextBox>
+                    </div>
+               </div>
+               <div id="dvProgrammingDate" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Programming Date :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtProgrammingDate" runat="server" Width="300px" Text ="" ValidationGroup="PWDetails"></asp:TextBox>DD/MM/YYYY 
+                         <asp:RequiredFieldValidator ID="reqProgrammedDate" runat ="server" ErrorMessage="*" controlToValidate="txtProgrammingDate" Display="Dynamic" SetFocusOnError="True" ValidationGroup="PWDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compProgrammedDate" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtProgrammingDate" Display="Dynamic" Operator="DataTypeCheck" Type="Date" ValidationGroup="PWDetails"></asp:CompareValidator>
+
+                    </div>
+               </div>
+
 
 
                <div style ="width :100%; float :left ;">
@@ -1620,12 +1713,12 @@
 
 
                <asp:ModalPopupExtender ID="MPRMASAnnuity" runat="server" PopupControlID="pnlRMASAnnuity" TargetControlID="btnPopupRMASAnnuity" CancelControlID="btnMPRMASAnnuity" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
-     <asp:Panel ID="pnlRMASAnnuity" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="780px">
+     <asp:Panel ID="pnlRMASAnnuity" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="1040px">
 
-          <div class ="bodyMainDiv" style="height:750px; width: 100%" >
+          <div class ="bodyMainDiv" style="height:1250px; width: 100%" >
           <div id="Div25" style ="padding-left :20px;"><h2><span>Annuity RMAS Details</span></h2></div>
           
-          <div id="Div26" class ="SubbodyMainDiv" style="height:680px;">
+          <div id="Div26" class ="SubbodyMainDiv" style="height:1150px;">
 
                <div id="dvBasicSalaryAnnuity" class ="dvBoxRows" style="margin-top : 5px; ">
 
@@ -1748,7 +1841,6 @@
 
                </div>
 
-
                <div id="dvRetirementGroundAnnuity" class ="dvBoxRows" style="margin-top : 1px; ">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
                          <span style ="font-size : medium;">Retirement Ground :</span>
@@ -1800,7 +1892,6 @@
                                                             </asp:UpdatePanel>
                                                     </asp:Panel>
                </div>
-
 
                <div id="dvValueDateAnnuity" class ="dvBoxRows" style="margin-top : 5px;">
                     <div class="dvBoxRowsFieldLabel" style="width:200px;">
@@ -1945,7 +2036,121 @@
                          <asp:CompareValidator ID="compMonthlyAnnuity" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtMonthlyAnnuity" Display="Dynamic" Operator="DataTypeCheck" Type="Double" ValidationGroup="AnnuityDetails"></asp:CompareValidator>
 
                     </div>
-               </div>            
+               </div> 
+               
+               
+               
+               
+               <div id="dvANNReviewedSalary" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Reviewed Salary :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNReviewedSalary" runat="server" Width="300px" Text ="0.00" ValidationGroup="AnnuityDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqANNReviewedSalary" runat ="server" ErrorMessage="*" controlToValidate="txtANNReviewedSalary" Display="Dynamic" SetFocusOnError="True" ValidationGroup="AnnuityDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compANNReviewedSalary" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtANNReviewedSalary" Display="Dynamic" Operator="DataTypeCheck" Type="Double"></asp:CompareValidator>
+
+                    </div>
+               </div>
+
+               <div id="dvANNPensionArrears" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Pension Arrears :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNPensionArrears" runat="server" Width="300px" Text ="0.00" ValidationGroup="AnnuityDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqANNPensionArrears" runat ="server" ErrorMessage="*" controlToValidate="txtANNPensionArrears" Display="Dynamic" SetFocusOnError="True" ValidationGroup="AnnuityDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compANNPensionArrears" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtANNPensionArrears" Display="Dynamic" Operator="DataTypeCheck" Type="Double"></asp:CompareValidator>
+
+                    </div>
+               </div>
+
+               <div id="dvANNMonthArrears" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Months Of Arrears :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNMonthArrears" runat="server" Width="300px" Text ="" ValidationGroup="AnnuityDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqANNMonthArrears" runat ="server" ErrorMessage="*" controlToValidate="txtANNMonthArrears" Display="Dynamic" SetFocusOnError="True" ValidationGroup="AnnuityDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compANNMonthArrears" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtANNMonthArrears" Display="Dynamic" Operator="DataTypeCheck" Type="Integer" ValidationGroup="AnnuityDetails"></asp:CompareValidator>
+
+                    </div>
+               </div>
+
+               <div id="dvANNPensionFrequency" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Pension Frequency :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNPensionFrequency" runat="server" Width="300px" Text ="" ValidationGroup="AnnuityDetails"></asp:TextBox>
+                         <asp:RequiredFieldValidator ID="reqANNPensionFrequency" runat ="server" ErrorMessage="*" controlToValidate="txtANNPensionFrequency" Display="Dynamic" SetFocusOnError="True" ValidationGroup="AnnuityDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compANNPensionFrequency" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtANNPensionFrequency" Display="Dynamic" Operator="DataTypeCheck" Type="Integer"></asp:CompareValidator>
+
+                    </div>
+               </div>
+
+               <div id="dvANNSS" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Salary Structure :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+
+                         <asp:DropDownList ID="ddANNSS" runat="server" Width ="300px">
+                                   <asp:ListItem></asp:ListItem>
+                                   <asp:ListItem>CONHESS</asp:ListItem>
+                                   <asp:ListItem>CONMESS</asp:ListItem>
+                                   <asp:ListItem>CONPASS</asp:ListItem>
+                                   <asp:ListItem>CONPCASS</asp:ListItem>
+                                   <asp:ListItem>CONPOSS</asp:ListItem>
+                                   <asp:ListItem>CONPSS</asp:ListItem>
+                                   <asp:ListItem>CONRAISS</asp:ListItem>
+                                   <asp:ListItem>CONTEDISS</asp:ListItem>
+                                   <asp:ListItem>CONTISS</asp:ListItem>
+                                   <asp:ListItem>CONUASS</asp:ListItem>
+                                   <asp:ListItem>TOPSAL</asp:ListItem>
+                          </asp:DropDownList>
+
+                    </div>
+               </div>
+
+               <div id="dvANNGradeLevel" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Grade Level :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNGradeLevel" runat="server" Width="300px" Text =""></asp:TextBox>
+                    </div>
+               </div>
+
+               <div id="dvANNStep" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Step :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNStep" runat="server" Width="300px" Text =""></asp:TextBox>
+                    </div>
+               </div>
+
+               <div id="dvANNProgrammingDate" class ="dvBoxRows" style="margin-top : 2px; ">
+                    <div class="dvBoxRowsFieldLabel" style="width:200px;">
+                         <span style ="font-size : medium;">Programming Date :</span>
+                    </div>
+                    <div style ="text-align :left ; padding-left : 250px;">
+                         <asp:TextBox ID="txtANNProgrammingDate" runat="server" Width="300px" Text ="" ValidationGroup="AnnuityDetails"></asp:TextBox>DD/MM/YYYY 
+                         <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat ="server" ErrorMessage="*" controlToValidate="txtANNProgrammingDate" Display="Dynamic" SetFocusOnError="True" ValidationGroup="AnnuityDetails" Font-Bold="True" ForeColor="Red" ></asp:RequiredFieldValidator>
+
+                         <asp:CompareValidator ID="compANNProgrammingDate" runat="server" ErrorMessage="Bad Input" ControlToValidate="txtANNProgrammingDate" Display="Dynamic" Operator="DataTypeCheck" Type="Date" ValidationGroup="AnnuityDetails"></asp:CompareValidator>
+
+                    </div>
+               </div>
+               
+               
+               
+                          
 
                <div style ="width :100%; float :left ;">
                     
@@ -1962,7 +2167,6 @@
           <br />
     <asp:Button ID="btnMPRMASAnnuity" runat="server" Text="Cancel" />
     </asp:Panel>
-
 
 
                <asp:ModalPopupExtender ID="mpDeathBenefit" runat="server" PopupControlID="pnlRMASDeathBenefit" TargetControlID="btnPopupRMASDB" CancelControlID="btnMPRMASDB" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
@@ -2283,7 +2487,6 @@
           <br />
     <asp:Button ID="btnCancelMPAVC" runat="server" Text="Cancel" />
     </asp:Panel>
-
 
 
                <asp:ModalPopupExtender ID="MPNSITF" runat="server" PopupControlID="pnlRMASNSITF" TargetControlID="btnPopupRMASNSITF" CancelControlID="btnCancelNSITF" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>
@@ -2719,8 +2922,6 @@
           
     
     </asp:Panel>
-
-
 
 
 

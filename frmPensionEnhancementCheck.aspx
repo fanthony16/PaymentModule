@@ -23,7 +23,11 @@
                     
                         <div id="dvStateDate" class ="dvBoxRows">
                                 <div style ="float :left; width:80px"><span>Start Date :</span></div>
-                                <div style="text-align :right ;"><asp:TextBox ID="txtRunDate" runat="server" Width ="200px" ValidationGroup="FindType"></asp:TextBox></div>
+                                <div style="text-align :right ;"><asp:TextBox ID="txtRunDate" runat="server" Width ="200px" ValidationGroup="PWEnhancement"></asp:TextBox>
+                                      <asp:RequiredFieldValidator ID="reqRunDate" runat="server" ErrorMessage="*" ControlToValidate="txtRunDate" Display="Dynamic" SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup="PWEnhancement"></asp:RequiredFieldValidator>
+
+
+                                </div>
                                 <asp:PopupControlExtender ID="calRunDate_PopupControlExtender" runat="server" Enabled="True" ExtenderControlID="" PopupControlID="pnlRunDate" Position="Bottom" TargetControlID="txtRunDate"></asp:PopupControlExtender>
                                 <asp:Panel ID="pnlRunDate" runat="server">
                                     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -49,8 +53,39 @@
 
                             </div>
 
+
+
+                         <div style=" width :100%; padding : 0px; border-color:#3a4f63; border :2px solid ; margin-bottom :20px; border-radius :25px 25px 0px 0px;">
+                        <div id="Div2" style ="text-align:center ; background-color:#3a4f63; font-size :14px; height :25px; border-radius :25px 25px 0px 0px;">
+                             <span style ="color :#dde4ec;"><strong>Find By PIN(s)</strong></span> 
+                        </div>
+                        
+                       
+                        <div id="dvFindPIN" style ="padding :5px; text-align :right ;" >
+                            
+                             <asp:TextBox ID="txtFindPIN" runat ="server" Width ="300px" TextMode="MultiLine" Height ="500px"></asp:TextBox>
+                           <%--  <asp:RequiredFieldValidator ID="reqPIN" runat="server" ErrorMessage="*" ControlToValidate="txtFindPIN" Display="Dynamic" SetFocusOnError="True" Font-Bold="True" ForeColor="Red" ValidationGroup="FindPIN"></asp:RequiredFieldValidator>--%>
+
+                        </div>
+                        <div style ="text-align :right ; padding :5px;"><asp:Button ID="btnFindPIN" runat="server" Text="Find" ValidationGroup="FindPIN" Visible ="false"  /></div>
+            <asp:Panel ID="Panel1" runat ="server" Visible="False"><div style ="padding:5PX;"><span id="Span1" runat ="server" >.</span></div></asp:Panel>
+            
+            
+                  </div>
+
+
+
+
+
+
+
+
                              <div style ="text-align :right ; margin-top :10px; margin-bottom : 10px; ">
-                             <div style ="padding-right :10px;"> <asp:Button ID="btnFind" runat="server" Text="Find" ValidationGroup="RMASComfirmation" /></div>
+                                  <div style="float :left ;"> <asp:CheckBox ID="chkSourceType" runat ="server" Text ="Filter By PIN" /> </div>
+                                  
+
+
+                             <div style ="padding-right :10px; float :left ; padding-left :170px;"> <asp:Button ID="btnFind" runat="server" Text="Find" ValidationGroup="PWEnhancement" /></div>
 
                         </div>
 
@@ -69,7 +104,7 @@
                <div class="dvMiddleBox" style="border-radius :25px 25px 0px 0px; border :2px solid; margin-top :10px; margin-bottom :10px; padding  :5px 10px 20px 10px; width :77%; " >
 
                     <asp:Panel ID="pnlGrid" Width ="100%" runat ="server" Height ="870px"  >
-                                  <asp:GridView Width="100%" ID="gridApplications" runat="server" Visible="true" PageSize="70" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" OnRowDataBound = "gridExport_OnRowDataBound" >
+                                  <asp:GridView Width="100%" ID="gridApplications" runat="server" Visible="true" PageSize="200" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" OnRowDataBound = "gridExport_OnRowDataBound" >
                                  
                                  <Columns >
                                         
@@ -94,8 +129,11 @@
                                         <asp:BoundField DataField="numMonthPension" HeaderText="Old Monthly Pension" DataFormatString="{0:N}" />
 
 
-                                      <asp:BoundField DataField="numCurrentRSABalance" HeaderText="Current RF Balance" DataFormatString="{0:N}" />
-                                      <asp:BoundField DataField="numNewPension" HeaderText="New Monthly Pension" DataFormatString="{0:N}" />
+                                      <asp:BoundField DataField="numRSABalance" HeaderText="Current RF Balance" DataFormatString="{0:N}" />
+                                      <asp:BoundField DataField="numEnhancement" HeaderText="New Monthly Pension" DataFormatString="{0:N}" />
+                                      <asp:BoundField DataField="numMaxEnhancement" HeaderText="Max Enh. Pension" DataFormatString="{0:N}" />
+                                      <asp:BoundField DataField="numReserve" HeaderText="Reserve" DataFormatString="{0:N}" />
+                                      <asp:BoundField DataField="numSurplus" HeaderText="Surplus" DataFormatString="{0:N}" />
                                       
 
                                       <%--<asp:TemplateField HeaderText="">
@@ -128,9 +166,9 @@
                   <div style="float:left; padding-right :0px;"><asp:Button ID="btnUnTagAll" runat="server" Text="Un-Tag All" /></div>
                   <div id="dvChecked" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnChecked" runat="server" Text="IC Checked" /></div>
                   
-                   <div id="dvCancelCheck" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnCancelChecked" runat="server" Text="Cancel Confirmation" /></div>
+                   <div id="dvCancelCheck" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnCancelChecked" runat="server" Text="Cancel Confirmation" Visible ="false"  /></div>
 
-                  <div id="dvReject" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnReject" runat="server" Text="Reject Approval Confirmation" /></div>
+                  <div id="dvReject" style="float:left; padding-left: 20px;" runat="server"><asp:Button ID="btnReject" runat="server" Text="Reject Approval Confirmation" Visible ="false"  /></div>
 
 
     </div>

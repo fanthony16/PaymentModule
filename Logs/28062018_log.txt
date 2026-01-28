@@ -1,0 +1,12 @@
+﻿28/06/2018 09:49:26 : PAYMENT MODULE : Thread was being aborted.: Error Generating LPW Schedule
+28/06/2018 09:49:26 : PAYMENT MODULE : Thread was being aborted.: Error Generating LPW Schedule
+28/06/2018 09:57:22 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 09:57:54 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:02:43 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:05:05 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:08:35 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:44:07 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:47:14 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:48:24 : PAYMENT MODULE : There is no row at position 0.: Error Generating LPW Schedule
+28/06/2018 10:50:00 : PAYMENT MODULE : Thread was being aborted.: Error Generating LPW Schedule
+28/06/2018 10:50:00 : PAYMENT MODULE : Thread was being aborted.: Error Generating LPW Schedule

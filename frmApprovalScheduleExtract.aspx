@@ -92,6 +92,24 @@
 
                     <div style ="text-align :left; padding-left :107px;"><asp:TextBox ID="txtPencomBatch" Width ="176px" runat="server"></asp:TextBox></div>
                 </div>
+
+                <div id="Div2" class ="dvBoxRows" >
+                    
+
+                     <div style ="float :left; width:100px"></div>
+
+                    <div style ="text-align :left; padding-left :107px;"><asp:CheckBox ID="chkRecallBatch" Text =" Recall Extracted Batch?" TextAlign ="right" runat="server" /></div>
+                </div>
+
+
+                 <div id="Div5" class ="dvBoxRows" >
+                    
+
+                     <div style ="float :left; width:280px"><span id="spRecall" runat ="server" visible ="false"  style ="color :green ;">Recall Successful</span></div>
+
+                    
+                </div>
+
                 <div id="Div1" class ="dvBoxRows" >
                     <div style ="text-align :center ;"><asp:Button ID="btnViewTransaction" runat="server" Text="View Transactions" Visible ="true"  /></div>
                     

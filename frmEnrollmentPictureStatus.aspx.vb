@@ -405,7 +405,7 @@ Partial Class frmEnrollmentPictureStatus
 
 		Dim dtusers As New DataTable
 		If IsPostBack = False Then
-
+			Session("user") = "o-taiwo"
 			If IsNothing(Session("user")) = True Then
 
 				'   getApprovalType()

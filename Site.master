@@ -22,7 +22,7 @@
             <div style=" height:30px;width:20px; float :left ;"></div>
             <div style=" float:left; height:auto;width:1000px;">
                 
-                <div id="dvMenuSp" style ="height :110px; text-align :right; padding-right :0px; " ><img alt="" src="images/index_01.gif" style=""/></div>
+                <div id="dvMenuSp" style ="height :110px; text-align :right; padding-right :0px; " ><img alt="" src="images/newl.png" style=""/></div>
                 
                 <div id="Div1" style =" text-align :right; padding-right :0px; " >
                  
@@ -40,6 +40,8 @@
                               <asp:MenuItem NavigateUrl="~/frmApplicationDashBoard.aspx" Text="Application DashBoard" Value="DashBoard" />
                               <asp:MenuItem NavigateUrl="~/frmManager.aspx" Text="Manager's DashBoard" Value="ManagerDashBoard" />
                               <asp:MenuItem NavigateUrl="~/frmEnhancementApplication.aspx" Text="Penion Enhancement" Value="Enhancement" />
+                              <asp:MenuItem NavigateUrl="~/frmPencomTemplate2.aspx" Text="PW Enhancement Template" Value ="PensionTemplateCSD"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmPWCalculator.aspx" Text="PW Calculator" Value ="PWCalculatorCSD"></asp:MenuItem>
 
                          </asp:MenuItem>
 
@@ -48,6 +50,12 @@
                              <asp:MenuItem NavigateUrl="~/frmApplicationInformation.aspx" Text="Find Application" Value ="ApplicationInformation"></asp:MenuItem>
                              <asp:MenuItem NavigateUrl="~/frmCustomerAdhocDocuments.aspx" Text="Pre-Application Documentation" Value ="PreApplication"></asp:MenuItem>
                             <asp:MenuItem NavigateUrl="#" Text="Documentation" Value ="DocumentationMain">
+
+                                 <asp:MenuItem NavigateUrl="~/frmPWCalculatorNew.aspx" Text="PW Calculator" Value ="PWCalculatorBPD"></asp:MenuItem>
+                                 
+                                 <asp:MenuItem NavigateUrl="~/frmPencomTemplate2.aspx" Text="PW Enhancement Template" Value ="PensionTemplate"></asp:MenuItem>
+                                 <asp:MenuItem NavigateUrl="~/frmPensionEnhancementCheckBPD.aspx" Text="PW Enhancement BPD Review" Value ="PWEnhancementCheckBPD"></asp:MenuItem>
+                                 
                                  <asp:MenuItem NavigateUrl="~/frmApplicationList.aspx" Text="Benefit Application" Value ="NewApplicationList"></asp:MenuItem>
                                  <asp:MenuItem NavigateUrl="~/frmApplicationUnFundedList.aspx" Text="UnFunded Public Application" Value ="PublicUnfunded"></asp:MenuItem>
                                  
@@ -65,8 +73,13 @@
                                  
                                  <asp:MenuItem NavigateUrl="~/frmApplicationApprovaList.aspx" Text="New Approval" Value ="ApprovalList"></asp:MenuItem>
                                  <asp:MenuItem NavigateUrl="~/frmApprovalComfirmation.aspx" Text="Approval Confirmation" Value ="ApprovalConfirmation"></asp:MenuItem>
+
                                   <asp:MenuItem NavigateUrl="~/frmApprovalScheduleExtract.aspx" Text="Extract Schedule To Enpower" Value ="ApprovalExport"></asp:MenuItem>
+
+                                 <asp:MenuItem NavigateUrl="~/frmEnhancementApproval.aspx" Text="Enhancement Approval" Value ="EnhancementApproval"></asp:MenuItem>
+
                                  <asp:MenuItem NavigateUrl="~/frmApprovalControlCheckView.aspx" Text="Payment Authorisation Status" Value ="ApprovalControlView"></asp:MenuItem>
+
                             </asp:MenuItem>
                         </asp:MenuItem>
                         <asp:MenuItem NavigateUrl="#" Text="Control" Value ="HeaderMainControl">
@@ -74,6 +87,12 @@
                              <asp:MenuItem NavigateUrl="~/frmApplicationControlCheck.aspx" Text="Pre - Approval Application Check" Value ="ApplicationControlCheck"></asp:MenuItem>
                              <asp:MenuItem NavigateUrl="~/frmApprovalControlCheck.aspx" Text="Post - Approval Check" Value ="ApprovalControlCheck"></asp:MenuItem>
                              <asp:MenuItem NavigateUrl="~/frmApprovalControlVerified.aspx" Text="Post - Approval Verfication" Value ="ApprovalControlVerified"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmPencomTemplate2.aspx" Text="PW Enhancement Template" Value ="PensionTemplateIC"></asp:MenuItem>
+                             <asp:MenuItem NavigateUrl="~/frmPensionEnhancementCheck.aspx" Text="PW - Enhancement Review Verfication" Value ="PWEnhancementCheck"></asp:MenuItem>
+
+
+                             
+
                         </asp:MenuItem>
                         <asp:MenuItem NavigateUrl="#" Text="Finance" Value ="HeaderMainFinance">
                              <asp:MenuItem NavigateUrl="~/frmApprovalFinanceAuthority.aspx" Text="Payment Authorisation" Value ="ApprovalFinanceCheck"></asp:MenuItem>

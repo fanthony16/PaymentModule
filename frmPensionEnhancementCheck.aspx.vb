@@ -39,14 +39,82 @@ Partial Class frmPensionEnhancementCheck
 
 	Protected Sub btnFind_Click(sender As Object, e As EventArgs) Handles btnFind.Click
 
-		Dim cr As New Core, dt As DataTable
-		dt = cr.PMgetPencomEnhancement(CDate(txtRunDate.Text))
-		BindGrid(dt)
+		If Me.chkSourceType.Checked = True Then
+
+			Dim cr As New Core, dt As DataTable
+			Dim iCount As Integer, str As String = ""
+
+			Dim sarrMyString As String() = UCase(Me.txtFindPIN.Text).ToString.Split(New String() {"PEN"}, StringSplitOptions.None)
+
+			If sarrMyString.Length > 1 Then
+
+				Do While iCount < sarrMyString.Length
+
+					If sarrMyString(iCount).ToString <> "" Then
+
+						If iCount = 0 And sarrMyString(iCount).ToString.Trim <> "" Then
+
+							str = "'PEN" & "" & sarrMyString(iCount).Trim & "'"
+
+						ElseIf iCount < sarrMyString.Length And str = "" Then
+
+							str = "'PEN" & "" & sarrMyString(iCount).Trim & "'"
+
+						ElseIf iCount < sarrMyString.Length And str <> "" Then
+
+							str = str & "," & "'PEN" & "" & sarrMyString(iCount).Trim & "'"
+
+						End If
+
+					Else
+
+					End If
+
+					iCount = iCount + 1
+				Loop
+
+
+			ElseIf sarrMyString.Length = 1 Then
+
+				str = "'PEN" & "" & sarrMyString(0) & "'"
+
+			End If
+			str = "(" & str & ")"
+
+			'LoadPIN(Me.txtFindPIN.Text)
+			'LoadPIN(str)
+
+			dt = cr.PMgetPencomEnhancementMultiplePIN(CDate(txtRunDate.Text), Server.MapPath("~/Logs"), "IC", str)
+
+			'ViewState("dtEnhancement") = dt
+
+			BindGrid(dt)
+
+		Else
+
+			Dim crr As New Core, dtt As DataTable
+			dtt = crr.PMgetPencomEnhancement(CDate(txtRunDate.Text), Server.MapPath("~/Logs"), "IC")
+			BindGrid(dtt)
+
+		End If
+
+
+
+
+
+
+		
+
+
+
+
+
 
 	End Sub
 	Protected Sub calRunDate_SelectionChanged(sender As Object, e As EventArgs) Handles calRunDate.SelectionChanged
 		Me.calRunDate_PopupControlExtender.Commit(Me.calRunDate.SelectedDate)
 	End Sub
+
 	Protected Sub BindGrid(dt As DataTable)
 
 		Me.gridApplications.DataSource = dt
@@ -58,7 +126,6 @@ Partial Class frmPensionEnhancementCheck
 		Else
 
 		End If
-
 
 	End Sub
 	Protected Sub gridExport_OnRowDataBound(sender As Object, e As GridViewRowEventArgs)
@@ -143,11 +210,16 @@ Partial Class frmPensionEnhancementCheck
 			sqlTran.Commit()
 
 
-			dt = cr.PMgetPencomEnhancement(CDate(txtRunDate.Text))
+			dt = cr.PMgetPencomEnhancement(CDate(txtRunDate.Text), Server.MapPath("~/Logs"), "IC")
 			BindGrid(dt)
 
 		Catch ex As Exception
-			MsgBox("" & ex.Message)
+
+			Dim loger As New Global.Logger.Logger
+			loger.FileSource = "Sure Pay Benefit Application "
+			loger.FilePath = Server.MapPath("~/Logs")
+			loger.Logger(ex.Message & "Core - Error on Internal Control's Review")
+
 		End Try
 	End Sub
 
@@ -156,34 +228,29 @@ Partial Class frmPensionEnhancementCheck
 		Dim cb As CheckBox, chk As Integer = 0, cr As New Core, dt As New DataTable
 
 		Try
-			'If IsNothing(Session("user")) = True Then
-			'	Response.Redirect("Login.aspx")
-			'Else
+			If IsNothing(Session("user")) = True Then
+				Response.Redirect("Login.aspx")
+			Else
 
+				For Each grow As GridViewRow In Me.gridApplications.Rows
 
+					cb = grow.FindControl("ChkPINReviewChecked")
 
-			For Each grow As GridViewRow In Me.gridApplications.Rows
+					If cb.Checked = True And cb.Enabled = True Then
+						PMUpdateApprovalControlCheck(grow.Cells(2).Text, CDate(Me.txtRunDate.Text), Session("user"))
+					Else
+					End If
 
-				cb = grow.FindControl("ChkPINReviewChecked")
+				Next
 
-				If cb.Checked = True And cb.Enabled = True Then
-					PMUpdateApprovalControlCheck(grow.Cells(2).Text, CDate(Me.txtRunDate.Text), "o-taiwo")
-				Else
-				End If
+				dt = cr.PMgetPencomEnhancement(CDate(txtRunDate.Text), Server.MapPath("~/Logs"), "IC")
+				BindGrid(dt)
 
-			Next
-
-
-
-			dt = cr.PMgetPencomEnhancement(CDate(txtRunDate.Text))
-			BindGrid(dt)
-
-
-			'Dim apptypeID As Integer = getApprovalType(Me.ddApplicationType.SelectedValue)
-			'dt = cr.PMgetPencomApprovalBatchByType(apptypeID, Me.ddExportedBatches.SelectedItem.Text, True)
-			'ViewState("BatchApprovals") = dt
-			'BindGrid(dt)
-			'End If
+				'Dim apptypeID As Integer = getApprovalType(Me.ddApplicationType.SelectedValue)
+				'dt = cr.PMgetPencomApprovalBatchByType(apptypeID, Me.ddExportedBatches.SelectedItem.Text, True)
+				'ViewState("BatchApprovals") = dt
+				'BindGrid(dt)
+			End If
 
 		Catch ex As Exception
 
@@ -193,6 +260,99 @@ Partial Class frmPensionEnhancementCheck
 	End Sub
 
 	Protected Sub gridApplications_SelectedIndexChanged(sender As Object, e As EventArgs) Handles gridApplications.SelectedIndexChanged
+
+	End Sub
+
+	Public Sub getUserAccessMenu(uName As String)
+
+		Dim cr As New Core
+		Dim dtAccessModule As New DataTable
+		Dim aryAccessModule As New ArrayList
+		Dim i As Integer, j As Integer, k As Integer
+		dtAccessModule = cr.getAccessModule(Session("User"))
+
+		Do While i < dtAccessModule.Rows.Count
+			'aryAccessModule.Add(dtAccessModule.Rows(i).Item(1))
+			' MsgBox("" & dtAccessModule.Rows(i).Item(0).ToString)
+			aryAccessModule.Add(dtAccessModule.Rows(i).Item(1))
+			i = i + 1
+		Loop
+		i = 0
+		j = 0
+		k = 0
+		Dim M As New System.Web.UI.WebControls.Menu
+		Dim n As New System.Web.UI.WebControls.MenuItem
+		M = Master.FindControl("NavigationMenu")
+
+		Do While i < M.Items.Count
+
+
+			''''main menu''''
+			If aryAccessModule.Contains(M.Items(i).Value) = False Then
+
+				M.Items.RemoveAt(i)
+
+			Else
+				''''sub menu''''
+				Do While j < M.Items(i).ChildItems.Count
+
+					If aryAccessModule.Contains(M.Items(i).ChildItems.Item(j).Value) = False Then
+						M.Items(i).ChildItems.RemoveAt(j)
+					Else
+
+						''''sub---sub menu''''
+						Do While k < M.Items(i).ChildItems(j).ChildItems.Count
+
+							If aryAccessModule.Contains(M.Items(i).ChildItems(j).ChildItems.Item(k).Value) = False Then
+								M.Items(i).ChildItems(j).ChildItems.RemoveAt(k)
+							Else
+								k = k + 1
+
+							End If
+
+						Loop
+
+						j = j + 1
+					End If
+
+				Loop
+				i = i + 1
+			End If
+
+
+		Loop
+
+		If aryAccessModule.Count = 0 Then
+			Response.Redirect("default.aspx")
+		Else
+		End If
+
+	End Sub
+
+	Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
+		Dim dtusers As New DataTable
+
+		If IsPostBack = False Then
+
+
+
+			If IsNothing(Session("user")) = True Then
+
+				'   getApprovalType()
+				Response.Redirect("Login.aspx")
+			ElseIf IsNothing(Session("user")) = False And IsNothing(Session("userDetails")) = False Then
+
+				dtusers = Session("userDetails")
+				getUserAccessMenu(Session("user"))
+
+			End If
+		End If
+
+
+
+	End Sub
+
+	Protected Sub btnFindPIN_Click(sender As Object, e As EventArgs) Handles btnFindPIN.Click
 
 	End Sub
 End Class

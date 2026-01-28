@@ -289,10 +289,15 @@ Partial Class frmEnhancementApplication
 
 				Me.txtPhone.Text = dt.Rows(0).Item("Phone").ToString
 
-				Me.txtRSABalance.Text = CDbl(dt.Rows(0).Item("numCurrentRSABalance"))
+				Me.txtRSABalance.Text = CDbl(dt.Rows(0).Item("numRSABalance"))
 
 				Me.txtOldPension.Text = CDbl(dt.Rows(0).Item("numMonthPension"))
-				Me.txtRecommendedAmount.Text = CDbl(dt.Rows(0).Item("numNewPension"))
+				Me.txtRecommendedAmount.Text = CDbl(dt.Rows(0).Item("numEnhancement"))
+
+
+				'numMonthPension()
+
+
 
 				txtReferenceNo.Text = dt.Rows(0).Item("pkiEnhancementID").ToString
 
@@ -374,7 +379,7 @@ Partial Class frmEnhancementApplication
 
 
 			Else
-				Response.Redirect("frmApplication.aspx")
+				Response.Redirect("frmEnhancementApplication.aspx")
 
 			End If
 		Catch ex As Exception
@@ -1236,9 +1241,9 @@ Partial Class frmEnhancementApplication
 					Else
 						isAllDocumentScanned = True
 					End If
-					appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+				'	appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-					'appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
+				appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
 
 					appDocDetail.IsVerified = CInt((row.Cells(5).Text))
 					appDocDetails.Add(appDocDetail)
@@ -1294,7 +1299,7 @@ Partial Class frmEnhancementApplication
 		Try
 			If Not IsNothing(Session("user")) = True Then
 
-				boolSubmitStatus = cr.PMSubmitApplication(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"), appCheckList, appCheckListDBA)
+				boolSubmitStatus = cr.PMSubmitApplicationPWE(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"), appCheckList, appCheckListDBA)
 
 
 				If boolSubmitStatus = True Then
@@ -1333,8 +1338,6 @@ Partial Class frmEnhancementApplication
 
 
 		End Try
-
-
 
 
 	End Sub

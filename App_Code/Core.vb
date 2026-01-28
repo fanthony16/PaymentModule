@@ -9,13 +9,12 @@ Imports System.Web.Script.Serialization
 Public Class Core
 
 	Private Sub testJASON()
+
 		Dim jS As JavaScriptSerializer = New JavaScriptSerializer
 
 	End Sub
 
 	Public Function IsValidEmailAddress(txtEmail As String) As Boolean
-
-
 
 		Static emailExpression As New Regex("^[_a-z0-9-]+(.[a-z0-9-]+)@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$")
 		Return emailExpression.IsMatch(txtEmail)
@@ -80,6 +79,38 @@ Public Class Core
 
 	End Function
 
+	Public Function PMgetRetireeForEnhencement(txtPIN As String) As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim _dateRunFor As Date = "2019-10-31"
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("EnpowerV4")
+		Try
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select a.EmployerID,a.RSAPIN PIN,b.[Date Of Retirement] from employee a, surePay..tmp_Enhancement2020 b where a.RSAPIN = b.pin and  rsapin in (select pin from surePay..tmp_Enhancement2020 ) and exists (select * from SurePay..tblPensionEnhancement where txtPIN = RSAPIN and dteRunFor = '" & DateTime.Parse(_dateRunFor).ToString("yyyy-MM-dd") & "') and rsapin = '" & txtPIN & "'  ", mycon)
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+			MyDataAdapter.Fill(dsUser, "Users")
+			dtUser = dsUser.Tables("Users")
+			db.close("EnpowerV4")
+			mycon.Close()
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+		Return dtUser
+	End Function
+
+
 	Public Function PMgetRetireeForEnhencement() As DataTable
 
 		Dim myPCon As New SqlClient.SqlConnection
@@ -88,20 +119,32 @@ Public Class Core
 		Dim dsUser As New DataSet
 		Dim dtUser As New DataTable
 		Dim db As New DbConnection
-
+		Dim _dateRunFor As Date = "2019-10-31"
 		Dim mycon As New SqlClient.SqlConnection
 		mycon = db.getConnection("EnpowerV4")
 		Try
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
 
-			MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select  distinct EmployeeID,(select top 1 rsapin from employee a where a.employeeid = b.EmployeeID ) PIN  from payments b where PaymentTypeID in (1,3,33,17) and month(valuedate) = 12 and year(valuedate)=2014 and IsConfirmed = 1 and isArchived = 0 and IsReversed = 0) select * from tab a where  not exists (select * from SurePay..tblPensionEnhancementIFRS where txtPIN = a.pin) and ltrim(rtrim(a.pin)) like 'PEN%' ", mycon)
+			'MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select  distinct EmployeeID,(select top 1 rsapin from employee a where a.employeeid = b.EmployeeID ) PIN  from payments b where PaymentTypeID in (1,3,33,17) and month(valuedate) = 12 and year(valuedate)=2014 and IsConfirmed = 1 and isArchived = 0 and IsReversed = 0) select * from tab a where  not exists (select * from SurePay..tblPensionEnhancementIFRS where txtPIN = a.pin) and ltrim(rtrim(a.pin)) like 'PEN%' ", mycon)
 
 
 			'MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select  distinct top 2 EmployeeID,(select top 1 rsapin from employee a where a.employeeid = b.EmployeeID ) PIN  from payments b where PaymentTypeID in (3,33,17) and month(valuedate) = 12 and year(valuedate)=2016 and IsConfirmed = 1 and isArchived = 0 and IsReversed = 0) select * from tab a where  not exists (select * from SurePay..tblPensionEnhancement where txtPIN = a.pin)", mycon)
 
 
-			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+			'MyDataAdapter = New SqlClient.SqlDataAdapter("select EmployerID,RSAPIN PIN from employee where rsapin in (select txtpin from surePay..tblForTad ) and not exists (select * from SurePay..tblPensionEnhancement where txtPIN = RSAPIN) ", mycon)
 
+			'MyDataAdapter = New SqlClient.SqlDataAdapter("select EmployerID,RSAPIN PIN from employee where rsapin in (select pin from surePay..tmp_Enhancement2020 ) and not exists (select * from SurePay..tblPensionEnhancement where txtPIN = RSAPIN and dteRunFor = '" & DateTime.Parse(_dateRunFor).ToString("yyyy-MM-dd") & "') ", mycon)
+
+
+			'MyDataAdapter = New SqlClient.SqlDataAdapter("select a.EmployerID,a.RSAPIN PIN,b.[Date Of Retirement] from employee a, surePay..tmp_Enhancement2020 b 			where a.RSAPIN = b.pin and  rsapin in (select pin from surePay..tmp_Enhancement2020 ) and not exists (select * from SurePay..tblPensionEnhancement where txtPIN = RSAPIN and dteRunFor = '" & DateTime.Parse(_dateRunFor).ToString("yyyy-MM-dd") & "') ", mycon)
+
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select a.EmployerID,a.RSAPIN PIN,b.[Date Of Retirement] from employee a, surePay..tmp_Enhancement2020 b 			where a.RSAPIN = b.pin and  rsapin in ('PEN100088159028','PEN100314354411','PEN100273641936','PEN100240245213','PEN200208667236','PEN200500332809','PEN200040947022','PEN100140809527','PEN100120319993',			'PEN100055439002','PEN100438971523','PEN100177450293',	'PEN100048299811','PEN200077067877','PEN100522839219','PEN100187795822','PEN100200946933') ", mycon)
+
+
+
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 			MyDataAdapter.Fill(dsUser, "Users")
 			dtUser = dsUser.Tables("Users")
 			db.close("EnpowerV4")
@@ -451,6 +494,47 @@ Public Class Core
 
 
 	End Sub
+
+
+	Public Function getPMCommentTypeID(txtCommentType As String) As String
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select intErrorID from tblReturnErrorTypes where txtDescription = '" & txtCommentType & "' ", mycon)
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "ErrorType")
+			dtUser = dsUser.Tables("ErrorType")
+			mycon.Close()
+
+
+			If dtUser.Rows.Count > 0 Then
+				Return dtUser.Rows(0).Item(0)
+			Else
+				Return ""
+			End If
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+
+	End Function
+
 
 
 
@@ -984,7 +1068,7 @@ Public Class Core
 	Public Function PMEligibilityList(runDate As Date, errPath As String) As DataTable
 		Try
 
-			Financial.PPmt(0, 0, 0, 0)
+			'Financial.PPmt(0, 0, 0, 0)
 
 
 			Dim db As New DbConnection
@@ -998,7 +1082,7 @@ Public Class Core
 
 			'MyDataAdapter = New SqlClient.SqlDataAdapter("select txtApplicationCode ApplicationCode	,	txtPIN PIN,	txtFullName FullName,	txtEmployerName EmployerName,	txtSex Sex ,Mobile ,dteDOB DOB,dteDisengagement Disengagement from tblMemberApplication,Enpowerv4..employee  where EmployeeID = fkiMemberID and  fkiAppTypeId = 2 and datediff(year,dtedob,getdate()) > 40 and txtStatus = 'Paid' and dteDeactivated is null", mycon)
 
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select datediff(year,dtedob,getdate()), txtApplicationCode ApplicationCode	,	txtPIN PIN,	txtFullName FullName,	txtEmployerName EmployerName,	txtSex Sex ,Mobile , dteDOB DOB,dteDisengagement Disengagement from tblMemberApplication a,Enpowerv4..employee  where EmployeeID = fkiMemberID and  fkiAppTypeId = 2 and datediff(year,dtedob,'" & runDate & "') >= 50 and txtStatus = 'Paid' and dteDeactivated is null and month(dtedob) = month('" & DateTime.Parse(runDate) & "') and day(dtedob) = day('" & DateTime.Parse(runDate) & "') and (select count(*) from tblMemberApplication b where b.txtPIN = a.txtPIN and fkiAppTypeId in (3,1) ) = 0", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select datediff(year,dtedob,getdate()), txtApplicationCode ApplicationCode	,	txtPIN PIN,	txtFullName FullName,	txtEmployerName EmployerName,	txtSex Sex ,Mobile , dteDOB DOB,dteDisengagement Disengagement from tblMemberApplication a,Enpowerv4..employee  where EmployeeID = fkiMemberID and  fkiAppTypeId = 2 and datediff(year,dtedob,'" & DateTime.Parse(runDate).ToString("yyyy-MM-dd") & "') = 50 and txtStatus = 'Paid' and dteDeactivated is null and month(dtedob) = month('" & DateTime.Parse(runDate).ToString("yyyy-MM-dd") & "') and day(dtedob) = day('" & DateTime.Parse(runDate).ToString("yyyy-MM-dd") & "') and (select count(*) from tblMemberApplication b where b.txtPIN = a.txtPIN and fkiAppTypeId in (3,1) ) = 0", mycon)
 
 
 
@@ -1027,9 +1111,6 @@ Public Class Core
 		End Try
 	End Function
 
-
-
-
 	Public Sub PMUpdateApplicationComment(comment As String, appCode As String, uName As String, uCommentStage As Integer, intErrorID As Integer)
 		Try
 
@@ -1046,7 +1127,29 @@ Public Class Core
 			command.CommandType = CommandType.Text
 			myComm.ExecuteNonQuery()
 
+			'tblApplicationComments
+			sqlTran.Commit()
 
+		Catch ex As Exception
+			'MsgBox("" & ex.Message)
+		End Try
+	End Sub
+
+	Public Sub PMUpdateEnhancementTemplate(PE As ApplicationEnhancement)
+		Try
+
+			Dim db As New DbConnection
+			Dim mycon As New SqlClient.SqlConnection
+			mycon = db.getConnection("PaymentModule")
+			Dim myComm, command As New SqlClient.SqlCommand, sql1 As String = ""
+
+			Dim sqlTran As SqlClient.SqlTransaction = mycon.BeginTransaction
+			myComm = mycon.CreateCommand
+			myComm.Transaction = sqlTran
+
+			myComm.CommandText = "update tblPensionEnhancement set numRSABalance = '" & PE.RSABalance & "',numMonthPension = '" & PE.CurPension & "', Nc = '" & PE.Nc & "', NxDxNc = '" & PE.NxDx & "',numEnhancement = '" & PE.EnhancedPension & "', numMaxEnhancement = '" & PE.MaxEnhancement & "', numReserve = '" & PE.Reserve & "', numSurplus = '" & PE.Surplus & "' where txtPin = '" & PE.RSAPin & "' and dteReviewDate =  '" & DateTime.Parse(PE.ReviewDate).ToString("yyyy-MM-dd") & "'"
+			command.CommandType = CommandType.Text
+			myComm.ExecuteNonQuery()
 
 			'tblApplicationComments
 			sqlTran.Commit()
@@ -1728,7 +1831,7 @@ Public Class Core
 					myComm.ExecuteNonQuery()
 
 
-					myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[numAccruedRight],[numRecommendedLumpSum],[numMonthlyDrowDown],[numRSABalance],[dtePriceDate]) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.AccruedRight & "', '" & AppDetail.RetirementDetails.RecommendedLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyProgramedDrawndown & "','" & AppDetail.RetirementDetails.RSABalance & "','" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "')"
+					myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[numAccruedRight],[numRecommendedLumpSum],[numMonthlyDrowDown],[numRSABalance],[dtePriceDate],[numReviewedSalary],[numPensionArrears],[numArrearsMonths],[intFrequency],txtSalaryStructure,txtGradeLevel,txtStep,dteProgramming) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.AccruedRight & "', '" & AppDetail.RetirementDetails.RecommendedLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyProgramedDrawndown & "','" & AppDetail.RetirementDetails.RSABalance & "','" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "','" & AppDetail.RetirementDetails.ReviewedSalary & "', '" & AppDetail.RetirementDetails.PensionArrears & "', '" & AppDetail.RetirementDetails.ArrearsMonths & "', '" & AppDetail.RetirementDetails.Frequency & "','" & AppDetail.RetirementDetails.SalaryStructure & "', '" & AppDetail.RetirementDetails.GradeLevel & "', '" & AppDetail.RetirementDetails.SalaryStep & "', '" & DateTime.Parse(AppDetail.RetirementDetails.ProgrammingDate).ToString("yyyy-MM-dd") & "')"
 					command.CommandType = CommandType.Text
 					myComm.ExecuteNonQuery()
 
@@ -1738,7 +1841,7 @@ Public Class Core
 					command.CommandType = CommandType.Text
 					myComm.ExecuteNonQuery()
 
-					myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[txtInsuranceCompanyName],[dteAnnuityCcommencementDate],[numRSABalance],[numPremium],[numLumpSum],[numMonthlyAnnuity],[dtePriceDate]) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.InsuranceCoy & "', '" & DateTime.Parse(AppDetail.RetirementDetails.AnnuityCommencement).ToString("yyyy-MM-dd") & "', '" & AppDetail.RetirementDetails.RSABalance & "', '" & AppDetail.RetirementDetails.Premium & "', '" & AppDetail.RetirementDetails.AnnuityLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyAnnuity & "', '" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "')"
+					myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[txtInsuranceCompanyName],[dteAnnuityCcommencementDate],[numRSABalance],[numPremium],[numLumpSum],[numMonthlyAnnuity],[dtePriceDate],[numReviewedSalary],[numPensionArrears],[numArrearsMonths],[intFrequency],txtSalaryStructure,txtGradeLevel,txtStep,dteProgramming) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.InsuranceCoy & "', '" & DateTime.Parse(AppDetail.RetirementDetails.AnnuityCommencement).ToString("yyyy-MM-dd") & "', '" & AppDetail.RetirementDetails.RSABalance & "', '" & AppDetail.RetirementDetails.Premium & "', '" & AppDetail.RetirementDetails.AnnuityLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyAnnuity & "', '" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "','" & AppDetail.RetirementDetails.ReviewedSalary & "', '" & AppDetail.RetirementDetails.PensionArrears & "', '" & AppDetail.RetirementDetails.ArrearsMonths & "', '" & AppDetail.RetirementDetails.Frequency & "','" & AppDetail.RetirementDetails.SalaryStructure & "', '" & AppDetail.RetirementDetails.GradeLevel & "', '" & AppDetail.RetirementDetails.SalaryStep & "', '" & DateTime.Parse(AppDetail.RetirementDetails.ProgrammingDate).ToString("yyyy-MM-dd") & "')"
 
 					command.CommandType = CommandType.Text
 					myComm.ExecuteNonQuery()
@@ -1971,7 +2074,11 @@ Public Class Core
 
 	End Function
 
-	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList, AppCheckListDBA As ApplicationCheckListDOB) As Boolean
+
+
+
+	'to be remove when all changes come live
+	Public Function PMSubmitApplicationPWE(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList, AppCheckListDBA As ApplicationCheckListDOB) As Boolean
 
 
 		Dim db As New DbConnection
@@ -2010,7 +2117,6 @@ Public Class Core
 					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtDepartment,txtDesignation,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
 
 
-
 				ElseIf AppDetail.IsRetirement = False And AppDetail.AppTypeId <> "17" Then
 
 					If AppDetail.ApplicationID.Substring(0, 3) = "ANN" Then
@@ -2030,7 +2136,7 @@ Public Class Core
 						AppDetail.AppTypeId = 3
 					End If
 
-					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtStatus,dteDocumentCompleted,IsDocCompleted,fkiEmployerID,numRSABalance,txtSex,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,IsPassportConfirmed,IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtCreatedBy,IsBankDetailsConfirmed,numApplicationAmount,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & userName & "','" & AppDetail.IsBankDetailsConfirmed & "','" & AppDetail.ApprovedAmount & "','" & AppDetail.ReferenceApplicationCode & "')"
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtStatus,dteDocumentCompleted,IsDocCompleted,fkiEmployerID,numRSABalance,txtSex,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,IsPassportConfirmed,IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtCreatedBy,numApplicationAmount,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & userName & "','" & AppDetail.ApprovedAmount & "','" & AppDetail.ReferenceApplicationCode & "')"
 
 
 				End If
@@ -2065,6 +2171,9 @@ Public Class Core
 
 					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtStatus,dteDocumentCompleted,IsDocCompleted,fkiEmployerID,numRSABalance,txtSex,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,IsPassportConfirmed,IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtCreatedBy,IsBankDetailsConfirmed,numApplicationAmount,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & userName & "','" & AppDetail.IsBankDetailsConfirmed & "','" & AppDetail.ApprovedAmount & "','" & AppDetail.ReferenceApplicationCode & "')"
 
+				ElseIf AppDetail.IsRetirement = True And AppDetail.AppTypeId = "17" Then
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtStatus,dteDocumentCompleted,IsDocCompleted,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,IsPassportConfirmed,IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtCreatedBy,numApplicationAmount,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & userName & "','" & AppDetail.ApprovedAmount & "','" & AppDetail.ReferenceApplicationCode & "')"
 
 				End If
 
@@ -2095,10 +2204,10 @@ Public Class Core
 
 			Else
 
-				sqlRef = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
-				myComm.CommandText = sqlRef
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+				'sqlRef = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
+				'myComm.CommandText = sqlRef
+				'command.CommandType = CommandType.Text
+				'myComm.ExecuteNonQuery()
 
 
 			End If
@@ -2350,6 +2459,474 @@ Public Class Core
 
 	End Function
 
+	Public Function PMIsPWTemplateSaved(PIN As String) As Boolean
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select * from tblRetireeCalculatedTemplate where txtPIN = @txtPIN", mycon)
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtPIN", _
+			    SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@txtPIN").Value = PIN
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "SavedPWTemplate")
+			dtUser = dsUser.Tables("SavedPWTemplate")
+			mycon.Close()
+
+			If dtUser.Rows.Count > 0 Then
+				Return True
+			Else
+				Return False
+			End If
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+	Public Sub PMSavePWTemplate(PWTemplate As CalulatedPWTemplate, txtStatus As Boolean, logPath As String)
+
+		Dim db As New DbConnection
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+		Dim myComm, command As New SqlClient.SqlCommand, sql1 As String = ""
+
+		Dim sqlTran As SqlClient.SqlTransaction = mycon.BeginTransaction
+		myComm = mycon.CreateCommand
+		myComm.Transaction = sqlTran
+		Try
+
+			If txtStatus = False Then
+
+				myComm.CommandText = "INSERT INTO [dbo].[tblRetireeCalculatedTemplate] ([txtPIN],[txtSalaryStructure],[txtGradeLevel],[txtStep],[txtSex],[numRSABalance],[numFinalSalary],[numValSalary],[intCurAge],[intRetirementAge],[dteDOB],[dteDOR],[dteDOP],[intArrears],[numMinLumpSum],[numRegLumpSum],[numMaxLumpSum],[numAdminCharges],[numMgtCharges],[numRegCharges] ,[intRate],[numNxDx],[numNc],[intFrequency],[numMinMonthly],[numRegMonthly],[numMaxMonthly],[TotalUpfront],[txtCreatedBy],[numAgreedMonthly],[numMonthBuffer])     VALUES ('" & PWTemplate.PIN & "', '" & PWTemplate.SalaryStructure & "', '" & PWTemplate.GradeLevel & "', '" & PWTemplate.SStep & "', '" & PWTemplate.Sex & "', '" & PWTemplate.RSABalance & "', '" & PWTemplate.FinalSalary & "', '" & PWTemplate.FinalSalary & "', '" & PWTemplate.CurAge & "', '" & PWTemplate.RetirementAge & "', '" & DateTime.Parse(PWTemplate.DOB).ToString("yyyy-MM-dd") & "', '" & DateTime.Parse(PWTemplate.DOR).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(PWTemplate.DOP).ToString("yyyy-MM-dd") & "','" & PWTemplate.Arrears & "', '" & PWTemplate.MinLumpSum & "', '" & PWTemplate.RegLumpSum & "','" & PWTemplate.MaxLumpSum & "', '" & PWTemplate.AdminCharges & "' , '" & PWTemplate.MgtCharges & "', '" & PWTemplate.RegCharges & "', '" & PWTemplate.Rate & "', '" & PWTemplate.NxDx & "', '" & PWTemplate.Nc & "', '" & PWTemplate.Frequency & "', '" & PWTemplate.MinMonthly & "', '" & PWTemplate.RegMonthly & "', '" & PWTemplate.MaxMonthly & "', '" & PWTemplate.TotalUpfront & "','" & PWTemplate.CreatedUser & "','" & PWTemplate.AgreedPension & "','" & PWTemplate.MonthBuffer & "')"
+
+			Else
+
+				myComm.CommandText = "update [dbo].[tblRetireeCalculatedTemplate] set [txtSalaryStructure]= '" & PWTemplate.SalaryStructure & "' ,[txtGradeLevel] = '" & PWTemplate.GradeLevel & "',[txtStep] = '" & PWTemplate.SStep & "',[txtSex] = '" & PWTemplate.Sex & "',[numRSABalance] = '" & PWTemplate.RSABalance & "',[numFinalSalary] = '" & PWTemplate.FinalSalary & "',[numValSalary]= '" & PWTemplate.FinalSalary & "',[intCurAge] = '" & PWTemplate.CurAge & "',[intRetirementAge]= '" & PWTemplate.RetirementAge & "',[dteDOB] = '" & DateTime.Parse(PWTemplate.DOB).ToString("yyyy-MM-dd") & "',[dteDOR]= '" & DateTime.Parse(PWTemplate.DOR).ToString("yyyy-MM-dd") & "',[dteDOP]= '" & DateTime.Parse(PWTemplate.DOP).ToString("yyyy-MM-dd") & "',[intArrears]= '" & PWTemplate.Arrears & "',[numMinLumpSum]= '" & PWTemplate.MinLumpSum & "',[numRegLumpSum]= '" & PWTemplate.RegLumpSum & "',[numMaxLumpSum]= '" & PWTemplate.MaxLumpSum & "',[numAdminCharges] = '" & PWTemplate.AdminCharges & "' ,[numMgtCharges] = '" & PWTemplate.MgtCharges & "',[numRegCharges] = '" & PWTemplate.RegCharges & "' ,[intRate] = '" & PWTemplate.Rate & "',[numNxDx] = '" & PWTemplate.NxDx & "',[numNc] = '" & PWTemplate.Nc & "',[intFrequency]= '" & PWTemplate.Frequency & "',[numMinMonthly] = '" & PWTemplate.MinMonthly & "',[numRegMonthly] = '" & PWTemplate.RegMonthly & "',[numMaxMonthly] = '" & PWTemplate.MaxMonthly & "',[TotalUpfront]= '" & PWTemplate.TotalUpfront & "', [txtCreatedBy] = '" & PWTemplate.CreatedUser & "',[numAgreedMonthly] = '" & PWTemplate.AgreedPension & "',[numMonthBuffer] = '" & PWTemplate.MonthBuffer & "' where txtPIN = '" & PWTemplate.PIN & "'"
+
+			End If
+
+
+			command.CommandType = CommandType.Text
+			myComm.ExecuteNonQuery()
+
+
+			sqlTran.Commit()
+
+		Catch ex As Exception
+
+			sqlTran.Rollback()
+
+			Dim loger As New Global.Logger.Logger
+			loger.FileSource = "Sure Pay - Saving PW Calculation "
+			loger.FilePath = logPath
+			loger.Logger(ex.Message & "Core - Application Submission")
+
+		End Try
+
+
+	End Sub
+	Public Function PMSubmitApplication(AppDetail As ApplicationDetail, AppDoc As List(Of ApplicationDocumentDetail), AppAdhocDoc As List(Of AdhocDocuments), userName As String, logPath As String, AppCheckList As ApplicationCheckList, AppCheckListDBA As ApplicationCheckListDOB) As Boolean
+
+
+		Dim db As New DbConnection
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+		Dim myComm, command As New SqlClient.SqlCommand, sql1 As String = ""
+		Dim sqlTran As SqlClient.SqlTransaction = mycon.BeginTransaction
+		myComm = mycon.CreateCommand
+		myComm.Transaction = sqlTran
+		Try
+
+
+			''''''''''''''''''''''Creating Enhancement Application'''''''''''''''''''''''''''''
+
+
+
+
+
+
+
+
+			'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+			If AppDetail.DocCompleted = 1 Then
+
+				If AppDetail.IsRetirement = True And AppDetail.AppTypeId <> "17" Then
+
+					If AppDetail.ApplicationID.Substring(0, 3) = "ANN" Then
+						AppDetail.AppTypeId = 4
+					ElseIf AppDetail.ApplicationID.Substring(0, 3) = "LPW" Then
+						AppDetail.AppTypeId = 3
+					End If
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtDepartment,txtDesignation,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
+
+
+
+				ElseIf AppDetail.IsRetirement = False And AppDetail.AppTypeId <> "17" Then
+
+					If AppDetail.ApplicationID.Substring(0, 3) = "ANN" Then
+						AppDetail.AppTypeId = 4
+					ElseIf AppDetail.ApplicationID.Substring(0, 3) = "LPW" Then
+						AppDetail.AppTypeId = 3
+					End If
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,dteDocumentCompleted,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,txtSex,txtReason,txtDepartment,txtDesignation,dteDisengagement,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "', '" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
+
+
+				ElseIf AppDetail.IsRetirement = True And AppDetail.AppTypeId = "17" Then
+
+					If AppDetail.ApplicationID.Substring(0, 3) = "ANN" Then
+						AppDetail.AppTypeId = 4
+					ElseIf AppDetail.ApplicationID.Substring(0, 3) = "LPW" Then
+						AppDetail.AppTypeId = 3
+					End If
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtStatus,dteDocumentCompleted,IsDocCompleted,fkiEmployerID,numRSABalance,txtSex,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,IsPassportConfirmed,IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtCreatedBy,IsBankDetailsConfirmed,numApplicationAmount,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & userName & "','" & AppDetail.IsBankDetailsConfirmed & "','" & AppDetail.ApprovedAmount & "','" & AppDetail.ReferenceApplicationCode & "')"
+
+
+				End If
+
+			ElseIf AppDetail.DocCompleted = 0 Then
+
+
+				If AppDetail.IsRetirement = True And AppDetail.AppTypeId <> "17" Then
+
+					If AppDetail.ApplicationID.Substring(0, 3) = "ANN" Then
+						AppDetail.AppTypeId = 4
+					ElseIf AppDetail.ApplicationID.Substring(0, 3) = "LPW" Then
+						AppDetail.AppTypeId = 3
+					End If
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,dteDOR,txtSex,txtReason,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & DateTime.Parse(AppDetail.DOR).ToString("yyyy-MM-dd") & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
+
+				ElseIf AppDetail.IsRetirement = False And AppDetail.AppTypeId <> "17" Then
+
+
+					If AppDetail.ApplicationID.Substring(0, 3) = "ANN" Then
+						AppDetail.AppTypeId = 4
+					ElseIf AppDetail.ApplicationID.Substring(0, 3) = "LPW" Then
+						AppDetail.AppTypeId = 3
+					End If
+
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtComment,txtStatus,IsDocCompleted,txtCommentGroup,fkiEmployerID,numRSABalance,txtSex,txtReason,txtDepartment,txtDesignation,dteDisengagement,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,txtFundStatus,IsPassportConfirmed,	IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtTIN,numNSITFInitialAmountPaid,numNSITFRecievedToRSA,numNSITFRequestedToRSA,txtCreatedBy,blnAgeOverriden,txtReferenceApplicationCode,IsBankDetailsConfirmed) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Comment.Replace("'", "''") & "','" & AppDetail.Status & "','" & AppDetail.DocCompleted & "','" & AppDetail.CommentGroup & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.Reason & "','" & AppDetail.Department & "','" & AppDetail.Designation & "','" & DateTime.Parse(AppDetail.DateDisengagement).ToString("yyyy-MM-dd") & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.FundStatus & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & AppDetail.TIN & "','" & AppDetail.NSITFInitialAmountPaid & "','" & AppDetail.NSITFRecievedToRSA & "','" & AppDetail.NSITFRequestedToRSA & "','" & userName & "','" & AppDetail.AgeConstrainstOverwitten & "','" & AppDetail.ReferenceApplicationCode & "','" & AppDetail.IsBankDetailsConfirmed & "')"
+
+
+				ElseIf AppDetail.IsRetirement = False And AppDetail.AppTypeId = "17" Then
+
+
+					sql1 = "insert into tblMemberApplication (txtApplicationCode,fkiMemberID,fkiAppTypeId,txtSector,dteApplicationDate,txtApplicationState,txtApplicationOffice,txtAccountName,txtAccountNo,txtBVN,fkiBankID,fkiBranchID,txtStatus,dteDocumentCompleted,IsDocCompleted,fkiEmployerID,numRSABalance,txtSex,txtPIN,txtFullName,txtEmployerCode,dteDOB,txtEmployerName,IsPassportConfirmed,IsSignatureConfirmed,txtLastChangedPerson,txtFileNo,txtCreatedBy,IsBankDetailsConfirmed,numApplicationAmount,txtReferenceApplicationCode) values ('" & AppDetail.ApplicationID & "'," & AppDetail.MemberID & ",'" & AppDetail.AppTypeId & "', '" & AppDetail.Sector & "', '" & DateTime.Parse(AppDetail.ApplicationDate).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationState & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.AccountName.Replace("'", "''") & "','" & AppDetail.AccountNo & "','" & AppDetail.BVN & "','" & AppDetail.BankID & "','" & AppDetail.BranchID & "','" & AppDetail.Status & "','" & DateTime.Parse(AppDetail.DateDocumentCompleted).ToString("yyyy-MM-dd HH:MM") & "','" & AppDetail.DocCompleted & "','" & AppDetail.EmployerID & "','" & AppDetail.RSABalance & "','" & AppDetail.Sex & "','" & AppDetail.PIN & "','" & AppDetail.FullName.Replace("'", "''") & "','" & AppDetail.EmployerCode & "','" & DateTime.Parse(AppDetail.DOB).ToString("yyyy-MM-dd") & "','" & AppDetail.EmployerName.Replace("'", "''") & "','" & AppDetail.IsPassportConfirmed & "','" & AppDetail.isSignatureConfirmed & "','" & AppDetail.CreatedBy & "','" & AppDetail.FileNumber & "','" & userName & "','" & AppDetail.IsBankDetailsConfirmed & "','" & AppDetail.ApprovedAmount & "','" & AppDetail.ReferenceApplicationCode & "')"
+
+
+				End If
+
+			End If
+			'txtReferenceApplicationCode
+
+			myComm.CommandText = sql1
+			myComm.ExecuteNonQuery()
+
+
+			Dim sqlRef As String
+			sqlRef = "update tblMemberApplication set txtStatus = 'Terminated', dteTerminated ='" & DateTime.Parse(Now).ToString("yyyy-MM-dd HH:MM") & "' where txtapplicationCode = '" & AppDetail.ReferenceApplicationCode & "'"
+			myComm.CommandText = sqlRef
+			command.CommandType = CommandType.Text
+			myComm.ExecuteNonQuery()
+
+
+
+			''''''''''''''''''''updating the checkList for the application''''''''''''''''''''''''''
+
+			If AppDetail.AppTypeId = 5 Then
+
+
+				sqlRef = "update tblMemberApplication set isLOAAffidavitChecked = '" & AppCheckListDBA.LOAAffidavitChecked & "', isLOANumbersChecked = '" & AppCheckListDBA.LOANumbersChecked & "',isLOAIntroLetter = '" & AppCheckListDBA.LOAIntroLetter & "',isLOAEmployerIntroLetter = '" & AppCheckListDBA.LOAEmployerIntroLetter & "',isLOASignatories = '" & AppCheckListDBA.LOASignatories & "',isPOA = '" & AppCheckListDBA.POA & "',isMinorBirthCert = '" & AppCheckListDBA.MinorBirthCert & "',isNOKMOIs = '" & AppCheckListDBA.NOKMOIs & "',isMOIDocs = '" & AppCheckListDBA.MOIDocs & "',isNamesDOB = '" & AppCheckListDBA.NamesDOB & "',isDODName = '" & AppCheckListDBA.NamesDOB & "' where txtapplicationCode = '" & AppCheckListDBA.ApplicationCode & "'"
+				myComm.CommandText = sqlRef
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+			Else
+
+				sqlRef = "update tblMemberApplication set isFundingStatusChecked = '" & AppCheckList.FundingStatusChecked & "', isLegAVCChecked = '" & AppCheckList.LegAVCChecked & "',isDOBChecked = '" & AppCheckList.DOBChecked & "',isNamesChecked = '" & AppCheckList.NamesChecked & "',isExitDocChecked = '" & AppCheckList.ExitDocChecked & "',isDataEntryChecked = '" & AppCheckList.DataEntryChecked & "',isValidDocChecked = '" & AppCheckList.ValidDocChecked & "' where txtapplicationCode = '" & AppCheckList.ApplicationCode & "'"
+				myComm.CommandText = sqlRef
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+
+			End If
+
+
+
+			''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+			'''''''''''''''''''''''''''''''ARL Acknowledgment'''''''''''''''''''''''''''''''''''
+			If AppDetail.IsARLActRecieved = True Then
+
+				sqlRef = "insert into tblARLAcknowledgment (txtApplicationCode,dteAcknowledgment) values ('" & AppDetail.ApplicationID & "','" & DateTime.Parse(AppDetail.ARLAcknowledgmentDate).ToString("yyyy-MM-dd") & "')"
+
+				myComm.CommandText = sqlRef
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+			ElseIf AppDetail.IsARLActRecieved = False Then
+
+				'sqlRef = "update tblMemberApplication set isARLRecieved = 1 where txtapplicationCode = '" & AppDetail.ApplicationID & "'"
+				'myComm.CommandText = sqlRef
+				'command.CommandType = CommandType.Text
+				'myComm.ExecuteNonQuery()
+
+			End If
+			'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+			'IsARLActRecieved
+
+
+
+			Dim dtAppPreference As DataTable = PMgetApplicationPreference()
+			Dim uName As String, uPWD As String, uRI As String
+			uName = ConfigurationManager.AppSettings("FileNetUName")
+			uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+			uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+			Dim dms As New PaymentModuleDMSWindow.CEEntry, DocumentID As String
+			dms.getConnection(uName, uPWD, uRI)
+
+
+			Dim i As Integer
+
+			Do While i < AppAdhocDoc.Count
+
+				Dim filePath As String = AppAdhocDoc(i).DocPath.ToString.Split("|")(1) + userName + "\" + AppAdhocDoc(i).DocPath.ToString.Split("|")(0)
+				Dim DestinationDir As String = AppAdhocDoc(i).DocPath.ToString.Split("|")(2)
+				Dim DestinationFile As String = AppAdhocDoc(i).DocPath.ToString.Split("|")(2) + AppDetail.ApplicationID.ToString.Replace("-", "_") + "_" + AppAdhocDoc(i).DocPath.ToString.Split("|")(0)
+
+				'Dim copyResult As Boolean = copyFile(filePath, DestinationDir, DestinationFile)
+
+				'checking if document is to be dropped in DMS or fileSystem
+				Dim copyResult As Boolean
+				Dim str() As String
+				Dim docFileExt As String = ""
+
+
+				If CBool(dtAppPreference.Rows(0).Item("blnIsDMSFileStorage")) = True Then
+					str = DestinationFile.Split(".")
+					Array.Reverse(str)
+					docFileExt = str(0)
+
+					If CBool(dtAppPreference.Rows(0).Item("blnIsFileSystemStorage")) = True Then
+						copyResult = copyFileDMS(filePath, DestinationDir, DestinationFile)
+					Else
+						copyResult = copyFile(filePath, DestinationDir, DestinationFile)
+					End If
+
+					DocumentID = dms.DropDocument(DestinationFile, Path.GetFileNameWithoutExtension(DestinationFile), "LPPFA_BPD")
+					If File.Exists(DestinationFile) = True Then
+						File.Delete(DestinationFile)
+					Else
+					End If
+				Else
+					DocumentID = ""
+					docFileExt = ""
+				End If
+
+
+
+				If CBool(dtAppPreference.Rows(0).Item("blnIsFileSystemStorage")) = True Then
+					copyResult = copyFile(filePath, DestinationDir, DestinationFile)
+				Else
+					DestinationFile = ""
+				End If
+
+
+
+				If copyResult = True Then
+
+					Dim sqll As String
+					sqll = "insert into tblAdhocApplicationDocuments (txtDescription,txtDocPath,txtApplicationCode,dteRecieved,txtRecievedBy,txtDocumentSource,isVerified,txtDMSDocumentID,txtDMSDocumentExt) values ('" & AppAdhocDoc(i).Description & "','" & DestinationFile & "','" & AppDetail.ApplicationID.ToString & "','" & DateTime.Parse(AppAdhocDoc(i).RecievedDate).ToString("yyyy-MM-dd HH:MM") & "','" & AppAdhocDoc(i).RecievedBy & "','" & AppDetail.ApplicationOffice & "','" & AppAdhocDoc(i).IsVerified & "','" & DocumentID & "','" & docFileExt & "') "
+					myComm.CommandText = sqll
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+				Else
+				End If
+
+				i = i + 1
+
+			Loop
+
+
+			i = 0
+
+			DocumentID = ""
+
+
+			Do While i < AppDoc.Count
+
+				'appDocDetail.DocumentTypeID = CInt(DocumentCollection.Item(row.Cells(1).Text))
+				'appDocDetail.DateReceived = CDate((row.Cells(2).Text))
+
+
+				Dim filePath As String = AppDoc(i).DocumentLocation.ToString.Split("|")(1) + userName + "\" + AppDoc(i).DocumentLocation.ToString.Split("|")(0)
+				Dim DestinationDir As String = AppDoc(i).DocumentLocation.ToString.Split("|")(2)
+				Dim DestinationFile As String = AppDoc(i).DocumentLocation.ToString.Split("|")(2) + AppDetail.ApplicationID.ToString.Replace("-", "_") + "_" + AppDoc(i).DocumentLocation.ToString.Split("|")(0)
+
+
+				'checking if document is to be dropped in DMS or fileSystem
+				Dim copyResult As Boolean
+				Dim str() As String
+				Dim docFileExt As String = ""
+
+
+				If CBool(dtAppPreference.Rows(0).Item("blnIsDMSFileStorage")) = True Then
+					str = DestinationFile.Split(".")
+					Array.Reverse(str)
+					docFileExt = str(0)
+
+					If CBool(dtAppPreference.Rows(0).Item("blnIsFileSystemStorage")) = True Then
+						copyResult = copyFileDMS(filePath, DestinationDir, DestinationFile)
+					Else
+						copyResult = copyFile(filePath, DestinationDir, DestinationFile)
+					End If
+
+					DocumentID = dms.DropDocument(DestinationFile, Path.GetFileNameWithoutExtension(DestinationFile), "LPPFA_BPD")
+					If File.Exists(DestinationFile) = True Then
+						File.Delete(DestinationFile)
+					Else
+					End If
+				Else
+					DocumentID = ""
+					docFileExt = ""
+				End If
+
+
+				If CBool(dtAppPreference.Rows(0).Item("blnIsFileSystemStorage")) = True Then
+					copyResult = copyFile(filePath, DestinationDir, DestinationFile)
+				Else
+					DestinationFile = ""
+				End If
+
+
+
+
+				If copyResult = True Then
+
+					Dim sqll As String
+					sqll = "insert into tblMemberDocument (fkiDocumentTypeID,dteReceived,fkiMemberApplicationID,txtdocumentSource,txtReceivedBy,txtDocumentPath,txtApplicationCode,isVerified,txtDMSDocumentID,txtDMSDocumentExt) values ('" & AppDoc(i).DocumentTypeID & "','" & DateTime.Parse(AppDoc(i).DateReceived).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationID.ToString & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.CreatedBy & "','" & DestinationFile & "','" & AppDetail.ApplicationID.ToString & "','" & AppDoc(i).IsVerified & "','" & DocumentID & "','" & docFileExt & "') "
+					myComm.CommandText = sqll
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+				Else
+
+
+					myComm.CommandText = "insert into tblMemberDocument (fkiDocumentTypeID,dteReceived,fkiMemberApplicationID,txtdocumentSource,txtReceivedBy,txtApplicationCode,isVerified) values ('" & AppDoc(i).DocumentTypeID & "','" & DateTime.Parse(AppDoc(i).DateReceived).ToString("yyyy-MM-dd") & "','" & AppDetail.ApplicationID.ToString & "','" & AppDetail.ApplicationOffice & "','" & AppDetail.CreatedBy & "','" & AppDetail.ApplicationID.ToString & "','" & AppDoc(i).IsVerified & "') "
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+				End If
+
+				i = i + 1
+			Loop
+
+
+			'myComm.CommandText = "sp_pm_CleanUploadedApplicationDocuments"
+			'command.CommandType = CommandType.StoredProcedure
+			'command.Parameters.Add(New SqlClient.SqlParameter("@txtapplicationcode", SqlDbType.VarChar))
+			'command.Parameters("@txtapplicationcode").Value = AppDetail.ApplicationID
+			'myComm.ExecuteNonQuery()
+
+
+
+			If CStr(AppDetail.Comment) <> "" Then
+
+				myComm.CommandText = "insert into tblApplicationComments (intAppCommentStage,txtApplicationCode,txtComment,txtCreatedBy) values ('1','" & AppDetail.ApplicationID & "','" & AppDetail.Comment & "', '" & AppDetail.CreatedBy & "')"
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+			Else
+
+			End If
+
+
+			If IsNothing(AppDetail.RetirementDetails) = False Then
+
+				If AppDetail.RetirementDetails.isProgramWithdrawal = True Then
+
+					'myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[numAccruedRight],[numRecommendedLumpSum],[numMonthlyDrowDown],[numRSABalance],[dtePriceDate],[numReviewedSalary],[numPensionArrears],[numArrearsMonths],[intFrequency],txtSalaryStructure,txtGradeLevel,txtStep,dteProgramming) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.AccruedRight & "', '" & AppDetail.RetirementDetails.RecommendedLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyProgramedDrawndown & "','" & AppDetail.RetirementDetails.RSABalance & "','" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "','" & AppDetail.RetirementDetails.ReviewedSalary & "', '" & AppDetail.RetirementDetails.PensionArrears & "', '" & AppDetail.RetirementDetails.ArrearsMonths & "', '" & AppDetail.RetirementDetails.Frequency & "','" & AppDetail.RetirementDetails.SalaryStructure & "', '" & AppDetail.RetirementDetails.GradeLevel & "', '" & AppDetail.RetirementDetails.SalaryStep & "', '" & DateTime.Parse(AppDetail.RetirementDetails.ProgrammingDate).ToString("yyyy-MM-dd") & "')"
+
+					'command.CommandType = CommandType.Text
+					'myComm.ExecuteNonQuery()
+
+
+
+
+					myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[numAccruedRight],[numRecommendedLumpSum],[numMonthlyDrowDown],[numRSABalance],[dtePriceDate],[numReviewedSalary],[numPensionArrears],[numArrearsMonths],[intFrequency],txtSalaryStructure,txtGradeLevel,txtStep,dteProgramming) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.AccruedRight & "', '" & AppDetail.RetirementDetails.RecommendedLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyProgramedDrawndown & "','" & AppDetail.RetirementDetails.RSABalance & "','" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "','" & AppDetail.RetirementDetails.ReviewedSalary & "', '" & AppDetail.RetirementDetails.PensionArrears & "', '" & AppDetail.RetirementDetails.ArrearsMonths & "', '" & AppDetail.RetirementDetails.Frequency & "','" & AppDetail.RetirementDetails.SalaryStructure & "', '" & AppDetail.RetirementDetails.GradeLevel & "', '" & AppDetail.RetirementDetails.SalaryStep & "', '" & DateTime.Parse(AppDetail.RetirementDetails.ProgrammingDate).ToString("yyyy-MM-dd") & "')"
+
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+				ElseIf AppDetail.RetirementDetails.isAnnuity = True Then
+
+					myComm.CommandText = "INSERT INTO [dbo].[tmpPWAnnuityDetails] ([txtApplicationCode],[numBasicSalary],[numHouseRent],[numTransport],[numUtility],[numConsolidatedAallowance],[numConsolidatedSalary],[numMonthlyTotal],[numAnnualTotalEmolumentAdj],[txtInsuranceCompanyName],[dteAnnuityCcommencementDate],[numRSABalance],[numPremium],[numLumpSum],[numMonthlyAnnuity],[dtePriceDate],[numReviewedSalary],[numPensionArrears],[numArrearsMonths],[intFrequency],txtSalaryStructure,txtGradeLevel,txtStep,dteProgramming) VALUES ('" & AppDetail.ApplicationID & "','" & AppDetail.RetirementDetails.BasicSalary & "','" & AppDetail.RetirementDetails.HouseRent & "','" & AppDetail.RetirementDetails.Transport & "','" & AppDetail.RetirementDetails.Utility & "', '" & AppDetail.RetirementDetails.ConsolidatedAallowance & "', '" & AppDetail.RetirementDetails.ConsolidatedSalary & "'   ,'" & AppDetail.RetirementDetails.MonthlyTotal & "', '" & AppDetail.RetirementDetails.AnnualTotalEmolumentAdj & "', '" & AppDetail.RetirementDetails.InsuranceCoy & "', '" & DateTime.Parse(AppDetail.RetirementDetails.AnnuityCommencement).ToString("yyyy-MM-dd") & "', '" & AppDetail.RetirementDetails.RSABalance & "', '" & AppDetail.RetirementDetails.Premium & "', '" & AppDetail.RetirementDetails.AnnuityLumpSum & "', '" & AppDetail.RetirementDetails.MonthlyAnnuity & "', '" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "','" & AppDetail.RetirementDetails.ReviewedSalary & "', '" & AppDetail.RetirementDetails.PensionArrears & "', '" & AppDetail.RetirementDetails.ArrearsMonths & "', '" & AppDetail.RetirementDetails.Frequency & "','" & AppDetail.RetirementDetails.SalaryStructure & "', '" & AppDetail.RetirementDetails.GradeLevel & "', '" & AppDetail.RetirementDetails.SalaryStep & "','" & DateTime.Parse(AppDetail.RetirementDetails.ProgrammingDate).ToString("yyyy-MM-dd") & "')"
+
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+				ElseIf AppDetail.RetirementDetails.IsDeathBenefit = True Then
+
+					myComm.CommandText = "INSERT INTO [dbo].[tmpDB] ([txtApplicationCode],[dteRetirement],[dteDeath],[txtAdminLetterAuthority],[dteAdminLetter],[txtAdminNOK],[numInsuranceProceed],[numAccruedRight],[numContribution],[numInvestmentIncome],[numRSABalance],[txtRemarks],[dtePriceDate]) VALUES ('" & AppDetail.ApplicationID & "','" & DateTime.Parse(AppDetail.RetirementDetails.RetirementDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(AppDetail.RetirementDetails.DeathDate).ToString("yyyy-MM-dd") & "','" & AppDetail.RetirementDetails.AdminIssuingAuthority & "','" & DateTime.Parse(AppDetail.RetirementDetails.AdminIssuingDate).ToString("yyyy-MM-dd") & "', '" & AppDetail.RetirementDetails.AdminNOK & "', '" & AppDetail.RetirementDetails.InsuranceProceed & "'   ,'" & AppDetail.RetirementDetails.AccruedRight & "', '" & AppDetail.RetirementDetails.Contribution & "', '" & AppDetail.RetirementDetails.InvestmentIncome & "', '" & AppDetail.RetirementDetails.RSABalance & "', '" & AppDetail.RetirementDetails.Remarks & "', '" & DateTime.Parse(AppDetail.RetirementDetails.PriceDate).ToString("yyyy-MM-dd") & "')"
+
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+				End If
+
+
+			Else
+
+			End If
+
+			sqlTran.Commit()
+
+			Return True
+		Catch ex As Exception
+
+			sqlTran.Rollback()
+
+			Dim loger As New Global.Logger.Logger
+			loger.FileSource = "Sure Pay Benefit Applicatiom "
+			loger.FilePath = logPath
+			loger.Logger(ex.Message & "Core - Application Submission")
+
+			Return False
+
+		End Try
+
+
+	End Function
+
 	Private Function copyFileDMS(ByVal path As String, ByVal destinationDir As String, ByVal destinationFile As String) As Boolean
 
 		Try
@@ -2534,7 +3111,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select  [dbo].[GetFundBalanceByDate](a.employeeid,1,@priceDate) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,@priceDate) RFBalance, (select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,@priceDate)) as Mandatory from dbo.Employee a where rsapin = @pin ", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select  [dbo].[GetFundBalanceByDate](a.employeeid,@FundID,@priceDate) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,@priceDate) RFBalance, (select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,@FundID,@priceDate)) as Mandatory from dbo.Employee a where rsapin = @pin ", mycon)
 
 
 			'     (select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,@priceDate))) as Mandatory
@@ -2549,12 +3126,16 @@ Public Class Core
 			    SqlDbType.VarChar))
 			MyDataAdapter.SelectCommand.Parameters("@pin").Value = PIn
 
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@FundID", _
+			    SqlDbType.Int))
+			MyDataAdapter.SelectCommand.Parameters("@FundID").Value = FundID
+
 			dsUser = New DataSet()
 			MyDataAdapter.Fill(dsUser, "MemberApplication")
 			dtUser = dsUser.Tables("MemberApplication")
 			mycon.Close()
 
-			If FundID = 1 Then
+			If FundID <> 2 Then
 				Return dtUser.Rows(0).Item(0)
 			ElseIf FundID = 2 Then
 				Return dtUser.Rows(0).Item(1)
@@ -2598,7 +3179,7 @@ Public Class Core
 
 			ElseIf appTypeID = 0 And isDetails = False Then
 
-				MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select (select fkiAppTypeId from tblMemberApplication where txtApplicationCode  = a.txtApplicationCode) appTypeID,(select txtControlCheckedStatus from tblMemberApplication where txtApplicationCode  = a.txtApplicationCode) txtControlCheckedStatus,a.* from [dbo].[tblApplicationApprovalPayee] a where a.txtStatus = 'E' and isnull(a.txtControlCheckedBy,'')='' or	isnull(a.txtControlVerifiedBy,'')='' or	isnull(a.txtControlAuthorisedBy,'') = '' ) select distinct  txtPencomBatch,isnull(txtEnpowerExtractBatch,'') txtEnpowerExtractBatch from tab where txtPencomBatch = @batch and txtEnpowerExtractBatch <> ''", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("with tab as (select (select fkiAppTypeId from tblMemberApplication where txtApplicationCode  = a.txtApplicationCode) appTypeID,(select txtControlCheckedStatus from tblMemberApplication where txtApplicationCode  = a.txtApplicationCode) txtControlCheckedStatus,a.* from [dbo].[tblApplicationApprovalPayee] a where a.txtStatus = 'E' and isnull(a.txtControlCheckedBy,'')='' or	isnull(a.txtControlVerifiedBy,'')='' or	isnull(a.txtControlAuthorisedBy,'') != '' ) select distinct  txtPencomBatch,isnull(txtEnpowerExtractBatch,'') txtEnpowerExtractBatch from tab where txtPencomBatch = @batch and txtEnpowerExtractBatch <> ''", mycon)
 				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 				MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@batch", SqlDbType.VarChar))
 				MyDataAdapter.SelectCommand.Parameters("@batch").Value = batch
@@ -2931,7 +3512,7 @@ Public Class Core
 
 	' <summary>
 
-	Public Function PMgetPencomEnhancement(rdate As Date) As DataTable
+	Public Function PMgetPencomEnhancementMultiplePIN(reviewDate As Date, logPath As String, viewSource As String, pins As String) As DataTable
 
 		Dim myPCon As New SqlClient.SqlConnection
 		Dim myComm As New SqlClient.SqlCommand
@@ -2943,9 +3524,90 @@ Public Class Core
 		Dim mycon As New SqlClient.SqlConnection
 
 		Try
+
+			'txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],dterunfor
+
 			mycon = db.getConnection("PaymentModule")
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement] where dterunfor = @dterunfor and isControlChecked is null ", mycon)
-			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			If viewSource = "BPD" Then
+
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement] where dterunfor = @dterunfor and isBPDConfirmed is null ", mycon)
+				'MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement]  where dterunfor = '" & DateTime.Parse(reviewDate).ToString("yyyy-MM-dd") & "' and txtPIN in " & pins & " and isBPDConfirmed is null ", mycon)
+
+				'in " & PIN & "
+
+				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			ElseIf viewSource = "IC" Then
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement] where dterunfor = '" & DateTime.Parse(reviewDate).ToString("yyyy-MM-dd") & "' and txtPIN in " & pins & " and isControlChecked is null and isBPDConfirmed is not null ", mycon)
+				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			End If
+
+
+
+			'MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@dterunfor", SqlDbType.Date))
+			'MyDataAdapter.SelectCommand.Parameters("@dterunfor").Value = rdate
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "PencomFormat")
+			dtUser = dsUser.Tables("PencomFormat")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch ex As Exception
+
+			Dim loger As New Global.Logger.Logger
+			loger.FileSource = "Sure Pay Benefit Application "
+			loger.FilePath = logPath
+			loger.Logger(ex.Message & "Core - Fetching PW Enhancement Record")
+
+		End Try
+		Return Nothing
+
+
+
+	End Function
+
+
+	Public Function PMgetPencomEnhancement(rdate As Date, logPath As String, viewSource As String) As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+		Dim mycon As New SqlClient.SqlConnection
+
+		Try
+
+			'txtSurname],[txtFirstName],[txtMiddleName],[txtPIN],[txtGender],dterunfor
+
+			mycon = db.getConnection("PaymentModule")
+
+			If viewSource = "BPD" Then
+
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement] where dterunfor = @dterunfor and isBPDConfirmed is null ", mycon)
+				'MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement] a,dbo.tblPriority b  where b.txtPIN = a.txtPIN and dterunfor = @dterunfor and isBPDConfirmed is null ", mycon)
+				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			ElseIf viewSource = "IC" Then
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname  +' '+	txtFirstName  +' '+ txtMiddleName  as FullName,* from [dbo].[tblPensionEnhancement] where dterunfor = @dterunfor and isControlChecked is null and isBPDConfirmed is not null order by dteBPDConfirmed asc ", mycon)
+				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			End If
+			
+
 
 			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@dterunfor", SqlDbType.Date))
 			MyDataAdapter.SelectCommand.Parameters("@dterunfor").Value = rdate
@@ -2958,6 +3620,11 @@ Public Class Core
 			Return dtUser
 
 		Catch ex As Exception
+
+			Dim loger As New Global.Logger.Logger
+			loger.FileSource = "Sure Pay Benefit Application "
+			loger.FilePath = logPath
+			loger.Logger(ex.Message & "Core - Fetching PW Enhancement Record")
 
 		End Try
 		Return Nothing
@@ -3002,6 +3669,39 @@ Public Class Core
 		End Try
 		Return Nothing
 
+
+
+	End Function
+
+	Public Function PMResetExtractedBatch(batchNo As String, logPath As String) As Boolean
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+		Try
+			MyDataAdapter = New SqlClient.SqlDataAdapter("update tblApplicationApprovalPayee set txtStatus = 'C',txtEnpowerExtractBatch =  null where txtPencomBatch = @batchNo and  txtStatus != 'P' and isnull(txtControlCheckedBy,'')='' and isnull(txtControlVerifiedBy,'')='' and isnull(txtControlAuthorisedBy,'')='';delete from TempPayment;", mycon)
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@batchNo", SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@batchNo").Value = batchNo
+			MyDataAdapter.SelectCommand.ExecuteNonQuery()
+			mycon.Close()
+			Return True
+
+		Catch ex As Exception
+			Dim loger As New Global.Logger.Logger
+			loger.FileSource = "Sure Pay - "
+			loger.FilePath = logPath
+			loger.Logger(ex.StackTrace & " | " & "Location => Resetting Enpower Export Batch")
+			Return False
+		End Try
 
 
 	End Function
@@ -3237,10 +3937,8 @@ Public Class Core
 
 
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
-
 			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@batchNo", SqlDbType.VarChar))
 			MyDataAdapter.SelectCommand.Parameters("@batchNo").Value = batchNo
-
 			dsUser = New DataSet()
 			MyDataAdapter.Fill(dsUser, "MemberApplication")
 			dtUser = dsUser.Tables("MemberApplication")
@@ -3260,6 +3958,7 @@ Public Class Core
 
 			bytedwp = Encoding.UTF8.GetBytes(pwd)
 			hash = Convert.ToBase64String(MD5.Create.ComputeHash(bytedwp))
+			hash = Convert.ToBase64String(SHA1.Create.ComputeHash(bytedwp))
 
 		Catch ex As Exception
 
@@ -4294,7 +4993,6 @@ Public Class Core
 		Return dtUser
 	End Function
 
-
 	Public Function PMgetPencomApprovalsConfirmation(AppType As Integer, FetchType As Char) As DataTable
 
 		'fetchtype definition
@@ -4439,7 +5137,7 @@ Public Class Core
 			Do While i < lstApprovalSchs.Count
 
 
-				myComm.CommandText = "update tblMemberApplication set isScheduleGenerated = '" & DateTime.Parse(lstApprovalSchs(i).IsScheduleGenerated).ToString("yyyy-MM-dd") & "' and dteScheduleGenerated = '" & DateTime.Parse(lstApprovalSchs(i).DateConfirmed).ToString("yyyy-MM-dd") & "', txtStatus ='Approved/Processed' where txtApplicationCode = '" & lstApprovalSchs(i).ApplicationID & "'"
+				myComm.CommandText = "update tblMemberApplication set isScheduleGenerated = '" & DateTime.Parse(lstApprovalSchs(i).IsScheduleGenerated).ToString("yyyy-MM-dd") & "' and dteScheduleGenerated = '" & DateTime.Parse(lstApprovalSchs(i).DateConfirmed).ToString() & "', txtStatus ='Approved/Processed' where txtApplicationCode = '" & lstApprovalSchs(i).ApplicationID & "'"
 				command.CommandType = CommandType.Text
 				myComm.ExecuteNonQuery()
 
@@ -4711,7 +5409,10 @@ Public Class Core
 
 			'sql = "select *, (select InsurerName  from EnPowerV4..Insurer where InsurerID = a.txtInsuranceCompanyName) InsurerName from tmpPWAnnuityDetails a where txtApplicationCode = @txtApplicationCode"
 
-			sql = "select *, isnull((select InsurerName  from EnPowerV4..Insurer where cast(InsurerID as varchar(225)) = a.txtInsuranceCompanyName),a.txtInsuranceCompanyName) InsurerName from tmpPWAnnuityDetails a where txtApplicationCode = @txtApplicationCode"
+			'sql = "select *, isnull((select InsurerName  from EnPowerV4..Insurer where cast(InsurerID as varchar(225)) = a.txtInsuranceCompanyName),a.txtInsuranceCompanyName) InsurerName from tmpPWAnnuityDetails a where txtApplicationCode = @txtApplicationCode"
+
+
+			sql = "select *, isnull((select InsurerName  from EnPowerV4..Insurer where cast(InsurerID as varchar(225)) = a.txtInsuranceCompanyName),a.txtInsuranceCompanyName) InsurerName, isnull((select numMonthBuffer from tblRetireeCalculatedTemplate b, tblMemberApplication c where b.txtPIN  =  c.txtPIN and c.txtApplicationCode =  a.txtApplicationCode),0) [MonthBuffer],isnull((select TotalUpfront from tblRetireeCalculatedTemplate b, tblMemberApplication c where b.txtPIN  =  c.txtPIN and c.txtApplicationCode =  a.txtApplicationCode),0) [TotalUpfront],isnull((select  b.numFinalSalary from tblRetireeCalculatedTemplate b, tblMemberApplication c where b.txtPIN  =  c.txtPIN and c.txtApplicationCode =  a.txtApplicationCode),0) [FinalSalary] from tmpPWAnnuityDetails a where txtApplicationCode = @txtApplicationCode"
 
 			'sql = "select * from tmpPWAnnuityDetails where txtApplicationCode = @txtApplicationCode"
 
@@ -4902,6 +5603,7 @@ Public Class Core
 		command = mycon.CreateCommand
 		Dim MyDataAdapter As SqlClient.SqlDataAdapter
 		MyDataAdapter = New SqlClient.SqlDataAdapter("select *, b.fkiAppTypeId from tmpPWAnnuityDetails a,tblMemberApplication b where  a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = @ApplicationCode ", mycon)
+
 		MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
 		MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@ApplicationCode", _
@@ -5522,9 +6224,43 @@ Public Class Core
 
 		Dim db As New DbConnection
 		Dim mycon As New SqlClient.SqlConnection
-		Dim myComm, command As New SqlClient.SqlCommand, sql1 As String = "", i As Integer
+		Dim myComm, command As New SqlClient.SqlCommand, sql1 As String = "", i As Integer, cmd As String = ""
 		Dim vDate As Date
 		vDate = Me.PMgetCurrentValueDate(fundID)
+
+
+		If updateType = 0 Then
+
+			mycon = db.getConnection("PaymentModule")
+			myComm.Connection = mycon
+
+			Do While i < lstApprovedApp.Count
+
+				If lstApprovedApp(i).AppTypeId = 17 Then
+					cmd = cmd & "insert into EnpowerV4..RetireeAccountTemp (RetireeAccountID,	OldFrequencyID,	NewFrequencyID,	OldDrawDown,	NewDrawDown,	OldCurrentUnits,	NewCurrentUnits,	DifferentialUnits,Reason,IsSuspended,CreatedByID) select top 1 a.RetireeAccountID,WithdrawalFrequencyID,WithdrawalFrequencyID,MonthlyPension,b.numEnhancement,(select sum(UnitValue) from EnpowerV4..Contributions where Employeeid = c.EmployeeID and IsInvested = 1 and IsConfirmed = 1 and IsReversed = 0 and isArchived = 0) oldUnit,(select sum(UnitValue) from EnpowerV4..Payments where Employeeid = c.EmployeeID and IsInvested = 1 and IsConfirmed = 1 and IsReversed = 0 and isArchived = 0) newUnit,((select sum(UnitValue) from EnpowerV4..Payments where Employeeid = c.EmployeeID and IsInvested = 1 and IsConfirmed = 1 and IsReversed = 0 and isArchived = 0) - (select sum(UnitValue) from EnpowerV4..Contributions where Employeeid = c.EmployeeID  and IsInvested = 1 and IsConfirmed = 1 and IsReversed = 0 and isArchived = 0)) diff,'PENSION ENHANCEMENT',0,1 createdByID from enpowerv4..RetireeAccount a, surePay..tblPensionEnhancement b, enpowerv4..Employee c where a.EmployeeID = c.EmployeeID and b.txtpin =  c.rsapin and c.RSAPIN = '" & lstApprovedApp(i).PIN & "'; "
+				End If
+				i = i + 1
+
+			Loop
+
+			Try
+
+				myComm.CommandText = cmd
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+			Catch ex As Exception
+
+				Dim logerr As New Global.Logger.Logger
+				logerr.FileSource = "SurePay - PW Enhancement Approval"
+				logerr.FilePath = errPath
+				logerr.Logger(ex.Message)
+
+			End Try	
+
+		End If
+
+		i = 0
 
 		Try
 
@@ -5549,17 +6285,56 @@ Public Class Core
 			End If
 
 
-
-
-
-
 			If updateType = 0 Then
 
 				Do While i < lstApprovedApp.Count
 
-					myComm.CommandText = "update tblMemberApplication set txtPencomBatch = '" & lstApprovedApp(i).PencomBatch & "' where txtApplicationCode = '" & lstApprovedApp(i).ApplicationID & "'"
-					command.CommandType = CommandType.Text
-					myComm.ExecuteNonQuery()
+
+					If lstApprovedApp(i).AppTypeId = 17 Then
+
+
+						myComm.CommandText = "update tblMemberApplication set txtPencomBatch = '" & lstApprovedApp(i).PencomBatch & "', numFinalSalary = '" & lstApprovedApp(i).NumberOfArrears & "' where txtApplicationCode = '" & lstApprovedApp(i).ApplicationID & "'"
+						command.CommandType = CommandType.Text
+						myComm.ExecuteNonQuery()
+
+
+						myComm.CommandText = "update b set b.monthlypension = c.numEnhancement, b.IsConfirmed = null,b.DateConfirmed = null,b.ConfirmedByID = null from tblMemberApplication a,enpowerv4.dbo.RetireeAccount   b, tblPensionEnhancement c where a.fkiMemberID = b.EmployeeID and c.txtpin = a.txtpin and a.txtApplicationCode = '" & lstApprovedApp(i).ApplicationID & "'"
+						command.CommandType = CommandType.Text
+						myComm.ExecuteNonQuery()
+
+
+						'updating existing SI
+						myComm.CommandText = "update tblSIPensioneer set numPension = c.numEnhancement,dteAnniversary =  cast(getdate() as date),txtStatus = 'P' from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c, tblSIPensioneer d where a.txtapplicationcode = b.txtapplicationcode and a.txtPIN = c.txtPIN and c.txtPIN = d.txtPIN and a.txtApplicationCode = '" & lstApprovedApp(i).ApplicationID & "'"
+						command.CommandType = CommandType.Text
+						myComm.ExecuteNonQuery()
+
+
+						'creating the SI
+						myComm.CommandText = "insert into tblSIPensioneer (txtPIN,txtFullName,numPWAmount,numPension,intBankID,intBankBranchID,txtBankAccount,txtFrequency,dteAnniversary,txtStatus,txtApplicationcode) select a.txtPIN,replace(a.txtfullName,'|','') as FullName, c.numRSABalance  RFBalance ,c.numEnhancement ,a.fkibankid,a.fkibranchid,a.txtAccountNo,1 as Frequency,cast(getdate() as date) as Anniversary,'P',a.txtApplicationcode from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c where a.txtapplicationcode = b.txtapplicationcode and a.txtPIN = c.txtPIN  and a.txtApplicationCode = '" & lstApprovedApp(i).ApplicationID & "' and not exists (select * from tblSIPensioneer where txtpin = a.txtPIN )"
+						command.CommandType = CommandType.Text
+						myComm.ExecuteNonQuery()
+
+					Else
+
+						myComm.CommandText = "update tblMemberApplication set txtPencomBatch = '" & lstApprovedApp(i).PencomBatch & "' where txtApplicationCode = '" & lstApprovedApp(i).ApplicationID & "'"
+						command.CommandType = CommandType.Text
+						myComm.ExecuteNonQuery()
+
+
+
+					End If
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 					If lstApprovedApp(i).AppTypeId = 3 Then
@@ -5682,7 +6457,6 @@ Public Class Core
 
 	End Sub
 
-
 	'exporting payment approval into enpower for further processing
 	Public Sub PMInsertEnpowerPaymentTemp(lstApprovalExport As List(Of PencomApprovalExport))
 
@@ -5690,52 +6464,24 @@ Public Class Core
 		Dim mycon As New SqlClient.SqlConnection
 		Dim myComm, command As New SqlClient.SqlCommand, i As Integer
 
-
 		Try
 
-			mycon = db.getConnection("EnpowerV4")
-			Dim sqlTran As SqlClient.SqlTransaction = mycon.BeginTransaction
-			myComm = mycon.CreateCommand
-			myComm.Transaction = sqlTran
+			'Dim commandInsert As String = "delete from SurePay..[TempPayment]"
+			Dim commandInsert As String = ""
 
 			Do While i < lstApprovalExport.Count
 
-				myComm.CommandText = "INSERT INTO [dbo].[TempPayment] ([FundID],[RSAPIN],[PaymentTypeID],[ApprovalDate],[ValueDate],[StartPeriod],[EndPeriod],[Amount])  VALUES('" & lstApprovalExport.Item(i).FundID & "','" & lstApprovalExport.Item(i).RSAPIN & "','" & lstApprovalExport.Item(i).ApplicationType & "','" & DateTime.Parse(lstApprovalExport.Item(i).ApprovalDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).ValueDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).StartPeriod).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).EndPeriod).ToString("yyyy-MM-dd") & "','" & lstApprovalExport.Item(i).ApprovalAmount & "') "
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+				If i = 0 Then
 
+					commandInsert = "INSERT INTO SurePay..[TempPayment] ([FundID],[RSAPIN],[PaymentTypeID],[ApprovalDate],[ValueDate],[StartPeriod],[EndPeriod],[Amount],txtApplicationCode)  VALUES('" & lstApprovalExport.Item(i).FundID & "','" & lstApprovalExport.Item(i).RSAPIN & "','" & lstApprovalExport.Item(i).ApplicationType & "','" & DateTime.Parse(lstApprovalExport.Item(i).ApprovalDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).ValueDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).StartPeriod).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).EndPeriod).ToString("yyyy-MM-dd") & "','" & lstApprovalExport.Item(i).ApprovalAmount & "','" & lstApprovalExport.Item(i).ApplicationCode & "');"
 
+				ElseIf i > 0 Then
 
-				myComm.CommandText = "update  a set a.AccountName = b.txtAccountName ,a.AccountNumber  = b.txtAccountNo ,BankID = b.fkiBankID ,BankBranchID = b.fkiBranchID from EnPowerV4..employee a, SurePay..tblMemberApplication b, EnPowerV4..Bank c, EnPowerV4..BankBranch d  where b.txtPIN = a.RSAPIN and c.BankID = d.BankID and c.BankID = b.fkiBankID and d.BankBranchID = b.fkiBranchID and b.txtApplicationCode  = '" & lstApprovalExport.Item(i).ApplicationCode & "'"
+					commandInsert = commandInsert & "INSERT INTO SurePay..[TempPayment] ([FundID],[RSAPIN],[PaymentTypeID],[ApprovalDate],[ValueDate],[StartPeriod],[EndPeriod],[Amount],txtApplicationCode)  VALUES('" & lstApprovalExport.Item(i).FundID & "','" & lstApprovalExport.Item(i).RSAPIN & "','" & lstApprovalExport.Item(i).ApplicationType & "','" & DateTime.Parse(lstApprovalExport.Item(i).ApprovalDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).ValueDate).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).StartPeriod).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstApprovalExport.Item(i).EndPeriod).ToString("yyyy-MM-dd") & "','" & lstApprovalExport.Item(i).ApprovalAmount & "','" & lstApprovalExport.Item(i).ApplicationCode & "');"
 
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+				End If
 
-
-
-				myComm.CommandText = "update  a set a.InsurerID = (select InsurerID from EnPowerV4..Insurer  where InsurerName = (select [insurance-company-name] from SurePay..[awbr700] where txtApplicationCode = b.txtApplicationCode)) from EnPowerV4..employee a, SurePay..tblMemberApplication b where b.txtPIN = a.RSAPIN and b.txtApplicationCode  = '" & lstApprovalExport.Item(i).ApplicationCode & "'"
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
-
-
-
-
-
-				myComm.CommandText = "update  a set a.IsRetired = 1, DateRetired = b.dteDOR from EnPowerV4..employee a, SurePay..tblMemberApplication b, EnPowerV4..Bank c, EnPowerV4..BankBranch d  where b.txtPIN = a.RSAPIN and c.BankID = d.BankID and c.BankID = b.fkiBankID and d.BankBranchID = b.fkiBranchID and b.txtApplicationCode  = '" & lstApprovalExport.Item(i).ApplicationCode & "' and b.dtedor is not null "
-
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
-
-
-				'myComm.CommandText = "update b set b.insurerid = a.txtInsuranceCompanyName from SurePay..tmpPWAnnuityDetails a, employee b, SurePay..tblMemberApplication c where c.txtPIN = b.RSAPIN And c.txtapplicationcode = a.txtapplicationcode and a.txtapplicationcode ='" & lstApprovalExport.Item(i).ApplicationCode & "'"
-				'command.CommandType = CommandType.Text
-				'myComm.ExecuteNonQuery()
-
-
-
-				myComm.CommandText = "update SurePay.dbo.tblApplicationApprovalPayee set txtEnpowerExtractBatch = '" & lstApprovalExport.Item(i).EnpowerExportBatch & "', txtStatus = 'E',dteStartPeriod ='" & DateTime.Parse(lstApprovalExport.Item(i).StartPeriod).ToString("yyyy-MM-dd") & "',dteEndPeriod = '" & DateTime.Parse(lstApprovalExport.Item(i).EndPeriod).ToString("yyyy-MM-dd") & "' where txtApplicationCode = '" & lstApprovalExport.Item(i).ApplicationCode & "' "
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+				commandInsert = commandInsert & "update SurePay.dbo.tblApplicationApprovalPayee set txtEnpowerExtractBatch = '" & lstApprovalExport.Item(i).EnpowerExportBatch & "', txtStatus = 'E',dteStartPeriod ='" & DateTime.Parse(lstApprovalExport.Item(i).StartPeriod).ToString("yyyy-MM-dd") & "',dteEndPeriod = '" & DateTime.Parse(lstApprovalExport.Item(i).EndPeriod).ToString("yyyy-MM-dd") & "' where txtApplicationCode = '" & lstApprovalExport.Item(i).ApplicationCode & "'"
 
 
 				i = i + 1
@@ -5743,10 +6489,74 @@ Public Class Core
 			Loop
 
 
-			sqlTran.Commit()
+			mycon = db.getConnection("EnpowerV4")
+			Try
+
+				
+				myComm.Connection = mycon
+				myComm.CommandText = commandInsert
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+			Catch ex As Exception
+
+				Dim logerr As New Global.Logger.Logger
+				logerr.FileSource = "Payment Module"
+				logerr.FilePath = "c:\GeneralProject\Payment Module\Logs"
+				logerr.Logger("Error Inserting into SurePay " & ex.Message & commandInsert)
+
+			End Try
+			
+
+			'''''''inserting into temp Table on surePay
+			Dim commandStr As String = ""
+			myComm = New SqlCommand
+			myComm.Connection = mycon
+
+			'preparing a statement for insert into tempTable on enpower
+			commandStr = "INSERT INTO EnPowerV4..[TempPayment] ([FundID],[RSAPIN],[PaymentTypeID],[ApprovalDate],[ValueDate],[StartPeriod],[EndPeriod],[Amount]) select [FundID],[RSAPIN],[PaymentTypeID],[ApprovalDate],[ValueDate],[StartPeriod],[EndPeriod],[Amount] from  SurePay..[TempPayment]; "
+
+			
+			'preparing a statement to update bank details
+			commandStr = commandStr & "update  a set a.AccountName = b.txtAccountName ,a.AccountNumber  = b.txtAccountNo ,BankID = b.fkiBankID ,BankBranchID = b.fkiBranchID from EnPowerV4..employee a, SurePay..tblMemberApplication b, EnPowerV4..Bank c, EnPowerV4..BankBranch d, SurePay..TempPayment e   where b.txtPIN = a.RSAPIN and c.BankID = d.BankID and c.BankID = b.fkiBankID and d.BankBranchID = b.fkiBranchID and b.txtApplicationCode  = e.txtApplicationCode ;"
+
+			'preparing a statement to update insurer details
+			commandStr = commandStr & "update  a set a.InsurerID = (select InsurerID from EnPowerV4..Insurer  where InsurerName = (select [insurance-company-name] from SurePay..[awbr700] where txtApplicationCode = b.txtApplicationCode)) from EnPowerV4..employee a, SurePay..tblMemberApplication b, SurePay..TempPayment c where b.txtPIN = a.RSAPIN and b.txtApplicationCode  = c.txtApplicationCode;"
+
+			'preparing a statement to update isRetired
+			commandStr = commandStr & "update  a set a.IsRetired = 1, DateRetired = b.dteDOR from EnPowerV4..employee a, SurePay..tblMemberApplication b, EnPowerV4..Bank c, EnPowerV4..BankBranch d, SurePay..tempPayment e  where b.txtPIN = a.RSAPIN and c.BankID = d.BankID and c.BankID = b.fkiBankID and d.BankBranchID = b.fkiBranchID and b.txtApplicationCode  = e.txtapplicationcode and b.dtedor is not null;"
+
+			'empting the surePay tempTable
+			commandStr = commandStr & "delete from SurePay..tempPayment;"
+
+
+			Try
+
+				myComm.CommandText = commandStr
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+			Catch ex As Exception
+
+				Dim logerr As New Global.Logger.Logger
+				logerr.FileSource = "Payment Module"
+				logerr.FilePath = "c:\GeneralProject\Payment Module\Logs"
+				logerr.Logger("Error on Enpower TempPayment " & ex.Message & commandStr)
+
+			End Try
+			
+
+
 
 		Catch ex As Exception
-			'MsgBox("" & ex.Message)
+
+
+			Dim logerr As New Global.Logger.Logger
+			logerr.FileSource = "Payment Module"
+			logerr.FilePath = "c:\MLive\Payment Module3\Logs"
+			logerr.Logger(ex.Message)
+
+
 		End Try
 
 	End Sub
@@ -5778,6 +6588,15 @@ Public Class Core
 				'IsSentToPencom = 2 means approval was sent through hard copy files to pencom
 				'IsSentToPencom = 0 means approval has not been sent at all
 				'inserting rmas return schedule for 25%
+
+
+				myComm.CommandText = "update  a set a.AccountName = b.txtAccountName ,a.AccountNumber  = b.txtAccountNo ,BankID = b.fkiBankID ,BankBranchID = b.fkiBranchID from EnPowerV4..employee a, SurePay..tblMemberApplication b, EnPowerV4..Bank c, EnPowerV4..BankBranch d  where b.txtPIN = a.RSAPIN and c.BankID = d.BankID and c.BankID = b.fkiBankID and d.BankBranchID = b.fkiBranchID and b.txtApplicationCode  = '" & lstRMASSchedule.Item(i).ApplicationCode & "'"
+				command.CommandType = CommandType.Text
+				myComm.ExecuteNonQuery()
+
+
+
+
 
 				If submissionType = 1 And apptype = "2" Then
 
@@ -5955,6 +6774,57 @@ Public Class Core
 
 
 
+
+
+				ElseIf submissionType = 2 And apptype = "3" Then
+
+
+					myComm.CommandText = "insert into awbr100 (pin,[employer-code],[birth-date],[retirement-date],[retirement-age],[gender],[retirement-ground],[annual-total-emolument],[accrued-right],[rsa-balance],[recommended-lumpsum],[monthly-programed-drawndown],[dateSent],[txtApplicationCode]) values ('" & lstRMASSchedule(i).PIN & "','" & lstRMASSchedule(i).Employercode & "', '" & DateTime.Parse(lstRMASSchedule(i).DOB).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstRMASSchedule(i).RetirementDate).ToString("yyyy-MM-dd") & "','" & (lstRMASSchedule(i).Age) & "','" & lstRMASSchedule(i).Gender & "', '" & lstRMASSchedule(i).PaymentReason & "','" & lstRMASSchedule(i).RetirementDetails.AnnualTotalEmolumentAdj & "','" & lstRMASSchedule(i).RetirementDetails.AccruedRight & "','" & lstRMASSchedule(i).RetirementDetails.RSABalance & "','" & lstRMASSchedule(i).RetirementDetails.RecommendedLumpSum & "','" & lstRMASSchedule(i).RetirementDetails.MonthlyProgramedDrawndown & "','" & DateTime.Parse(lstRMASSchedule(i).DateSent).ToString("yyyy-MM-dd") & "','" & lstRMASSchedule(i).ApplicationCode & "')"
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+
+					myComm.CommandText = "insert into awbr101 (pin,[employer-name],[basic-salary],[housing-rent],transport,utility,[consolidated-allowance],[consolidated-salary],[monthly-total],[annual-total-emolument-adjusted],txtApplicationCode) values ('" & lstRMASSchedule(i).PIN & "','" & lstRMASSchedule(i).EmployerName & "', '" & lstRMASSchedule(i).RetirementDetails.BasicSalary & "','" & (lstRMASSchedule(i).RetirementDetails.HouseRent) & "','" & lstRMASSchedule(i).RetirementDetails.Transport & "', '" & lstRMASSchedule(i).RetirementDetails.Utility & "','" & lstRMASSchedule(i).RetirementDetails.ConsolidatedAallowance & "','" & lstRMASSchedule(i).RetirementDetails.ConsolidatedSalary & "','" & lstRMASSchedule(i).RetirementDetails.MonthlyTotal & "','" & lstRMASSchedule(i).RetirementDetails.AnnualTotalEmolumentAdj & "','" & lstRMASSchedule(i).ApplicationCode & "')"
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+					Dim dt As DateTime = formatMyDate(Now)
+					myComm.CommandText = "update tblMemberApplication set txtStatus = 'Sent To Pencom', IsSentToPencom = 1, dteSentToPencom = cast('" & dt.ToString("yyyy-MM-dd HH:MM") & "' as datetime),txtSPBatchNo = '" & SPLogBatchNo & "' where txtApplicationCode = '" & lstRMASSchedule(i).ApplicationCode & "'"
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+
+
+
+
+				ElseIf submissionType = 2 And apptype = "4" Then
+
+
+					myComm.CommandText = "insert into awbr700 (pin,[employer-code],[birth-date],[retirement-date],[insurance-company-name],[annuity-commencement-date],[annual-total-emolument],[rsa-balance],premium,lumpsum,[monthly-annuity],[dateSent],[txtApplicationCode]) values ('" & lstRMASSchedule(i).PIN & "','" & lstRMASSchedule(i).Employercode & "', '" & DateTime.Parse(lstRMASSchedule(i).DOB).ToString("yyyy-MM-dd") & "','" & DateTime.Parse(lstRMASSchedule(i).RetirementDate).ToString("yyyy-MM-dd") & "','" & (lstRMASSchedule(i).RetirementDetails.InsuranceCoy) & "','" & DateTime.Parse(lstRMASSchedule(i).RetirementDetails.AnnuityCommencement).ToString("yyyy-MM-dd") & "','" & lstRMASSchedule(i).RetirementDetails.AnnualTotalEmolumentAdj & "', '" & lstRMASSchedule(i).RetirementDetails.RSABalance & "','" & lstRMASSchedule(i).RetirementDetails.Premium & "','" & lstRMASSchedule(i).RetirementDetails.AnnuityLumpSum & "','" & lstRMASSchedule(i).RetirementDetails.MonthlyAnnuity & "','" & DateTime.Parse(lstRMASSchedule(i).DateSent).ToString("yyyy-MM-dd") & "','" & lstRMASSchedule(i).ApplicationCode & "')"
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+
+					myComm.CommandText = "insert into awbr701 (pin,[employer-name],[basic-salary],[housing-rent],transport,utility,[consolidated-allowance],[consolidated-salary],[monthly-total],[annual-total-emolument-adjusted],txtApplicationCode) values ('" & lstRMASSchedule(i).PIN & "','" & lstRMASSchedule(i).EmployerName & "', '" & lstRMASSchedule(i).RetirementDetails.BasicSalary & "','" & (lstRMASSchedule(i).RetirementDetails.HouseRent) & "','" & lstRMASSchedule(i).RetirementDetails.Transport & "', '" & lstRMASSchedule(i).RetirementDetails.Utility & "','" & lstRMASSchedule(i).RetirementDetails.ConsolidatedAallowance & "','" & lstRMASSchedule(i).RetirementDetails.ConsolidatedSalary & "','" & lstRMASSchedule(i).RetirementDetails.MonthlyTotal & "','" & lstRMASSchedule(i).RetirementDetails.AnnualTotalEmolumentAdj & "','" & lstRMASSchedule(i).ApplicationCode & "')"
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+					Dim dt As DateTime = formatMyDate(Now)
+					myComm.CommandText = "update tblMemberApplication set txtStatus = 'Sent To Pencom', IsSentToPencom = 1, dteSentToPencom = cast('" & dt.ToString("yyyy-MM-dd HH:MM") & "' as datetime),txtSPBatchNo = '" & SPLogBatchNo & "' where txtApplicationCode = '" & lstRMASSchedule(i).ApplicationCode & "'"
+					command.CommandType = CommandType.Text
+					myComm.ExecuteNonQuery()
+
+
+
+
+
+
+
 					'saving hardcopy for additional lumpSum
 				ElseIf submissionType = 2 And apptype = "14" Then
 
@@ -6089,7 +6959,12 @@ Public Class Core
 			sqlTran.Commit()
 
 		Catch ex As Exception
-			'MsgBox("" & ex.Message)
+
+			Dim logerr As New Global.Logger.Logger
+			logerr.FileSource = "Payment Module"
+			logerr.FilePath = "C:\MLive\Payment Module3\Logs\"
+			logerr.Logger(ex.Message & ": Error Saving LPW Extract")
+
 		End Try
 
 	End Sub
@@ -6460,7 +7335,7 @@ Public Class Core
 				Case Is = 17
 
 
-					sql = "select a.txtApplicationCode,a.txtPIN,txtFullName,isnull(a.dteDOR,cast(getdate() as date)) dteDOR,isnull(d.numNewPension,0.00)  as ApprovedAmount ,isnull(d.numNewPension,0.00) as AmountToPay,dteConfirmPriceDate as ValueDate,txtAccountName,txtAccountNo, (select BankName from enpowerv4..Bank where BankID = fkiBankID) fkiBankID,(select BranchName from enpowerv4..[BankBranch] where BankBranchID = fkiBranchID) fkiBranchID,txtPencomBatch,dteApprovalConfirmed,(select dteApproval from tblApplicationApprovals where txtRefNo =  txtPencomBatch) dteApproved,(select dteAcknowledgment from tblApplicationApprovals where txtRefNo =  txtPencomBatch) dteAcknowledgment,(select numApprovalAmount from tblApplicationApprovals where txtRefNo =  txtPencomBatch) numApprovalAmount,(select txtRefNo from tblApplicationApprovals where txtRefNo =  txtPencomBatch) txtRefNo, isnull(a.intFundPlatFormID,0) intFundPlatFormID from tblMemberApplication a,tblSPLog b, tblApplicationType c,[dbo].[tblPensionEnhancement] d where txtSPBatchNo = txtBatchNo and c.pkiAppTypeId = a.fkiAppTypeId and d.pkiEnhancementID = a.txtReferenceApplicationCode and dteApprovalConfirmed is null and  txtSPBatchNo in " & batches & ""
+					sql = "select a.txtApplicationCode,a.txtPIN,txtFullName,isnull(a.dteDOR,cast(getdate() as date)) dteDOR,isnull(d.numEnhancement,0.00)  as ApprovedAmount ,isnull(d.numEnhancement,0.00) as AmountToPay,d.dteReviewDate as ValueDate,txtAccountName,txtAccountNo, (select BankName from enpowerv4..Bank where BankID = fkiBankID) fkiBankID,(select BranchName from enpowerv4..[BankBranch] where BankBranchID = fkiBranchID) fkiBranchID,txtPencomBatch,dteApprovalConfirmed,(select dteApproval from tblApplicationApprovals where txtRefNo =  txtPencomBatch) dteApproved,(select dteAcknowledgment from tblApplicationApprovals where txtRefNo =  txtPencomBatch) dteAcknowledgment,(select numApprovalAmount from tblApplicationApprovals where txtRefNo =  txtPencomBatch) numApprovalAmount,(select txtRefNo from tblApplicationApprovals where txtRefNo =  txtPencomBatch) txtRefNo, isnull(a.intFundPlatFormID,0) intFundPlatFormID from tblMemberApplication a,tblSPLog b, tblApplicationType c,[dbo].[tblPensionEnhancement] d where txtSPBatchNo = txtBatchNo and c.pkiAppTypeId = a.fkiAppTypeId and d.pkiEnhancementID = a.txtReferenceApplicationCode and dteApprovalConfirmed is null and  txtSPBatchNo in " & batches & ""
 
 			End Select
 
@@ -7004,10 +7879,10 @@ Public Class Core
 			'0
 
 			Dim ApplicationProperty As New ApplicationProperties
-			ApplicationProperty.FieldName = "Fund Type :"
+			'ApplicationProperty.FieldName = "Fund Type :"
 			'ApplicationProperty.FieldValue = "Fund II"
-			ApplicationProperty.FieldValue = dtPDetails.Rows(0).Item("FundType").ToString
-			ApplicationProperties.Add(ApplicationProperty)
+			'ApplicationProperty.FieldValue = dtPDetails.Rows(0).Item("FundType").ToString
+			'ApplicationProperties.Add(ApplicationProperty)
 
 			ApplicationProperty = New ApplicationProperties
 			ApplicationProperty.FieldName = "Application Stage/Status :"
@@ -7491,10 +8366,10 @@ Public Class Core
 				ApplicationProperties.Clear()
 
 
-				ApplicationProperty = New ApplicationProperties
-				ApplicationProperty.FieldName = "Fund Type :"
-				ApplicationProperty.FieldValue = "Fund II"
-				ApplicationProperties.Add(ApplicationProperty)
+				'ApplicationProperty = New ApplicationProperties
+				'ApplicationProperty.FieldName = "Fund Type :"
+				'ApplicationProperty.FieldValue = "Fund II"
+				'ApplicationProperties.Add(ApplicationProperty)
 
 
 				ApplicationProperty = New ApplicationProperties
@@ -7705,10 +8580,10 @@ Public Class Core
 				ApplicationProperties.Clear()
 
 
-				ApplicationProperty = New ApplicationProperties
-				ApplicationProperty.FieldName = "Fund Type :"
-				ApplicationProperty.FieldValue = "Fund II"
-				ApplicationProperties.Add(ApplicationProperty)
+				'ApplicationProperty = New ApplicationProperties
+				'ApplicationProperty.FieldName = "Fund Type :"
+				'ApplicationProperty.FieldValue = "Fund II"
+				'ApplicationProperties.Add(ApplicationProperty)
 
 
 				ApplicationProperty = New ApplicationProperties
@@ -7928,10 +8803,10 @@ Public Class Core
 
 
 
-				ApplicationProperty = New ApplicationProperties
-				ApplicationProperty.FieldName = "Fund Type :"
-				ApplicationProperty.FieldValue = "Fund II"
-				ApplicationProperties.Add(ApplicationProperty)
+				'ApplicationProperty = New ApplicationProperties
+				'ApplicationProperty.FieldName = "Fund Type :"
+				'ApplicationProperty.FieldValue = "Fund II"
+				'ApplicationProperties.Add(ApplicationProperty)
 
 
 				ApplicationProperty = New ApplicationProperties
@@ -8151,10 +9026,10 @@ Public Class Core
 				ApplicationProperties.Clear()
 
 
-				ApplicationProperty = New ApplicationProperties
-				ApplicationProperty.FieldName = "Fund Type :"
-				ApplicationProperty.FieldValue = "Fund II"
-				ApplicationProperties.Add(ApplicationProperty)
+				'ApplicationProperty = New ApplicationProperties
+				'ApplicationProperty.FieldName = "Fund Type :"
+				'ApplicationProperty.FieldValue = "Fund II"
+				'ApplicationProperties.Add(ApplicationProperty)
 
 
 				ApplicationProperty = New ApplicationProperties
@@ -8368,10 +9243,10 @@ Public Class Core
 				ApplicationProperties.Clear()
 
 
-				ApplicationProperty = New ApplicationProperties
-				ApplicationProperty.FieldName = "Fund Type :"
-				ApplicationProperty.FieldValue = "Fund II"
-				ApplicationProperties.Add(ApplicationProperty)
+				'ApplicationProperty = New ApplicationProperties
+				'ApplicationProperty.FieldName = "Fund Type :"
+				'ApplicationProperty.FieldValue = "Fund II"
+				'ApplicationProperties.Add(ApplicationProperty)
 
 
 				ApplicationProperty = New ApplicationProperties
@@ -9473,8 +10348,8 @@ Public Class Core
 
 	End Sub
 
-
 	Public Function PMgetCheckList(TypeID As Integer) As DataTable
+
 		Dim myPCon As New SqlClient.SqlConnection
 		Dim myComm As New SqlClient.SqlCommand
 		Dim daUser As New SqlClient.SqlDataAdapter
@@ -9577,7 +10452,8 @@ Public Class Core
 
 	End Function
 
-	Public Function PMgetApprovalPaymentSchedule(pencomBatch As String, typeID As Integer, uNITType As String) As DataTable
+	' generate currently confirmed application PENCOM approval by Finance
+	Public Function PMgetApprovalPaymentSchedule(pencomBatch As String, typeID As Integer, uNITType As String, FINApprovalBatch As String) As DataTable
 
 		Dim myPCon As New SqlClient.SqlConnection
 		Dim myComm As New SqlClient.SqlCommand
@@ -9601,50 +10477,64 @@ Public Class Core
 
 					Case Is = 1
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						'	(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm]
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
 
 					Case Is = 16
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
 
 
 					Case Is = 3
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
 
 
 					Case Is = 4
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
 
 					Case Is = 7
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+
+						'or a.dteVerified is not null
 
 					Case Is = 5
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
 
 
 					Case Is = 6
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
 
 					Case Is = 8
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null  ", mycon)
+						'or a.dteVerified is not null
 
 
 					Case Is = 11
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null  ", mycon)
+						'or a.dteVerified is not null
 
 					Case Is = 2
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null  ", mycon)
+						'or a.dteVerified is not null
 
 					Case Else
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null or a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null", mycon)
+						' or a.dteVerified is not null
 
 				End Select
 				' a.txtPaymentRemarks as txtRemarks
@@ -9679,50 +10569,238 @@ Public Class Core
 
 					Case Is = 1
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 					Case Is = 16
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 
 					Case Is = 3
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 
 					Case Is = 4
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 					Case Is = 7
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 					Case Is = 5
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 
 					Case Is = 6
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 					Case Is = 8
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 
 					Case Is = 11
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 					Case Is = 2
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
 
 					Case Else
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null and txtFinanceApprovalBatch = @FINApprovalBatch", mycon)
+
+				End Select
+				' a.txtPaymentRemarks as txtRemarks
+				' and a.dteChecked is not null and a.dteVerified is not null
+
+				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+				MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@pencomBatch", _
+			  SqlDbType.VarChar))
+				MyDataAdapter.SelectCommand.Parameters("@pencomBatch").Value = pencomBatch
+
+				MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtStatus", _
+				    SqlDbType.VarChar))
+				MyDataAdapter.SelectCommand.Parameters("@txtStatus").Value = "E"
+
+				MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@FINApprovalBatch", _
+				    SqlDbType.VarChar))
+				MyDataAdapter.SelectCommand.Parameters("@FINApprovalBatch").Value = FINApprovalBatch
+
+
+			End If
+
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "ApprovalSchedule")
+			dtUser = dsUser.Tables("ApprovalSchedule")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+
+
+	Public Function PMgetApprovalPaymentSchedule(pencomBatch As String, typeID As Integer, uNITType As String) As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			If uNITType = "A" Then
+
+
+
+				Select Case typeID
+
+
+					Case Is = 1
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
+
+					Case Is = 16
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
+
+
+					Case Is = 3
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
+
+
+					Case Is = 4
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
+
+					Case Is = 7
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+
+						'or a.dteVerified is not null
+
+					Case Is = 5
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
+
+
+					Case Is = 6
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null ", mycon)
+						'or a.dteVerified is not null
+
+					Case Is = 8
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null  ", mycon)
+						'or a.dteVerified is not null
+
+
+					Case Is = 11
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null  ", mycon)
+						'or a.dteVerified is not null
+
+					Case Is = 2
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null  ", mycon)
+						'or a.dteVerified is not null
+
+					Case Else
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null", mycon)
+						' or a.dteVerified is not null
+
+				End Select
+				' a.txtPaymentRemarks as txtRemarks
+				' and a.dteChecked is not null and a.dteVerified is not null
+
+				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+				MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@pencomBatch", _
+			  SqlDbType.VarChar))
+				MyDataAdapter.SelectCommand.Parameters("@pencomBatch").Value = pencomBatch
+
+				MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtStatus", _
+				    SqlDbType.VarChar))
+				MyDataAdapter.SelectCommand.Parameters("@txtStatus").Value = "E"
+
+
+			ElseIf uNITType = "F" Then
+
+
+				Select Case typeID
+
+
+					Case Is = 1
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+					Case Is = 16
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+
+					Case Is = 3
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+
+					Case Is = 4
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+					Case Is = 7
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+					Case Is = 5
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+
+					Case Is = 6
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
+
+					Case Is = 8
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null ", mycon)
+
+
+					Case Is = 11
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null ", mycon)
+
+					Case Is = 2
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null ", mycon)
+
+					Case Else
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) and a.dteChecked is not null and a.dteVerified is not null", mycon)
 
 				End Select
 				' a.txtPaymentRemarks as txtRemarks
@@ -9786,61 +10864,67 @@ Public Class Core
 					''''Enhancement
 					Case Is = 17
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,'RF' as [PlatForm],c.dteApproval,b.numApplicationAmount numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy ,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,'Fund4' as [PlatForm],c.dteApproval,b.numApplicationAmount numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy ,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode ", mycon)
 
 
 						''''LPW
 					Case Is = 3
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numLumpSumToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy ,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr100 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode union all SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedArrears numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,a.txtCreatedBy,a.txtConfirmedBy,4 as fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr100 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numLumpSumToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy ,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr100 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode union all SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numApprovedArrears numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,a.txtCreatedBy,a.txtConfirmedBy,4 as fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr100 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 						''Annuity
+
+						'(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm]
+
 					Case Is = 4
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numLumpSumToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,1 fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode union all SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.premium numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,a.txtCreatedBy,a.txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numLumpSumToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,1 fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode union all SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund II' when b.intFundPlatFormID = 2 then 'Fund IV' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.premium numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,a.txtCreatedBy,a.txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+
+
+
 
 
 					Case Is = 15
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numLumpSumToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,1 fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode union all SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numAnnuityToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,a.txtCreatedBy,a.txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numLumpSumToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,1 fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode union all SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund II' when b.intFundPlatFormID = 2 then 'Fund IV' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,d.numAnnuityToPay numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,a.txtCreatedBy,a.txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 						''enbloc
 					Case Is = 1
 
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr400 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr400 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 
 					Case Is = 16
 
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr400 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr400 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 
 					Case Is = 2
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr500 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr500 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 					Case Is = 7
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr800 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr800 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 					Case Is = 8
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr300 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr300 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 					Case Is = 11
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbrEEP d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbrEEP d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 
 					Case Is = 5
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr600 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr600 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 					Case Is = 6
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr200 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT  b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm],c.dteApproval ,isnull(d.numAmountToPay,0) numApproved,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) +', '+ (select BranchName   from EnPowerV4.dbo.BankBranch  where BankBranchID = b.fkiBranchID ) as BankDetails, b.txtAccountNo ,'' as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,(select isnull(PaymentTypeID_Enpower,0) from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) fkiAppTypeId, a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c,awbr200 d WHERE       a.txtApplicationCode = b.txtApplicationCode and a.txtApplicationCode = d.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and b.txtApplicationCode = @txtApplicationCode", mycon)
 
 					Case Else
 
@@ -9865,51 +10949,55 @@ Public Class Core
 
 					Case Is = 1
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus)", mycon)
+						'(select case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) as [PlatForm]
+
+						'(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm]
+
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus)", mycon)
 
 
 					Case Is = 16
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr400 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 
 					Case Is = 3
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedLumpSum numApproved,d.numLumpSumToPay as numToPay,isnull(d.numApprovedArrears,0) as Arrears ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR, isnull(d.numPensionToPay,0) as PensionToPay FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr100 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 
 					Case Is = 4
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.premium numApproved,d.numLumpSumToPay as numToPay,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate,d.[retirement-date] as DOR FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr700 d WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 					Case Is = 7
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,b.txtTIN,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay , d.numInterestAtPayment, d.numTaxAtPayment, b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select StateName  from enpowerv4.[dbo].[State] m , enpowerv4..employee n where StateID = n.ContactStateID and n.RSAPIN = b.txtPIN) as Location,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr800 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 					Case Is = 5
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr600 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 
 					Case Is = 6
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr200 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 					Case Is = 8
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr300 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 
 					Case Is = 11
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbrEEP D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 					Case Is = 2
 
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,d.numApprovedAmount numApproved,d.numAmountToPay as numToPay ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c, awbr500 D WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch AND B.txtApplicationCode =  d.txtApplicationCode  and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus) ", mycon)
 
 					Case Else
-						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'RSA' when b.intFundPlatFormID = 2 then 'RF' end) [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus)", mycon)
+						MyDataAdapter = New SqlClient.SqlDataAdapter("SELECT     b.txtApplicationCode ,   replace(b.txtFullName,'|','') txtFullName, b.txtpin,b.txtSector,(case when b.intFundPlatFormID = 1 then 'Fund2' when b.intFundPlatFormID = 2 then 'Fund4' when b.intFundPlatFormID = 9 then 'Fund1' when b.intFundPlatFormID = 10 then 'Fund3' when b.intFundPlatFormID is null then 'GGF' end) [PlatForm],c.dteApproval ,a.numApproved ,b.txtAccountName ,(select BankName  from EnPowerV4.dbo.[Bank] where BankID = b.fkiBankID ) as BankDetails, b.txtAccountNo ,a.txtPaymentRemarks as txtRemarks,(select FullName from tblUsers where UserName = a.txtCreatedBy) txtCreatedBy,(select FullName from tblUsers where UserName = a.txtConfirmedBy) txtConfirmedBy,a.txtControlCheckedBy,a.txtControlVerifiedBy,a.txtControlAuthorisedBy,b.fkiAppTypeId,a.dteValueDate FROM tblApplicationApprovalPayee a, tblMemberApplication  b, [tblApplicationApprovals] c WHERE       a.txtApplicationCode = b.txtApplicationCode and c.txtRefNo = a.txtPencomBatch and (a.txtEnpowerExtractBatch = @pencomBatch) AND (a.txtStatus = @txtStatus)", mycon)
 
 				End Select
 				' a.txtPaymentRemarks as txtRemarks
@@ -10925,7 +12013,7 @@ Public Class Core
 
 		Try
 
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select rsapin,(select employername from Enpowerv4..Employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,datediff(year,dateofbirth,getdate()) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, Enpowerv4.dbo.titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +'. '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'ST' then 'State' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, isnull(phone,mobile) phone,(select employercode from Enpowerv4..Employer where employerid = a.employerid) EmployerCode,employerid,sex,(isnull(dteDOR,dteDisengagement)) DOR,MaritalStatus,txtReason,txtApplicationCode,replace(txtfullname,'|','') Name,(select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Mandatory,(select VoluntaryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as AVC,(select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Legacy,b.*,(select txtDescription from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) ApprovalType,numRSABalance from Enpowerv4.dbo.Employee a, SurePay..tblMemberApplication b where rsapin = txtPIN and rsapin in " & pin & " and dteDeactivated is null", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select rsapin,(select employername from Enpowerv4..Employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,datediff(year,dateofbirth,getdate()) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, Enpowerv4.dbo.titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +'. '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'ST' then 'State' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, isnull(phone,mobile) phone,(select employercode from Enpowerv4..Employer where employerid = a.employerid) EmployerCode,employerid,sex,(isnull(dteDOR,dteDisengagement)) DOR,MaritalStatus,txtReason,txtApplicationCode,replace(txtfullname,'|','') Name,(select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Mandatory,(select VoluntaryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as AVC,(select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Legacy,b.*,(select txtDescription from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) ApprovalType,numRSABalance from Enpowerv4.dbo.Employee a, SurePay..tblMemberApplication b where rsapin = txtPIN and rsapin in " & pin & " and dteDeactivated is null", mycon)
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
 
@@ -10966,7 +12054,7 @@ Public Class Core
 
 			If appCode <> "" Then
 
-				MyDataAdapter = New SqlClient.SqlDataAdapter("select rsapin,(select employername from Enpowerv4..Employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,datediff(year,dateofbirth,getdate()) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, Enpowerv4.dbo.titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +'. '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'ST' then 'State' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, isnull(phone,mobile) phone,(select employercode from Enpowerv4..Employer where employerid = a.employerid) EmployerCode,employerid,sex,(isnull(dteDOR,dteDisengagement)) DOR,MaritalStatus,txtReason,txtApplicationCode [Application No],replace(txtfullname,'|','') Name,isnull((select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as MandatoryRF,(select VoluntaryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as AVC,(select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Legacy,b.*,(select txtDescription from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) ApprovalType,numRSABalance,b.dteApplicationDate ApplicationDate from Enpowerv4.dbo.Employee a, SurePay..tblMemberApplication b where rsapin = txtPIN and txtApplicationCode = @appCode and rsapin = @pin and dteDeactivated is null", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select rsapin,(select employername from Enpowerv4..Employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,datediff(year,dateofbirth,getdate()) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, Enpowerv4.dbo.titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +'. '+ (select top 1 isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'ST' then 'State' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, isnull(phone,mobile) phone,(select employercode from Enpowerv4..Employer where employerid = a.employerid) EmployerCode,employerid,sex,(isnull(dteDOR,dteDisengagement)) DOR,MaritalStatus,txtReason,txtApplicationCode [Application No],replace(txtfullname,'|','') Name,isnull((select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as MandatoryRF,(select VoluntaryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as AVC,(select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Legacy,b.*,(select txtDescription from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) ApprovalType,numRSABalance,b.dteApplicationDate ApplicationDate from Enpowerv4.dbo.Employee a, SurePay..tblMemberApplication b where rsapin = txtPIN and txtApplicationCode = @appCode and rsapin = @pin and dteDeactivated is null", mycon)
 
 				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
@@ -10976,7 +12064,7 @@ Public Class Core
 
 			ElseIf appCode = "" Then
 
-				MyDataAdapter = New SqlClient.SqlDataAdapter("select rsapin,(select employername from Enpowerv4..Employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,datediff(year,dateofbirth,getdate()) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, Enpowerv4.dbo.titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +'. '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'ST' then 'State' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, isnull(phone,mobile) phone,(select employercode from Enpowerv4..Employer where employerid = a.employerid) EmployerCode,employerid,sex,(isnull(dteDOR,dteDisengagement)) DOR,MaritalStatus,txtReason,txtApplicationCode [Application No],replace(txtfullname,'|','') Name,(select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Mandatory,(select VoluntaryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as AVC,(select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Legacy,b.*,(select txtDescription from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) ApprovalType,numRSABalance,b.dteApplicationDate ApplicationDate from Enpowerv4.dbo.Employee a, SurePay..tblMemberApplication b where rsapin = txtPIN and rsapin = @pin and dteDeactivated is null", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select rsapin,(select employername from Enpowerv4..Employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,datediff(year,dateofbirth,getdate()) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, Enpowerv4.dbo.titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +'. '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,Enpowerv4.[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'ST' then 'State' when substring((select employercode from Enpowerv4..Employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, isnull(phone,mobile) phone,(select employercode from Enpowerv4..Employer where employerid = a.employerid) EmployerCode,employerid,sex,(isnull(dteDOR,dteDisengagement)) DOR,MaritalStatus,txtReason,txtApplicationCode [Application No],replace(txtfullname,'|','') Name,(select MandatoryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Mandatory,(select VoluntaryBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as AVC,(select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))) as Legacy,b.*,(select txtDescription from tblApplicationType where pkiAppTypeId = b.fkiAppTypeId) ApprovalType,numRSABalance,b.dteApplicationDate ApplicationDate from Enpowerv4.dbo.Employee a, SurePay..tblMemberApplication b where rsapin = txtPIN and rsapin = @pin and dteDeactivated is null", mycon)
 				MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
 			End If
@@ -11059,7 +12147,13 @@ Public Class Core
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
 
 
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select a.EmployeeID,FormReferenceNumber,RSAPIN,(LastName+'  '+ FirstName+'  '+	MiddleName) as FullName,'True' IsRecordAvailable,RSAPINRegistrationDate,'' as comment,b.Picture  from employee a, Biometric b where exists (select * from EVerification_Audit where FormRef = a.FormReferenceNumber ) and 			RSAPINRegistrationDate between '" & DateTime.Parse(date1).ToString("yyyy-MM-dd") & "' and '" & DateTime.Parse(date2).ToString("yyyy-MM-dd") & "' and a.EmployeeID = b.EmployeeID  union all select a.EmployeeID,FormReferenceNumber,RSAPIN,(LastName+'  '+ FirstName+'  '+	MiddleName) as FullName,'False' IsRecordAvailable,RSAPINRegistrationDate,'Missing Record on Everification Audit' as comment,b.Picture  from employee a,Biometric b where  not exists (select * from EVerification_Audit where FormRef = a.FormReferenceNumber ) and RSAPINRegistrationDate between '" & DateTime.Parse(date1).ToString("yyyy-MM-dd") & "' and '" & DateTime.Parse(date2).ToString("yyyy-MM-dd") & "' and a.EmployeeID = b.EmployeeID  ", mycon)
+			'	MyDataAdapter = New SqlClient.SqlDataAdapter("select a.EmployeeID,FormReferenceNumber,RSAPIN,(LastName+'  '+ FirstName+'  '+	MiddleName) as FullName,'True' IsRecordAvailable,RSAPINRegistrationDate,'' as comment,b.Picture  from employee a, Biometric b where exists (select * from EVerification_Audit where FormRef = a.FormReferenceNumber ) and 			RSAPINRegistrationDate between '" & DateTime.Parse(date1).ToString("yyyy-MM-dd") & "' and '" & DateTime.Parse(date2).ToString("yyyy-MM-dd") & "' and a.EmployeeID = b.EmployeeID  union all select a.EmployeeID,FormReferenceNumber,RSAPIN,(LastName+'  '+ FirstName+'  '+	MiddleName) as FullName,'False' IsRecordAvailable,RSAPINRegistrationDate,'Missing Record on Everification Audit' as comment,b.Picture  from employee a,Biometric b where  not exists (select * from EVerification_Audit where FormRef = a.FormReferenceNumber ) and RSAPINRegistrationDate between '" & DateTime.Parse(date1).ToString("yyyy-MM-dd") & "' and '" & DateTime.Parse(date2).ToString("yyyy-MM-dd") & "' and a.EmployeeID = b.EmployeeID  ", mycon)
+
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select a.EmployeeID,FormReferenceNumber,RSAPIN,(LastName+'  '+ FirstName+'  '+	MiddleName) as FullName,'True' IsRecordAvailable,RSAPINRegistrationDate,'' as comment,b.Picture  from employee a, Biometric b where exists (select * from [P-ENPOWER].[pencom_standalone].dbo.EVerification_Audit where FormRef = a.FormReferenceNumber ) and 			RSAPINRegistrationDate between '" & DateTime.Parse(date1).ToString("yyyy-MM-dd") & "' and '" & DateTime.Parse(date2).ToString("yyyy-MM-dd") & "' and a.EmployeeID = b.EmployeeID and FormReferenceNumber = '0023W99002171840'  union all select a.EmployeeID,FormReferenceNumber,RSAPIN,(LastName+'  '+ FirstName+'  '+	MiddleName) as FullName,'False' IsRecordAvailable,RSAPINRegistrationDate,'Missing Record on Everification Audit' as comment,b.Picture  from employee a,Biometric b where  not exists (select * from [P-ENPOWER].[pencom_standalone].dbo.EVerification_Audit where FormRef = a.FormReferenceNumber ) and RSAPINRegistrationDate between '" & DateTime.Parse(date1).ToString("yyyy-MM-dd") & "' and '" & DateTime.Parse(date2).ToString("yyyy-MM-dd") & "' and a.EmployeeID = b.EmployeeID and FormReferenceNumber = '0023W99002171840'  ", mycon)
+
+
+
 
 
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
@@ -11093,6 +12187,180 @@ Public Class Core
 
 	End Function
 
+	Public Function PMgetApplicationDocsForCRM(appCode As String) As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select txtDocumentName  from tblDocumentType where pkiDocumentTypeID = fkiDocumentTypeID) documentName,* from tblMemberDocument where txtApplicationCode = @appCode", mycon)
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@appCode", _
+			    SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@appCode").Value = appCode
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "MemberDocument")
+			dtUser = dsUser.Tables("MemberDocument")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+
+	Public Sub PMUpdateParticipantForFIN(pin As String, nxdx As Decimal, nc As Decimal)
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("EnpowerV4")
+
+		Try
+
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("update tempFIN set Column1 = @nxdx, Column2 = @nc where rsapin = @rsapin ", mycon)
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@nxdx", _
+			    SqlDbType.Decimal))
+			MyDataAdapter.SelectCommand.Parameters("@nxdx").Value = nxdx
+
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@nc", _
+			    SqlDbType.Decimal))
+			MyDataAdapter.SelectCommand.Parameters("@nc").Value = nc
+
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@rsapin", _
+			    SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@rsapin").Value = pin
+
+			MyDataAdapter.SelectCommand.ExecuteNonQuery()
+
+			mycon.Close()
+
+
+
+
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Sub
+
+
+	Public Function PMgetParticipantForFIN() As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("EnpowerV4")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select * from tempFIN where column1 is null", mycon)
+			'HAR-20757
+			'HAR-20756
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "MemberApplication")
+			dtUser = dsUser.Tables("MemberApplication")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
+
+
+	Public Function PMgetApplicationForCRM() As DataTable
+
+		Dim myPCon As New SqlClient.SqlConnection
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+
+			'MyDataAdapter = New SqlClient.SqlDataAdapter("select txtAccountName,	txtAccountNo,(select txtDescription  from tblApplicationType where pkiAppTypeId = fkiAppTypeId) as applicationTypeName,fkiAppTypeId,txtCreatedBy,fkiBankID,	fkiBranchID,* from tblMemberApplication where dteApplicationDate = '2018-03-21' and txtApplicationState <> 'LAGOS' and txtApplicationCode = 'LPW-12876'", mycon)
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select txtAccountName,	txtAccountNo,(select txtDescription  from tblApplicationType where pkiAppTypeId = fkiAppTypeId) as applicationTypeName,fkiAppTypeId,txtCreatedBy,fkiBankID,	fkiBranchID,* from tblMemberApplication where  txtApplicationState <> 'LAGOS' and txtApplicationCode = 'HAR-20795'", mycon)
+
+
+			'	MyDataAdapter = New SqlClient.SqlDataAdapter("select txtAccountName,	txtAccountNo,(select txtDescription  from tblApplicationType where pkiAppTypeId = fkiAppTypeId) as applicationTypeName,fkiAppTypeId,txtCreatedBy,fkiBankID,	fkiBranchID,* from tblMemberApplication where dteApplicationDate = '2018-03-22' and txtApplicationState <> 'LAGOS'", mycon)
+
+			
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			'MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtApplicationCode", _
+			'    SqlDbType.VarChar))
+			'MyDataAdapter.SelectCommand.Parameters("@txtApplicationCode").Value = applicationCode
+
+			dsUser = New DataSet()
+			MyDataAdapter.Fill(dsUser, "MemberApplication")
+			dtUser = dsUser.Tables("MemberApplication")
+			mycon.Close()
+
+			Return dtUser
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+	End Function
+
 	Public Function PMgetApplicationByCode(applicationCode As String) As DataTable
 
 		Dim myPCon As New SqlClient.SqlConnection
@@ -11109,7 +12377,7 @@ Public Class Core
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
 
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select replace(txtfullname,'|','') Name,isnull(numApplicationAmount,0.00) ApplicationAMount,*,(select txtDescription  from dbo.tblApplicationType where pkiAppTypeId = fkiAppTypeId) TypeName,(select bankName from enpowerv4..bank where BankID  = fkibankid) BankName,(select BranchName  from enpowerv4..BankBranch where BankBranchID = fkiBranchID) BranchName,(select a.dteApproval from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) ApprovalDate, (select a.dteAcknowledgment from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) AcknowledgmentDate,(select FullName from tblUsers where UserName = c.txtCreatedBy) CreatedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Processing' and txtOldValue = 'Documentation' order by dteChanged desc) ReviewedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Confirmation' and txtOldValue = 'Processing' order by dteChanged desc) ProcessedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Send To Pencom' and txtOldValue = 'Confirmation' order by dteChanged desc) ConfirmedBy,txtControlCheckedBy,isFundingStatusChecked,isLegAVCChecked,isDOBChecked,isNamesChecked,isExitDocChecked,isDataEntryChecked,isValidDocChecked,IsBankDetailsConfirmed,IsPassportConfirmed,IsSignatureConfirmed,(select numRSABalance from tblPensionEnhancement where pkiEnhancementID = c.txtReferenceApplicationCode) numCurrentRSABalance,(select numMonthPension from tblPensionEnhancement where pkiEnhancementID = c.txtReferenceApplicationCode) numMonthPension, (select numCurrentRSABalance from tblPensionEnhancement where pkiEnhancementID = c.txtReferenceApplicationCode) numCurrentRSABalance, (select numNewPension from tblPensionEnhancement where pkiEnhancementID = c.txtReferenceApplicationCode) numNewPension, (select dteDOR from tblPensionEnhancement where pkiEnhancementID = c.txtReferenceApplicationCode) dteDORR from tblMemberApplication c where txtApplicationCode = @txtApplicationCode", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select replace(txtfullname,'|','') Name,isnull(numApplicationAmount,0.00) ApplicationAMount,*,(select txtDescription  from dbo.tblApplicationType where pkiAppTypeId = fkiAppTypeId) TypeName,(select bankName from enpowerv4..bank where BankID  = fkibankid) BankName,(select BranchName  from enpowerv4..BankBranch where BankBranchID = fkiBranchID) BranchName,(select a.dteApproval from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) ApprovalDate, (select a.dteAcknowledgment from [dbo].[tblApplicationApprovals] a, [dbo].[tblApplicationApprovalPayee] b where a.txtRefNo = b.txtPencomBatch and b.txtApplicationCode = c.txtApplicationCode) AcknowledgmentDate,(select FullName from tblUsers where UserName = c.txtCreatedBy) CreatedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Processing' and txtOldValue = 'Documentation' order by dteChanged desc) ReviewedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Confirmation' and txtOldValue = 'Processing' order by dteChanged desc) ProcessedBy,(select top 1 txtChangedPerson  from tblChangeHistory where fkiMemberApplicationID = c.pkiMemberApplicationID and txtNewValue = 'Send To Pencom' and txtOldValue = 'Confirmation' order by dteChanged desc) ConfirmedBy,txtControlCheckedBy,isFundingStatusChecked,isLegAVCChecked,isDOBChecked,isNamesChecked,isExitDocChecked,isDataEntryChecked,isValidDocChecked,IsBankDetailsConfirmed,IsPassportConfirmed,IsSignatureConfirmed,txtReferenceApplicationCode,(select numRSABalance from tblPensionEnhancement where cast(pkiEnhancementID as varchar(50)) = c.txtReferenceApplicationCode) numCurrentRSABalance,(select numMonthPension from tblPensionEnhancement where cast(pkiEnhancementID as varchar(50)) = c.txtReferenceApplicationCode) numMonthPension, (select numRSABalance from tblPensionEnhancement where cast(pkiEnhancementID as varchar(50)) = c.txtReferenceApplicationCode) numCurrentRSABalance, (select numEnhancement from tblPensionEnhancement where cast(pkiEnhancementID as varchar(50)) = c.txtReferenceApplicationCode) numNewPension, (select dteDOR from tblPensionEnhancement where cast(pkiEnhancementID as varchar(50)) = c.txtReferenceApplicationCode) dteDORR from tblMemberApplication c where txtApplicationCode = @txtApplicationCode", mycon)
 
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
@@ -11513,7 +12781,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select count(*) from tblMemberApplication where txtSPBatchNo = @txtSPBatchNo and dteApprovalConfirmed is null", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select count(*) from tblMemberApplication where txtSPBatchNo = @txtSPBatchNo and txtPencomBatch is null", mycon)
 
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtSPBatchNo", _
@@ -11753,7 +13021,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin from dbo.Employee a where rsapin  = @PIN", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, (select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select top 1 isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin from dbo.Employee a where rsapin  = @PIN", mycon)
 
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
@@ -11870,7 +13138,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin from dbo.Employee a where rsapin in " & PIN & "", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select top 1 isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin from dbo.Employee a where rsapin in " & PIN & "", mycon)
 
 			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
 
@@ -11893,7 +13161,9 @@ Public Class Core
 
 	End Function
 
-	Public Function getNxDx(SexType As Integer, intAge As Integer) As Decimal
+
+	Public Function getPublicSalary(SexType As Integer, intAge As Integer) As Decimal
+
 		Dim myComm As New SqlClient.SqlCommand
 		Dim daUser As New SqlClient.SqlDataAdapter
 		Dim dsUser As New DataSet
@@ -11906,17 +13176,15 @@ Public Class Core
 
 		Try
 
-			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			Dim MyDataAdapter As New SqlClient.SqlDataAdapter
 
 			If SexType = 1 Then
 
-				'MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblMalePencomTemplate where intAge =  @intAge ", mycon)
-				MyDataAdapter = New SqlClient.SqlDataAdapter("select [ax (n year gtee)] from tblMaleEnhancement where age =  @intAge ", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblMalePencomTemplate where intAge =  @intAge ", mycon)
 
-			Else
+			ElseIf SexType <> 1 Then
 
-				'MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblFemalePencomFormat where intAge =  @intAge ", mycon)
-				MyDataAdapter = New SqlClient.SqlDataAdapter("select [ax (n year gtee)] from tblFemaleEnhancement where age =  @intAge ", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblFemalePencomFormat where intAge =  @intAge ", mycon)
 
 			End If
 
@@ -11943,7 +13211,170 @@ Public Class Core
 	End Function
 
 
-	'finding perticipant detailed full information 
+	Public Function getSalaryStructure(salaryStructure As String, grade As String, stepp As String) As Decimal
+
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim EmployerHisCollection As New Hashtable
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+
+		Try
+
+			Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select numAnnualSalary from tblSalaryStructure where txtSalaryStructure =  @txtSalaryStructure and txtGradeLevel =  @txtGradeLevel and txtStep =  @txtStep ", mycon)
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtSalaryStructure", SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@txtSalaryStructure").Value = salaryStructure
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtGradeLevel", SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@txtGradeLevel").Value = grade
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@txtStep", SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@txtStep").Value = stepp
+
+			MyDataAdapter.Fill(dsUser, "SalaryStrucrure")
+			dtUser = dsUser.Tables("SalaryStrucrure")
+
+
+			mycon.Close()
+			If dtUser.Rows.Count > 0 Then
+				Return CDbl(dtUser.Rows(0).Item(0))
+			Else
+				Return 0
+			End If
+
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+
+	End Function
+
+
+	Public Function getNxDxPW(SexType As Integer, intAge As Integer, freq As Integer) As Decimal
+
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim EmployerHisCollection As New Hashtable
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+
+		Try
+
+			Dim MyDataAdapter As New SqlClient.SqlDataAdapter
+
+			If SexType = 1 Then
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx,numNxDx_QTR from tblMalePencomTemplate_New where intAge =  @intAge ", mycon)
+
+			ElseIf SexType <> 1 Then
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx,numNxDx_QTR from tblFemalePencomFormat_New where intAge =  @intAge ", mycon)
+
+			End If
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@intAge", SqlDbType.Int))
+			MyDataAdapter.SelectCommand.Parameters("@intAge").Value = intAge
+
+			MyDataAdapter.Fill(dsUser, "PencomTemplate")
+			dtUser = dsUser.Tables("PencomTemplate")
+
+			mycon.Close()
+
+			If freq = 4 Then
+				Return dtUser.Rows(0).Item(1)
+			Else
+				Return dtUser.Rows(0).Item(0)
+			End If
+
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+
+	End Function
+
+
+	Public Function getNxDx(SexType As Integer, intAge As Integer, freq As Integer) As Decimal
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim EmployerHisCollection As New Hashtable
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+
+			If SexType = 1 And freq = 12 Then
+
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblMalePencomTemplate where intAge =  @intAge ", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select [ax (n year gtee)] from tblMaleEnhancement where age =  @intAge ", mycon)
+
+			ElseIf SexType = 1 And freq = 4 Then
+
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select [[ax (n year gtee)]]_QTR] from tblMaleEnhancement where age =  @intAge ", mycon)
+
+			ElseIf SexType <> 1 And freq = 12 Then
+
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblFemalePencomFormat where intAge =  @intAge ", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select [ax (n year gtee)] from tblFemaleEnhancement where age =  @intAge ", mycon)
+
+			ElseIf SexType <> 1 And freq = 4 Then
+
+				'MyDataAdapter = New SqlClient.SqlDataAdapter("select numNxDx from tblFemalePencomFormat where intAge =  @intAge ", mycon)
+				MyDataAdapter = New SqlClient.SqlDataAdapter("select [[ax (n year gtee)]]_QTR] from tblFemaleEnhancement where age =  @intAge ", mycon)
+
+			End If
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@intAge", SqlDbType.Int))
+			MyDataAdapter.SelectCommand.Parameters("@intAge").Value = intAge
+
+			MyDataAdapter.Fill(dsUser, "PencomTemplate")
+			dtUser = dsUser.Tables("PencomTemplate")
+
+
+			mycon.Close()
+
+			Return dtUser.Rows(0).Item(0)
+
+		Catch Ex As Exception
+			'MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+
+	End Function
+
+
+	'finding retiree's details eligible for PW Enhancement
 	Public Function getPMEnhancementPersonInformation(PIN As String) As DataTable
 
 		Dim myPCon As New SqlClient.SqlConnection
@@ -11959,7 +13390,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2016-12-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2016-12-31') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation,(select fundName  from FundDefinition where FundDefinitionID = a.FundID) FundType,b.numMonthPension,b.numCurrentRSABalance,b.numNewPension,b.pkiEnhancementID from dbo.Employee a,surePay..tblPensionEnhancement b where a.RSAPIN = b.txtPIN and rsapin  = @PIN", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select top 1 isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2016-12-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2016-12-31') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation,(select fundName  from FundDefinition where FundDefinitionID = a.FundID) FundType,b.numMonthPension,b.numRSABalance,b.numEnhancement,b.pkiEnhancementID from dbo.Employee a,surePay..tblPensionEnhancement b where a.RSAPIN = b.txtPIN and b.isControlChecked is not null and b.dteControlChecked is not null and rsapin  = @PIN", mycon)
 			'DateOfResignation
 			',isnull((select top 1 netAmount from payments here PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount
 
@@ -12034,7 +13465,45 @@ Public Class Core
 
 	End Function
 
+	Public Function getPMEnhancemetApplication(PIN As String) As DataTable
 
+		Dim myComm As New SqlClient.SqlCommand
+		Dim daUser As New SqlClient.SqlDataAdapter
+		Dim dsUser As New DataSet
+		Dim dtUser As New DataTable
+		Dim db As New DbConnection
+		Dim EmployerHisCollection As New Hashtable
+
+		Dim mycon As New SqlClient.SqlConnection
+		mycon = db.getConnection("PaymentModule")
+
+		Try
+
+			Dim MyDataAdapter As SqlClient.SqlDataAdapter
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select txtSurname SURNAME,	txtFirstName [FIRST NAME],	txtMiddleName [MIDDLE NAME],a.txtPIN [RSA_PIN],'LEADWAY PENSURE PFA' AS PFA,A.txtEmployerCode [EMPLOYER CODE],A.txtSector [SECTOR], B.dteRunFor [PENSION REVIEW DATE],B.txtGender [GENDER],B.dteDOB [DATE OF BIRTH], B.dteDOR [RETIREMENT DATE], B.numRSABalance [RSA BALANCE AS AT 31 DEC 2016], numMonthPension [CURRENT PENSION AS AT 31 DEC 2016], enpowerv4.[dbo].[GetFundBalanceByDate](a.fkiMemberID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) [RSA BALANCE AS AT SUBMISSION],numEnhancement [ENHANCED PENSION], 'MONTHLY' AS [FREQUENCY (MONTHLY/QUARTERLY)] from tblMemberApplication a, tblPensionEnhancement b where txtApplicationCode like '%peh%' and a.txtpin =  b.txtPIN and a.txtStatus != 'Entry' and a.txtpin = @PIN", mycon)
+
+			'[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance
+
+			MyDataAdapter.SelectCommand.CommandType = CommandType.Text
+
+			MyDataAdapter.SelectCommand.Parameters.Add(New SqlClient.SqlParameter("@PIN", SqlDbType.VarChar))
+			MyDataAdapter.SelectCommand.Parameters("@PIN").Value = PIN
+
+			MyDataAdapter.Fill(dsUser, "EnhancementApplication")
+			dtUser = dsUser.Tables("EnhancementApplication")
+
+			mycon.Close()
+			Return dtUser
+
+		Catch Ex As Exception
+			'		MsgBox("" & Ex.Message)
+		Finally
+
+		End Try
+
+
+		Return Nothing
+	End Function
 
 	'finding perticipant detailed full information 
 	Public Function getPMPersonInformation(PIN As String) As DataTable
@@ -12052,7 +13521,7 @@ Public Class Core
 		Try
 
 			Dim MyDataAdapter As SqlClient.SqlDataAdapter
-			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2016-12-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2009-02-01') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation,(select fundName  from FundDefinition where FundDefinitionID = a.FundID) FundType,DateRetired from dbo.Employee a where rsapin  = @PIN", mycon)
+			MyDataAdapter = New SqlClient.SqlDataAdapter("select (select employername from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerName,LastName as Surname,FirstName,MiddleName,dateofbirth,isnull(datediff(year,dateofbirth,getdate()),0) Age, isnull((select top 1 isnull(c.Value,'') from Enpowerv4.dbo.NextOfKin b, titles c where b.titleid = c.titleid and employeeid = a.employeeid),'') +' '+ (select top 1 isnull(LastName,'')+' '+isnull(FirstName,'')+' '+isnull(MiddleName,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOK,isnull(OfficeStreetAddress1,'')+' '+ isnull(OfficeStreetAddress2,'')+' '+ isnull(OfficeTown,'') as OfficeAddress ,	OfficeLGAID,	OfficeStateID, isnull(ResidentialAddress1,'')+' '+	isnull(ResidentialAddress2,'') as ResidentialAddress ,	ResidentialStateID,	ResidentialLGAID,isnull(ContactAddress1,'')+' '+ isnull(ContactAddress2,'') as ContactAddress ,	ContactStateID,	ContactLGAID,email,JobTitle,Designation, AccountName,	AccountNumber,	BankID,	BankBranchID,employeeid, [dbo].[GetFundBalanceByDate](a.employeeid,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1)) RSABalance,[dbo].[GetFundBalanceByDate](a.employeeid,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance, ((select isnull(sum(isnull(unitvalue,0)),0.000) from Enpowerv4.[dbo].[Contributions] where employeeid = a.employeeid and ContributionTypeID in (11,12,13,14)) * (select UnitPrice from Enpowerv4.dbo.UnitPrice where FundID = 2 and  valuedate =  (select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) )as AccruedRight, (case when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PR' then 'Private' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'ST' then 'Public' when substring((select employercode from Enpowerv4.dbo.employer where employerid = a.employerid),1,2) = 'PU' then 'Public' else 'No Sector'  end) Sector,isnull(BasicSalary,0.00) BasicSalary,	isnull(Transport,0.00) Transport,	isnull(Housing,0.00) Housing, Phone,(select employercode from Enpowerv4.dbo.employer where employerid = a.employerid) EmployerCode,employerid,sex,isnull((select isnull(c.Value,'') from  titles c where c.titleid = a.TitleID ),'') as Title,isnull((select MandatoryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Mandatory,isnull((select VoluntaryBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as AVC,isnull((select PreActNSITFBalance from [dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as Legacy,(select top 1 isnull(Phone ,'') from Enpowerv4.dbo.NextOfKin where employeeid = a.employeeid) as NOKPhone,isnull((select sum(UnitValue  ) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0.0000) as TotalLegacyUnit,isnull((select sum(NetAmount) from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2),0) as TotalLegacyAmount,(select max( ValueDate)  from Contributions where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 ) LagacyContValueDate, isnull((select top 1 UnitPrice  from Contributions b where EmployeeID = a.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID = 2 and valuedate = (select max( ValueDate)  from Contributions where EmployeeID = b.EmployeeID and (EmployeeLegacyAmount	+ EmployerLegacyAmount) > 0 and IsReversed = 0 and ContributionTypeID =2 )),0) LagacyContUnitPrice,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1) RSAPriceDate,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2) RFPriceDate,[dbo].udfGetWithdrawalsBF(a.EmployeeID,2,getdate()) as TotalRFPayment,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,1,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 1))),0) as TotalNSITFValueRSA,isnull((select PreActNSITFBalance from Enpowerv4.[dbo].[udfGetBalanceBySource] (a.EmployeeID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2))),0) as TotalNSITFValueRF,isnull((select (select sum(([EEPreactNSITFAmount]+[ERPreactNSITFAmount])) NSITFCont From vwContributions where EmployeeID= a.EmployeeID and FundID=1 and ([EEPreactNSITFAmount]+[ERPreactNSITFAmount]) >0) + (select sum(-[AmountFromPreActNSITF]) NSITFCont From vwPayments where EmployeeID= a.EmployeeID and FundID=1 and [AmountFromPreActNSITF] >0)),0) TotalNSITFUpload,rsapin,isnull(datediff(year,dateofbirth,('2019-10-31')),0) AgeAtRetirement,[dbo].[GetFundBalanceByDate](a.employeeid,2,'2019-10-31') YearEndRFBalance,isnull((select top 1 netAmount from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate desc),0) LastPensionAmount,DateOfResignation,(select fundName  from FundDefinition where FundDefinitionID = a.FundID) FundType,DateRetired,(select top 1 ValueDate from payments where PaymentTypeID in (1) and employeeid = a.EmployeeID) LumpSumPayDate,(select top 1 ValueDate  from payments where PaymentTypeID in (3,33,17) and employeeid = a.EmployeeID order by valueDate asc) FirstPensionDate,isnull((select top 1 WithdrawalFrequencyID from RetireeAccount where EmployeeID = a.EmployeeID and IsSuspended = 1),0) Frequency,(select StateName from State where stateid = ResidentialStateID) CustomerState, (select LgaName  from LGA where LgaID  = ResidentialLGAID) CustomerStateLGA from dbo.Employee a where rsapin  = @PIN", mycon)
 
 
 			'DateOfResignation
@@ -12065,6 +13534,7 @@ Public Class Core
 			MyDataAdapter.SelectCommand.Parameters("@PIN").Value = PIN
 
 			'TotalNSITFValueRSA,TotalNSITFValueRF
+
 			dsUser = New DataSet()
 			MyDataAdapter.Fill(dsUser, "PersonalDetails")
 			dtUser = dsUser.Tables("PersonalDetails")
@@ -12119,10 +13589,6 @@ Public Class Core
 		End Try
 
 	End Function
-
-
-
-
 
 	Public Function getAwaitingRole(rowID As Integer, returnName As String) As DataTable
 

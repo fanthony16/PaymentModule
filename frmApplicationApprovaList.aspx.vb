@@ -768,8 +768,10 @@ Partial Class frmApplicationApprovaList
 		Try
 
 			dt = cr.PMgetPencomApprovalBatchApplication(BatchApprovalCode, txtStatus, typeID)
+
 			ViewState("BatchApprovalCode") = BatchApprovalCode
 			ViewState("BatchApplications") = dt
+
 			BindGridApplication(dt, typeID)
 
 		Catch ex As Exception

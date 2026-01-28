@@ -982,15 +982,17 @@ Partial Class frmApprovalControlCheck
 	'handle the view image button on the submitted document grid on the page
 	Protected Sub ViewDocumentDetails_Click(sender As Object, e As EventArgs)
 
+
+
 		Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
 		btnViewDocumentLog = sender
 		Dim i As GridViewRow
 		i = btnViewDocumentLog.NamingContainer
-		'   appCode = Me.gridProcessing.Rows(i.RowIndex).Cells(2).Text
+
 
 		If Not IsNothing(ViewState("Documents")) = True Then
 
-			Dim dt As DataTable = ViewState("Documents")
+			Dim dt As DataTable = ViewState("Documents"), dmsDocumentID As String, dmsDocumentExt As String
 			'retrieving the location of the scanned document
 			documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
 
@@ -1001,21 +1003,10 @@ Partial Class frmApprovalControlCheck
 
 			ElseIf File.Exists(documentPath) = False Then
 
-				DownLoadDocument(documentPath)
-
-			End If
-
-
-
-			''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-
-			Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
-			If IsNothing(ViewState("Documents")) = False Then
-
-				dtDocs = ViewState("Documents")
-				dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID")
-				dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension")
+				'DownLoadDocument(documentPath)
+				documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+				dmsDocumentID = dt.Rows(i.RowIndex).Item("DocumentID").ToString()
+				dmsDocumentExt = dt.Rows(i.RowIndex).Item("DocumentExtension").ToString()
 
 				Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
 				Dim uName As String, uPWD As String, uRI As String
@@ -1025,19 +1016,244 @@ Partial Class frmApprovalControlCheck
 				uRI = ConfigurationManager.AppSettings("FileNetURI")
 
 				dms.getConnection(uName, uPWD, uRI)
-				DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+				DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA_BPD", "." & dmsDocumentExt)
 				DownLoadDocument(DMSDocumentPath)
 
-			Else
+
 			End If
+
+
+
+			''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+			'Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
+			'If IsNothing(ViewState("Documents")) = False Then
+
+			'	dtDocs = ViewState("Documents")
+			'	dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID").ToString
+			'	dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension").ToString
+
+			'	Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+			'	Dim uName As String, uPWD As String, uRI As String
+
+			'	uName = ConfigurationManager.AppSettings("FileNetUName")
+			'	uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+			'	uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+			'	dms.getConnection(uName, uPWD, uRI)
+			'	DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+			'	DownLoadDocument(DMSDocumentPath)
+
+			'Else
+			'End If
 
 
 			'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 
+
+
+
+
+
+
+
+
+
 		Else
 
 		End If
+
+
+
+		'Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
+		'btnViewDocumentLog = sender
+		'Dim i As GridViewRow
+		'i = btnViewDocumentLog.NamingContainer
+		''   appCode = Me.gridProcessing.Rows(i.RowIndex).Cells(2).Text
+
+		'If Not IsNothing(ViewState("Documents")) = True Then
+
+		'	Dim dt As DataTable = ViewState("Documents")
+		'	'retrieving the location of the scanned document
+		'	documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+
+		'	'testing if the file still exist in the saved file path
+		'	If File.Exists(documentPath) = True Then
+
+		'		DownLoadDocument(documentPath)
+
+		'	ElseIf File.Exists(documentPath) = False Then
+
+		'		DownLoadDocument(documentPath)
+
+		'	End If
+
+
+		'	''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+		'	Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
+		'	If IsNothing(ViewState("Documents")) = False Then
+
+		'		dtDocs = ViewState("Documents")
+		'		dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID").ToString
+		'		dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension").ToString
+
+		'		Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+		'		Dim uName As String, uPWD As String, uRI As String
+
+		'		uName = ConfigurationManager.AppSettings("FileNetUName")
+		'		uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+		'		uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+		'		dms.getConnection(uName, uPWD, uRI)
+		'		DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+		'		DownLoadDocument(DMSDocumentPath)
+
+		'	Else
+		'	End If
+
+
+		'	'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+
+
+		'Else
+
+		'End If
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		''Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
+		''btnViewDocumentLog = sender
+		''Dim i As GridViewRow
+		''i = btnViewDocumentLog.NamingContainer
+
+
+		''If Not IsNothing(ViewState("Documents")) = True Then
+
+		''	Dim dt As DataTable = ViewState("Documents"), dmsDocumentID As String, dmsDocumentExt As String
+		''	'retrieving the location of the scanned document
+		''	documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+
+		''	'testing if the file still exist in the saved file path
+		''	If File.Exists(documentPath) = True Then
+
+		''		DownLoadDocument(documentPath)
+
+		''	ElseIf File.Exists(documentPath) = False Then
+
+		''		'DownLoadDocument(documentPath)
+		''		documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+		''		dmsDocumentID = dt.Rows(i.RowIndex).Item("DocumentID").ToString()
+		''		dmsDocumentExt = dt.Rows(i.RowIndex).Item("DocumentExtension").ToString()
+
+		''		Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+		''		Dim uName As String, uPWD As String, uRI As String
+
+		''		uName = ConfigurationManager.AppSettings("FileNetUName")
+		''		uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+		''		uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+		''		dms.getConnection(uName, uPWD, uRI)
+		''		DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA_BPD", "." & dmsDocumentExt)
+		''		DownLoadDocument(DMSDocumentPath)
+
+
+		''	End If
+
+
+
+
+
+		''Else
+
+		''End If
+
+
+
+
+
+
+
+
+
+
+		'Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
+		'btnViewDocumentLog = sender
+		'Dim i As GridViewRow
+		'i = btnViewDocumentLog.NamingContainer
+		''   appCode = Me.gridProcessing.Rows(i.RowIndex).Cells(2).Text
+
+		'If Not IsNothing(ViewState("Documents")) = True Then
+
+		'	Dim dt As DataTable = ViewState("Documents")
+		'	'retrieving the location of the scanned document
+		'	documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+
+		'	'testing if the file still exist in the saved file path
+		'	If File.Exists(documentPath) = True Then
+
+		'		DownLoadDocument(documentPath)
+
+		'	ElseIf File.Exists(documentPath) = False Then
+
+		'		DownLoadDocument(documentPath)
+
+		'	End If
+
+
+
+		'	''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+		'	Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
+		'	If IsNothing(ViewState("Documents")) = False Then
+
+		'		dtDocs = ViewState("Documents")
+		'		dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID")
+		'		dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension")
+
+		'		Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+		'		Dim uName As String, uPWD As String, uRI As String
+
+		'		uName = ConfigurationManager.AppSettings("FileNetUName")
+		'		uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+		'		uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+		'		dms.getConnection(uName, uPWD, uRI)
+		'		DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+		'		DownLoadDocument(DMSDocumentPath)
+
+		'	Else
+		'	End If
+
+
+		'	'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+		'Else
+
+		'End If
 
 
 
@@ -1390,6 +1606,10 @@ Partial Class frmApprovalControlCheck
 		dt = cr.PMgetPencomApprovalBatchByType(apptypeID, Me.ddExportedBatches.SelectedItem.Text, True)
 		ViewState("BatchApprovals") = dt
 		BindGrid(dt)
+
+	End Sub
+
+	Protected Sub gridRecievedDocument_SelectedIndexChanged(sender As Object, e As EventArgs) Handles gridRecievedDocument.SelectedIndexChanged
 
 	End Sub
 End Class

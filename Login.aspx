@@ -47,7 +47,7 @@
         <div style ="overflow :auto ; width :740px">
             <div style ="width :140px; float :left ; height :128px;"><img alt="" src="images/logon_icon.png" style ="height :100%;"  /></div>
             <div style ="width :600px; padding-left : 138px;">
-                <div id="Divlogon" style ="width:360px; text-align :left ; padding-left :20px; padding-bottom :10px;" runat ="server" ><span id="lblogonMessage" runat ="server" > Enter Your Login Details</span></div>
+                <div id="Divlogon" style ="width:360px; text-align :left ; padding-left :20px; padding-bottom :10px; font-size :20px;" runat ="server" ><span id="lblogonMessage" runat ="server" >Enter Your Login Details</span></div>
                 <table border ="0" style ="height :40px;">
                        
                           <tr>

@@ -490,15 +490,15 @@ Partial Class frmCustomerAdhocDocuments
 			If sarrMyString.Count = 1 Then
 
 				sarrMyString = Session("documentPath").ToString.Split(New String() {"DBA"}, StringSplitOptions.None)
-				appAdhocDocDetail.DocPath = "DBA" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+				'	appAdhocDocDetail.DocPath = "DBA" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-				'	appAdhocDocDetail.DocPath = "DBA" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
+				appAdhocDocDetail.DocPath = "DBA" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
 
 			Else
 
-				appAdhocDocDetail.DocPath = "PEN" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+				'appAdhocDocDetail.DocPath = "PEN" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-				'appAdhocDocDetail.DocPath = "PEN" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
+				appAdhocDocDetail.DocPath = "PEN" + sarrMyString(1).ToString + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
 
 				'D:\NPM_Data\ApplicationDocuments\
 				'"D:\NPM_Data\ApplicationDocuments\"

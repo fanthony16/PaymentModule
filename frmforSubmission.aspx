@@ -29,6 +29,9 @@
 
                         </div>
                         <div style ="text-align :right ; padding :5px;"><asp:Button ID="btnFind" runat="server" Text="Find" ValidationGroup="processing" /></div>
+
+                         <%--<div style ="text-align :right ; padding :5px;"><span id="spTest" runat="server" >Test</span></div>--%>
+
             <asp:Panel ID="pnlMessage" runat ="server" Visible="False"><div style ="padding:5PX;"><span id="spnMessage" runat ="server" >.</span></div></asp:Panel>
             
             
@@ -41,7 +44,7 @@
                <div class="dvMiddleBox" style="border-radius :25px 25px 0px 0px; border :2px solid; margin-top :10px; padding  :5px 10px 0px 10px; " >
 
                     <asp:Panel ID="pnlGrid" Width ="100%" runat ="server" >
-                            <asp:GridView Width="100%" ID="gridProcessing" runat="server" Visible="true" PageSize="50" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" >
+                            <asp:GridView Width="100%" ID="gridProcessing" runat="server" Visible="true" PageSize="500" AutoGenerateColumns="False" ShowHeaderWhenEmpty="True" AllowPaging ="true" >
                                  <Columns>
                                         <asp:TemplateField HeaderText="">
                                              <ItemTemplate>
@@ -163,8 +166,8 @@
 
 
              </div>
-             <div style="float:left"><asp:Button ID="btnHardShipProcessingBatch" runat="server" Text="Generate Submission Schedule" ValidationGroup ="Submission" /></div>
-              <div style="float:left"><asp:Button ID="btnNonSubmissionSchedule" runat="server" Text="Generate Non-Submission Schedule" ValidationGroup ="Submission" /></div>
+             <div style="float:left"><asp:Button ID="btnHardShipProcessingBatch" runat="server" Text="Generate Submission Schedule" ValidationGroup ="Submission" Enabled="true" /></div>
+              <div style="float:left"><asp:Button ID="btnNonSubmissionSchedule" runat="server" Text="Generate Non-Submission Schedule" ValidationGroup ="Submission" Enabled="true" /></div>
         </div>
         <div id="dvSNRForm">
 

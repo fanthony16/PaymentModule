@@ -1,0 +1,1 @@
+﻿29/01/2020 10:31:17 : SURE PAY BENEFIT APPLICATION  : A transport-level error has occurred when sending the request to the server. (provider: TCP Provider, error: 0 - An existing connection was forcibly closed by the remote host.)Core - Fetching PW Enhancement Record

@@ -26,8 +26,6 @@ Public Class DbConnection
 
     End Function
 
-   
-
     Public Sub close(fund As String)
           Try
                Dim conn As SqlConnection

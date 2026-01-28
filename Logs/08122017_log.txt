@@ -1,8 +1,0 @@
-﻿08/12/2017 09:34:50 : SURE PAY BENEFIT APPLICATIOM  : Invalid column name 'IsBankDetailsConfirmed'.Core - Application Submission
-08/12/2017 10:23:58 : SURE PAY BENEFIT APPLICATIOM  : Invalid column name 'IsBankDetailsConfirmed'.Core - Application Submission
-08/12/2017 10:28:06 : PAYMENT MODULE : Object reference not set to an instance of an object.
-08/12/2017 10:28:50 : PAYMENT MODULE : Object reference not set to an instance of an object.
-08/12/2017 10:29:33 : PAYMENT MODULE : Object reference not set to an instance of an object.
-08/12/2017 10:30:59 : PAYMENT MODULE : Object reference not set to an instance of an object.
-08/12/2017 10:32:02 : PAYMENT MODULE : Argument 'Per' is not valid. - Eligility Notification
-08/12/2017 10:32:02 : PAYMENT MODULE : Object reference not set to an instance of an object.Error Sending Eligibility Email Notification

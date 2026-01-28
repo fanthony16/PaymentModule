@@ -19,7 +19,8 @@ legend{
 input, textarea, select{
 	font-size:12px;
 	font-family:Georgia, "Times New Roman", Times, serif;
-     }
+     height: 25px;
+}
 
 /* ----------------------------------------------Search Form-------------------------------------*/
 

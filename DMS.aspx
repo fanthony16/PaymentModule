@@ -10,6 +10,7 @@
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+     <asp:Button ID="btnAVC" runat="server" Text="textAVCCalculator" OnClientClick ="SetTarget();" />
      <asp:Button ID="Button1" runat="server" Text="Button" OnClientClick ="SetTarget();" />
 <asp:Button ID="Button2" runat="server" Text="Get Doc" />
      <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>

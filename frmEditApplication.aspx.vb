@@ -144,27 +144,25 @@ Partial Class frmEditApplication
 
      End Function
 
-
      Protected Sub btnRemoveDocument_Click(sender As Object, e As EventArgs) Handles btnRemoveDocument.Click
 
 		Dim cb As CheckBox, chk As Integer = 0, cr As New Core, aryIndex As New ArrayList
 
+		For Each grow As GridViewRow In Me.gridRecievedDocument.Rows
 
-          For Each grow As GridViewRow In Me.gridRecievedDocument.Rows
+			grow.FindControl("chkSelect")
+			cb = grow.FindControl("chkSelect")
 
-               grow.FindControl("chkSelect")
-               cb = grow.FindControl("chkSelect")
-
-               If cb.Checked = True Then
+			If cb.Checked = True Then
 
 				chk = chk + 1
 				aryIndex.Add(grow.RowIndex)
 
-               ElseIf cb.Checked = False Then
+			ElseIf cb.Checked = False Then
 
-               End If
+			End If
 
-          Next
+		Next
 
 
 
@@ -454,6 +452,27 @@ Partial Class frmEditApplication
 
 								Me.txtLumpSum.Text = dtRDetails.Rows(0).Item("numLumpSum").ToString
 								Me.txtMonthlyAnnuity.Text = dtRDetails.Rows(0).Item("numMonthlyAnnuity").ToString
+
+
+
+								Me.txtANNMonthArrears.Text = dtRDetails.Rows(0).Item("numArrearsMonths").ToString
+								Me.txtANNPensionArrears.Text = CDbl(dtRDetails.Rows(0).Item("numPensionArrears"))
+								Me.txtANNPensionFrequency.Text = dtRDetails.Rows(0).Item("intFrequency").ToString
+								Me.ddANNSS.SelectedItem.Text = dtRDetails.Rows(0).Item("txtSalaryStructure").ToString
+								Me.txtANNGradeLevel.Text = dtRDetails.Rows(0).Item("txtGradeLevel").ToString
+								Me.txtANNStep.Text = dtRDetails.Rows(0).Item("txtStep").ToString
+
+								If dtRDetails.Rows(0).Item("dteProgramming").ToString = "" Then
+
+								Else
+									Me.txtANNProgrammingDate.Text = CDate(dtRDetails.Rows(0).Item("dteProgramming"))
+								End If
+
+
+								Me.txtANNReviewedSalary.Text = CDbl(dtRDetails.Rows(0).Item("numReviewedSalary"))
+
+
+
 
 							ElseIf CInt(dtRDetails.Rows(0).Item("fkiAppTypeId")) = 15 Then
 
@@ -1980,8 +1999,20 @@ Partial Class frmEditApplication
                          rDetails.AnnuityLumpSum = Me.txtLumpSum.Text
                          rDetails.MonthlyAnnuity = Me.txtMonthlyAnnuity.Text
 					rDetails.isAnnuity = True
+
+
+					rDetails.ArrearsMonths = CInt(Me.txtANNMonthArrears.Text)
+					rDetails.PensionArrears = CDbl(Me.txtANNPensionArrears.Text)
+					rDetails.Frequency = CInt(Me.txtANNPensionFrequency.Text)
+					rDetails.SalaryStructure = Me.ddANNSS.SelectedItem.Text
+					rDetails.GradeLevel = Me.txtANNGradeLevel.Text
+					rDetails.SalaryStep = Me.txtANNStep.Text
+					rDetails.ProgrammingDate = CDate(Me.txtANNProgrammingDate.Text)
+					rDetails.ReviewedSalary = CDbl(Me.txtANNReviewedSalary.Text)
+
+
 					rDetails.RetirementDate = CDate(Me.txtDORAnnuity.Text)
-                         appDetail.RetirementDetails = rDetails
+					appDetail.RetirementDetails = rDetails
 
 				End If
 
@@ -2023,7 +2054,6 @@ Partial Class frmEditApplication
 					rDetails.AnnualTotalEmolumentAdj = Me.txtAnnualTotalEmolument.Text
 					rDetails.RetirementDate = Me.txtDORPW.Text
 
-
                          rDetails.PriceDate = Me.txtValueDate.Text
                          rDetails.RSABalance = Me.txtRSABalancePW.Text
                          rDetails.AccruedRight = Me.txtAccruedRightPW.Text
@@ -2032,8 +2062,20 @@ Partial Class frmEditApplication
                          rDetails.isProgramWithdrawal = True
                          appDetail.RetirementDetails = rDetails
 					appDetail.DOR = Me.txtDORPW.Text
-				End If
 
+					rDetails.Frequency = txtPensionFrequency.Text
+					rDetails.ArrearsMonths = txtMonthArrears.Text
+					rDetails.ReviewedSalary = txtReviewedSalary.Text
+					rDetails.PensionArrears = txtPensionArrears.Text
+
+					rDetails.SalaryStructure = ddSS.SelectedItem.Text
+					rDetails.GradeLevel = Me.txtGradeLevel.Text
+					rDetails.SalaryStep = Me.txtStep.Text
+					rDetails.ProgrammingDate = CDate(Me.txtProgrammingDate.Text)
+
+					appDetail.RetirementDetails = rDetails
+
+				End If
 
 				If IsNothing(ViewState("RMAS")) = False And typeID = 14 Then
 
@@ -2318,9 +2360,9 @@ Partial Class frmEditApplication
 								isAllDocumentScanned = True
 							End If
 
-							appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+							'appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-							'appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "\\P-MIDAS2\NPM_Data\ApplicationDocuments\"
+							appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "\\P-MIDAS2\NPM_Data\ApplicationDocuments\"
 							'\\P-MIDAS2\NPM_Data
 							appDocDetail.IsVerified = CInt((row.Cells(5).Text))
 							appDocDetails.Add(appDocDetail)
@@ -2442,8 +2484,6 @@ Partial Class frmEditApplication
 
 
 				If Not IsNothing(ViewState("ReturnPage")) = True Then
-
-					'MsgBox("" & "" & "frm" & CStr(ViewState("ReturnPage")) & ".aspx?IsReturn=1")
 
 					Response.Redirect("" & "frm" & CStr(ViewState("ReturnPage")) & ".aspx?IsReturn=1")
 				Else
@@ -2664,8 +2704,11 @@ Partial Class frmEditApplication
 
 		If (CDbl(txtRecommendeLumpSum.Text) * 2) > CDbl(txtRSABalancePW.Text) Then
 
-			lblError.Text = "Lumpsum Should be Less Than 50% of RSA balance "
-			Me.pnlError.Visible = True
+			'lblError.Text = "Lumpsum Should be Less Than 50% of RSA balance "
+			'Me.pnlError.Visible = True
+
+			blnPW = True
+			ViewState("RMAS") = blnPW
 
 		Else
 			blnPW = True

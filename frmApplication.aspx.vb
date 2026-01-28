@@ -4,6 +4,7 @@ Imports System.Configuration
 Imports System.IO
 Imports System.Diagnostics
 Imports AjaxControlToolkit
+Imports System.Drawing
 
 Partial Class frmApplication
 	Inherits System.Web.UI.Page
@@ -11,6 +12,9 @@ Partial Class frmApplication
 	Dim ApprovalTypeCollection As New Hashtable
 	Dim InsurerTypeCollection As New Hashtable
 	Dim BankTypeCollection As New Hashtable
+
+	Dim StateCollection As New Hashtable
+
 	Dim BankBranchCollection As New Hashtable
 	Dim EmployerHistoryCollection As New Hashtable
 	Dim lstRecievedDoc As New ArrayList
@@ -232,7 +236,7 @@ Partial Class frmApplication
 			Dim logerr As New Global.Logger.Logger
 			logerr.FileSource = "Payment Module"
 			logerr.FilePath = Server.MapPath("~/Logs")
-			logerr.Logger(ex.Message)
+			logerr.Logger(ex.Message & "Error Attaching Document")
 			Me.lblError.Text = "Error Adding Documents"
 
 		End Try
@@ -387,17 +391,22 @@ Partial Class frmApplication
 		Dim lstAppTypes As New List(Of String)
 		lstAppTypes = getApprovalType()
 		ddApplicationType.Items.Clear()
-		Do While i < lstAppTypes.Count
+		Try
+			Do While i < lstAppTypes.Count
 
-			If ddApplicationType.Items.Count = 0 Then
-				ddApplicationType.Items.Add("")
-				ddApplicationType.Items.Add(lstAppTypes.Item(i))
-			ElseIf ddApplicationType.Items.Count > 0 Then
-				ddApplicationType.Items.Add(lstAppTypes.Item(i))
-			End If
-			i = i + 1
+				If ddApplicationType.Items.Count = 0 Then
+					ddApplicationType.Items.Add("")
+					ddApplicationType.Items.Add(lstAppTypes.Item(i))
+				ElseIf ddApplicationType.Items.Count > 0 Then
+					ddApplicationType.Items.Add(lstAppTypes.Item(i))
+				End If
+				i = i + 1
 
-		Loop
+			Loop
+		Catch ex As Exception
+
+		End Try
+
 
 	End Sub
 
@@ -516,23 +525,50 @@ Partial Class frmApplication
 		Dim lstBank As New DataTable
 		lstBank = cr.PMgetBanks
 		Me.ddBankName.Items.Clear()
+		Try
 
-		Do While i < lstBank.Rows.Count
 
-			If Me.ddBankName.Items.Count = 0 Then
-				Me.ddBankName.Items.Add("")
-				Me.ddBankName.Items.Add(lstBank.Rows(i).Item("bankname"))
-				BankTypeCollection.Add(lstBank.Rows(i).Item("bankname"), lstBank.Rows(i).Item("BankID"))
+			Do While i < lstBank.Rows.Count
 
-			ElseIf Me.ddBankName.Items.Count > 0 Then
-				Me.ddBankName.Items.Add(lstBank.Rows(i).Item("bankname"))
-				BankTypeCollection.Add(lstBank.Rows(i).Item("bankname"), lstBank.Rows(i).Item("BankID"))
+				If Me.ddBankName.Items.Count = 0 Then
+					Me.ddBankName.Items.Add("")
+					Me.ddBankName.Items.Add(lstBank.Rows(i).Item("bankname"))
+					BankTypeCollection.Add(lstBank.Rows(i).Item("bankname"), lstBank.Rows(i).Item("BankID"))
 
-			End If
-			i = i + 1
+				ElseIf Me.ddBankName.Items.Count > 0 Then
+					Me.ddBankName.Items.Add(lstBank.Rows(i).Item("bankname"))
+					BankTypeCollection.Add(lstBank.Rows(i).Item("bankname"), lstBank.Rows(i).Item("BankID"))
 
-		Loop
-		ViewState("BankTypeCollection") = BankTypeCollection
+				End If
+				i = i + 1
+
+			Loop
+			ViewState("BankTypeCollection") = BankTypeCollection
+		Catch ex As Exception
+
+		End Try
+
+	End Sub
+	Protected Sub getCRMState()
+		Dim lstState As New List(Of States), i As Integer
+		Dim st As New States
+
+		Try
+
+			lstState = st.PopulateStates()
+			Do While i < lstState.Count
+
+				StateCollection.Add(lstState(i).StateName, lstState(i).StateID)
+				i = i + 1
+
+			Loop
+			ViewState("StateCollection") = StateCollection
+		Catch ex As Exception
+
+		End Try
+		
+
+
 
 	End Sub
 
@@ -550,6 +586,7 @@ Partial Class frmApplication
 			ElseIf ddApplicationState.Items.Count > 0 Then
 				ddApplicationState.Items.Add(lstState.Item(i))
 			End If
+
 			i = i + 1
 
 		Loop
@@ -575,8 +612,8 @@ Partial Class frmApplication
 
 					'   getApprovalType()
 					Response.Redirect("Login.aspx")
-				ElseIf IsNothing(Session("user")) = False And IsNothing(Session("userDetails")) = False Then
 
+				ElseIf IsNothing(Session("user")) = False And IsNothing(Session("userDetails")) = False Then
 
 					dtusers = Session("userDetails")
 					getUserAccessMenu(Session("user"))
@@ -593,6 +630,7 @@ Partial Class frmApplication
 					txtRecievedDate.Enabled = False
 
 					getStates()
+					getCRMState()
 					populateBank()
 					getApprovalTypes()
 					getInsurerTypes()
@@ -869,7 +907,7 @@ Partial Class frmApplication
 			Else
 
 			End If
-			
+
 		Next
 		ViewState("DocumentCollection") = DocumentCollection
 		Return lstDocument
@@ -1711,7 +1749,7 @@ Partial Class frmApplication
 			fileNewName = fileNewName.Replace(")", "_")
 
 
-			Dim strUploadPath As String
+			Dim strUploadPath, strUploadPathCRM As String
 			If (Session("Document").ToString) = "Others" Then
 				fileNewName = filename
 
@@ -1721,18 +1759,20 @@ Partial Class frmApplication
 				fileNewName = fileNewName.Replace("(", "_")
 				fileNewName = fileNewName.Replace(")", "_")
 
-
 				strUploadPath = "~/FileUploads/" & Session("user") & "/" + Session("PIN").ToString & "_" & fileNewName
+				strUploadPathCRM = "~/FileUploads/" & "CRMImages" & "/" + Session("PIN").ToString & "_" & fileNewName
+
 			Else
 
 				strUploadPath = "~/FileUploads/" & Session("user") & "/" + Session("PIN").ToString & "_" & fileNewName & System.IO.Path.GetExtension(fullPath) '& "_" & filename
+				strUploadPathCRM = "~/FileUploads/" & "CRMImages" & "/" + Session("PIN").ToString & "_" & fileNewName & System.IO.Path.GetExtension(fullPath) '& "_" & filename
+
 				'keeping the temporary the uploaded document prior final saving for easy retrieval should there is network cut-off
 
 			End If
 
-
 			Session("documentPath") = strUploadPath
-
+			Session("documentPathCRM") = strUploadPathCRM
 
 			'Dim infoReader As System.IO.FileInfo
 			'infoReader = My.Computer.FileSystem.GetFileInfo(e.FileSize)
@@ -1755,13 +1795,19 @@ Partial Class frmApplication
 
 			'Uplaod Document should be <= 2MB
 			If e.FileSize > 2000000 Then
+
 				Session("FileSizeExceeded") = True
 				Session("Document") = Nothing
+
 			Else
+
 				Session("FileSizeExceeded") = False
 				Me.flReqDocUpload.SaveAs(Server.MapPath(strUploadPath))
+				Me.flReqDocUpload.SaveAs(Server.MapPath(strUploadPathCRM))
+
 				flReqDocUpload.Dispose()
 				Session("Document") = Nothing
+
 			End If
 
 
@@ -1956,12 +2002,10 @@ Partial Class frmApplication
 	Protected Sub btnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
 
 
-		
 		Dim date2 As Date = Date.Parse(txtDOB.Text)
 		Dim date1 As Date = Now
 		Dim years As Long = DateDiff(DateInterval.Year, date2, date1)
 		Dim cr As New Core
-
 
 
 		If years < 50 And Me.chkOverrideAgeBarrier.Checked = True And Me.txtOtherComments.Text = "" Then
@@ -2072,6 +2116,7 @@ Partial Class frmApplication
 
 			If IsNothing(ViewState("CheckListChecked")) = True Then '' And CBool(ViewState("CheckListChecked")) = False Then
 				mpCheckListDBA.Show()
+
 				Exit Sub
 			Else
 			End If
@@ -2085,7 +2130,7 @@ Partial Class frmApplication
 			End If
 
 		End If
-		
+
 
 
 		Dim appDetail As New ApplicationDetail, NextAppID As Integer, ApplicationCode As String, FileNumber As String, sector As String, myID As Integer
@@ -2198,8 +2243,21 @@ Partial Class frmApplication
 				rDetails.AnnuityLumpSum = Me.txtLumpSum.Text
 				rDetails.MonthlyAnnuity = Me.txtMonthlyAnnuity.Text
 				rDetails.isAnnuity = True
+
+				rDetails.ArrearsMonths = CInt(Me.txtANNMonthArrears.Text)
+				rDetails.PensionArrears = CDbl(Me.txtANNPensionArrears.Text)
+				rDetails.Frequency = CInt(Me.txtANNPensionFrequency.Text)
+				rDetails.SalaryStructure = Me.ddANNSS.SelectedItem.Text
+				rDetails.GradeLevel = Me.txtANNGradeLevel.Text
+				rDetails.SalaryStep = Me.txtANNStep.Text
+				rDetails.ProgrammingDate = CDate(Me.txtANNProgrammingDate.Text)
+
+				rDetails.ReviewedSalary = CDbl(Me.txtANNReviewedSalary.Text)
+
 				appDetail.RetirementDetails = rDetails
 				appDetail.ReferenceApplicationCode = Me.ddAnnRunningPW.Text
+
+
 				'ReferenceApplicationCode
 			End If
 
@@ -2248,7 +2306,19 @@ Partial Class frmApplication
 				rDetails.RecommendedLumpSum = Me.txtRecommendeLumpSum.Text
 				rDetails.MonthlyProgramedDrawndown = Me.txtMonthlyDrawDown.Text
 				rDetails.isProgramWithdrawal = True
+
+				rDetails.Frequency = txtPensionFrequency.Text
+				rDetails.ArrearsMonths = txtMonthArrears.Text
+				rDetails.ReviewedSalary = txtReviewedSalary.Text
+				rDetails.PensionArrears = txtPensionArrears.Text
+
+				rDetails.SalaryStructure = ddSS.SelectedItem.Text
+				rDetails.GradeLevel = Me.txtGradeLevel.Text
+				rDetails.SalaryStep = Me.txtStep.Text
+				rDetails.ProgrammingDate = CDate(Me.txtProgrammingDate.Text)
+
 				appDetail.RetirementDetails = rDetails
+
 
 			End If
 
@@ -2389,6 +2459,7 @@ Partial Class frmApplication
 				appDetail.NSITFInitialAmountPaid = "0.00"
 				appDetail.NSITFRecievedToRSA = "0.00"
 				appDetail.NSITFRequestedToRSA = "0.00"
+
 			End If
 
 
@@ -2489,8 +2560,10 @@ Partial Class frmApplication
 
 
 			If Not IsNothing(ViewState("BankTypeCollection")) = True Then
+
 				BankTypeCollection = ViewState("BankTypeCollection")
 				appDetail.BankID = CInt(BankTypeCollection.Item(Me.ddBankName.SelectedItem.Text.ToString))
+
 			Else
 			End If
 
@@ -2553,9 +2626,9 @@ Partial Class frmApplication
 						appAdhocDocDetail.PIN = LTrim(RTrim(Me.txtPIN.Text))
 						appAdhocDocDetail.RecievedBy = Session("user")
 						appAdhocDocDetail.RecievedDate = Now
-						appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+						'appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-						'appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
+						appAdhocDocDetail.DocPath = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
 
 						appAdhocDocDetail.IsVerified = CInt((row.Cells(5).Text))
 						appAdhocDocDetails.Add(appAdhocDocDetail)
@@ -2571,9 +2644,9 @@ Partial Class frmApplication
 						Else
 							isAllDocumentScanned = True
 						End If
-						appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
+						'	appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + Server.MapPath("~/ApplicationDocuments/")
 
-						'appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
+						appDocDetail.DocumentLocation = CStr((row.Cells(3).Text)) + "|" + Server.MapPath("~/FileUploads/") + "|" + "D:\NPM_Data\ApplicationDocuments\"
 
 						appDocDetail.IsVerified = CInt((row.Cells(5).Text))
 						appDocDetails.Add(appDocDetail)
@@ -2694,6 +2767,46 @@ Partial Class frmApplication
 					boolSubmitStatus = cr.PMSubmitApplication(appDetail, appDocDetails, appAdhocDocDetails, Session("user"), Server.MapPath("~/Logs"), appCheckList, appCheckListDBA)
 
 
+
+					If appDetail.ApplicationState <> "LAGOS" Then
+
+						Try
+							Dim CRMResponse As String = MoveToCRM(appDetail, appDocDetails)
+
+							If CRMResponse <> "Error on SurePay" Then
+
+								Dim logerr As New Global.Logger.Logger
+								logerr.FileSource = "LPPFACRMService"
+								logerr.FilePath = Server.MapPath("~/Logs")
+								logerr.Logger("Feedback FROM CRM : " & CRMResponse)
+
+							Else
+
+								Dim logerr As New Global.Logger.Logger
+								logerr.FileSource = "LPPFACRMService"
+								logerr.FilePath = Server.MapPath("~/Logs")
+								logerr.Logger("Application Submission Declined")
+
+							End If
+
+							
+
+						Catch ex As Exception
+							Dim logerr As New Global.Logger.Logger
+							logerr.FileSource = "LPPFACRMService"
+							logerr.FilePath = Server.MapPath("~/Logs")
+							logerr.Logger(ex.Message & "LPPFACRMService")
+						End Try
+
+
+
+
+					Else
+
+					End If
+
+
+
 					If boolSubmitStatus = True Then
 						'deleting possible duplicate document created
 						cr.PMCleanDuplicateDocument(appDetail.ApplicationID)
@@ -2706,7 +2819,10 @@ Partial Class frmApplication
 
 
 						Session("appDetail") = appDetail
+
 						Response.Redirect(String.Format("frmApplicationConfirmation.aspx?ApplicationCode={0}&ReturnPage={1}", Server.UrlEncode(appDetail.ApplicationID), Server.UrlEncode("ApplicationDashBoard")))
+
+
 
 					Else
 
@@ -2734,6 +2850,177 @@ Partial Class frmApplication
 		End If
 
 	End Sub
+
+	Private Function MoveToCRM(appDetails As ApplicationDetail, appDocDetail As List(Of ApplicationDocumentDetail)) As String
+
+		Try
+
+			Dim crm As New CRM.ApplicationDocumentDetail
+			Dim crmm As New CRM.BankCls
+
+
+			Dim _CRMRequest As New CRM.LPPFARequest
+			Dim _CRMResponse As New CRM.BenefitApplicationResponse
+			Dim _AppDetail As New CRM.NPMOnlineApplicationDetail
+
+			'	Dim _AppDocDetail As New CRM.ApplicationDocumentDetail
+
+			Dim appDocs(appDocDetail.Count) As CRM.ApplicationDocumentDetail
+
+
+			Dim i As Integer
+
+			Do While i < appDocDetail.Count
+
+				Dim appDoc As New CRM.ApplicationDocumentDetail
+				appDoc.dateReceived = appDocDetail(i).DateReceived
+				appDoc.documentLocation = appDocDetail(i).DocumentLocation
+				appDoc.documentTypeID = appDocDetail(i).DocumentTypeID
+				appDoc.documentTypeName = appDocDetail(i).DocumentTypeName
+				appDoc.isVerified = 1
+				'appDoc.ext = appDocDetail(i).DMSDocumentExt
+				'appDocDetail(i).DocumentLocation.Split("|")(0).Split(".")(1)
+				appDoc.ext = "." & appDocDetail(i).DocumentLocation.Split("|")(0).Split(".")(1)
+
+				'appDoc.documentHashValue = ConvertImageFiletoBytes(appDocDetail(i).DocumentLocation)
+				appDoc.documentHashValue = ConvertImageFiletoBytes(appDocDetail(i).DocumentLocation.ToString.Split("|")(1) + "CRMImages" + "\" + appDocDetail(i).DocumentLocation.ToString.Split("|")(0))
+				appDocs(i) = appDoc
+				i = i + 1
+
+			Loop
+
+
+			_AppDetail.accountName = appDetails.AccountName
+			_AppDetail.accountNumber = appDetails.AccountNo
+			_AppDetail.applicationDocuments = appDocs
+			_AppDetail.applicationTypeName = appDetails.ApplicationTypeName
+			_AppDetail.appTypeId = appDetails.AppTypeId
+			_AppDetail.aVCApplicationAmount = appDetails.AmountToPay
+			_AppDetail.createdBy = appDetails.CreatedBy
+			_AppDetail.customerBankBranchID = appDetails.BranchID
+			_AppDetail.customerBankID = appDetails.BankID
+			_AppDetail.pIN = appDetails.PIN
+
+
+			'enbloc payment
+			If appDetails.AppTypeId = 1 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			ElseIf appDetails.AppTypeId = 16 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			ElseIf appDetails.AppTypeId = 2 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.designation = appDetails.Designation
+				_AppDetail.department = appDetails.Department
+				_AppDetail.dateDisengagement = appDetails.DateDisengagement
+
+				'lump sum payment
+			ElseIf appDetails.AppTypeId = 3 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.dateRetirement = appDetails.DOR
+
+				'additional lump payment
+			ElseIf appDetails.AppTypeId = 14 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			ElseIf appDetails.AppTypeId = 4 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			ElseIf appDetails.AppTypeId = 15 Then
+
+				_AppDetail.reason = appDetails.Reason
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			ElseIf appDetails.AppTypeId = 8 Then
+
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			ElseIf appDetails.AppTypeId = 5 Then
+
+				_AppDetail.dateRetirement = appDetails.DOR
+
+			End If
+
+
+			_AppDetail.sourceId = 0
+
+			'appDetails.ApplicationState
+
+			'_AppDetail.stateId = appDetails.ApplicationState
+			MsgBox("" & CInt(StateCollection.Item(appDetails.ApplicationState)).ToString)
+
+			_AppDetail.stateId = CInt(StateCollection.Item(appDetails.ApplicationState))
+
+			_AppDetail.tIN = appDetails.PIN
+
+			_CRMResponse = _CRMRequest.DropBenefitApplication(_AppDetail)
+
+			If _CRMResponse.Status Then
+				Return _CRMResponse.benefitapplicationid
+			Else
+				Return _CRMResponse.Message
+			End If
+
+
+		Catch ex As Exception
+
+			Return "Error on SurePay"
+
+		End Try
+
+	End Function
+
+
+	'Public Function ConvertImageFiletoBase64(ByVal ImageFilePath As String) As String
+	Public Function ConvertImageFiletoBytes(ByVal ImageFilePath As String) As Byte()
+		Dim _tempByte() As Byte = Nothing
+		If String.IsNullOrEmpty(ImageFilePath) = True Then
+			Throw New ArgumentNullException("Image File Name Cannot be Null or Empty", "ImageFilePath")
+			Return Nothing
+		End If
+		Try
+			Dim _fileInfo As New IO.FileInfo(ImageFilePath)
+			Dim _NumBytes As Long = _fileInfo.Length
+			Dim _FStream As New IO.FileStream(ImageFilePath, IO.FileMode.Open, IO.FileAccess.Read)
+			Dim _BinaryReader As New IO.BinaryReader(_FStream)
+			_tempByte = _BinaryReader.ReadBytes(Convert.ToInt32(_NumBytes))
+			_fileInfo = Nothing
+			_NumBytes = 0
+			_FStream.Close()
+			_FStream.Dispose()
+			_BinaryReader.Close()
+
+			If File.Exists(ImageFilePath) Then
+				File.Delete(ImageFilePath)
+			Else
+			End If
+
+			Return _tempByte
+
+			'Dim final As String
+			'final = Convert.ToBase64String(_tempByte)
+			'Return final
+
+		Catch ex As Exception
+			Return Nothing
+		End Try
+	End Function
+
+
+
+
+
 
 	'builds the message to be sent out on data change request complaint Unit in CSD
 	Private Function AMsg(lstChangeRequest As List(Of ChangeRequest), pin As String, UName As String) As String
@@ -3100,8 +3387,11 @@ Partial Class frmApplication
 		pnlError.Visible = False
 		If (CDbl(txtRecommendeLumpSum.Text) * 2) > CDbl(txtRSABalancePW.Text) Then
 
-			lblError.Text = "Lumpsum Should be Less Than 50% of RSA balance "
-			Me.pnlError.Visible = True
+			'lblError.Text = "Lumpsum Should be Less Than 50% of RSA balance "
+			'Me.pnlError.Visible = True
+
+			blnPW = True
+			ViewState("RMAS") = blnPW
 
 		Else
 			blnPW = True
@@ -3508,7 +3798,7 @@ Partial Class frmApplication
 		End If
 
 		ViewState("CheckListChecked") = True
-		
+
 
 	End Sub
 
@@ -3583,15 +3873,13 @@ Partial Class frmApplication
 		Me.chkLOASignatories.Checked = True
 		Me.chkMinorBirthCert.Checked = True
 		Me.chkMOIDocs.Checked = True
-		'Me.chk.Checked = True
 		Me.chkNamesDOB.Checked = True
 		Me.chkNOKMOIs.Checked = True
 		Me.chkPOA.Checked = True
 		Me.chkDODName.Checked = True
-
 		Me.mpCheckListDBA.Show()
 
 	End Sub
 
-	
+
 End Class

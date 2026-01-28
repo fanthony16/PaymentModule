@@ -8,13 +8,13 @@ Partial Class index
 		Dim dtusers As New DataTable, dtAppPreference As New DataTable, cr As New Core
 
 
-		Dim appStr = "ANN-003"
+		'Dim appStr = "ANN-003"
 
-		If appStr.Substring(0, 3) = "ANN" Then
-			MsgBox("" & appStr.Substring(0, 3))
-		ElseIf appStr.Substring(0, 3) = "LPW" Then
-			MsgBox("" & appStr.Substring(0, 3))
-		End If
+		'If appStr.Substring(0, 3) = "ANN" Then
+		'	MsgBox("" & appStr.Substring(0, 3))
+		'ElseIf appStr.Substring(0, 3) = "LPW" Then
+		'	MsgBox("" & appStr.Substring(0, 3))
+		'End If
 
 
 
@@ -164,6 +164,12 @@ Partial Class index
 
 				i = 1
 
+
+				lstEmail = New EmailGateway.EmailAddress
+				lstEmail.EmailAddress = "o-taiwo@leadway-pensure.com"
+				lstEmail.Reciever = False
+				emialAddys.Add(lstEmail)
+
 				Do While i <= dayss
 
 					Dim dtEligibility As New DataTable
@@ -176,15 +182,16 @@ Partial Class index
 
 					dtEligibility = cr.PMEligibilityList(answer, Server.MapPath("~/Logs"))
 
+
 					If dtEligibility.Rows.Count > 1 Then
 
 						lstEmails = New List(Of EmailGateway.EmailAddress)
 						lstEmails = emialAddys
 
-						lstEmail = New EmailGateway.EmailAddress
-						lstEmail.EmailAddress = "o-taiwo@leadway-pensure.com"
-						lstEmail.Reciever = False
-						lstEmails.Add(lstEmail)
+						'lstEmail = New EmailGateway.EmailAddress
+						'lstEmail.EmailAddress = "o-taiwo@leadway-pensure.com"
+						'lstEmail.Reciever = False
+						'lstEmails.Add(lstEmail)
 
 						'building the e-mail notification to be sent to the application logger
 

@@ -132,25 +132,28 @@ Partial Class frmApplicationList
 
                If IsPostBack = False And Not Context.Request.QueryString("ApplicationID") Is Nothing Then
 
-                    If IsNothing(Session("user")) = True Then
-                         Response.Redirect("Login.aspx")
-                    ElseIf IsNothing(Session("user")) = False And IsNothing(Session("userDetails")) = False Then
-                         dtusers = Session("userDetails")
-                         getUserAccessMenu(Session("user"))
-					getApprovalTypes()
-					'getCheckLists()
-                         PopulateApplicationStatus()
-                         getApplicationForDocumentation(0)
-                         getApplicationList(CInt(Context.Request.QueryString("ApplicationID")))
+				If IsNothing(Session("user")) = True Then
 
-                         Dim cr As New Core
+					Response.Redirect("Login.aspx")
+
+				ElseIf IsNothing(Session("user")) = False And IsNothing(Session("userDetails")) = False Then
+
+					dtusers = Session("userDetails")
+					getUserAccessMenu(Session("user"))
+					getApprovalTypes()
+					getCheckLists(0)
+					PopulateApplicationStatus()
+					getApplicationForDocumentation(0)
+					getApplicationList(CInt(Context.Request.QueryString("ApplicationID")))
+
+					Dim cr As New Core
 					Me.ddApprovalType.SelectedValue = cr.PMgetApprovalTypebyID(CInt(Context.Request.QueryString("ApplicationID")))
 
 					'mpApplicationSummary.Show() PMgetApplicationSummary
 
-					
-                    Else
-                    End If
+
+				Else
+				End If
 
                ElseIf IsPostBack = False And Context.Request.QueryString("ApplicationID") Is Nothing Then
                     If IsNothing(Session("user")) = True Then
@@ -160,7 +163,7 @@ Partial Class frmApplicationList
 					dtusers = Session("userDetails")
 					getUserAccessMenu(Session("user"))
 					getApprovalTypes()
-					'getCheckLists()
+					getCheckLists(0)
 					PopulateApplicationStatus()
 					getApplicationForDocumentation(0)
 
@@ -281,7 +284,7 @@ Partial Class frmApplicationList
 				uRI = ConfigurationManager.AppSettings("FileNetURI")
 
 				dms.getConnection(uName, uPWD, uRI)
-				DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+				DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA_BPD", "." & dmsDocumentExt)
 				DownLoadDocument(DMSDocumentPath)
 
 			End If
@@ -290,12 +293,12 @@ Partial Class frmApplicationList
 
           End If
 
-
      End Sub
 
 	Protected Sub gridApplicationSummary_RowDataBound()
 
 	End Sub
+
      Private Sub DownLoadDocument(path As String)
 
           If Not File.Exists(path) = False Then
@@ -410,9 +413,6 @@ Partial Class frmApplicationList
      End Sub
 
 
-
-
-
      Protected Sub getApplicationForDocumentation(typeID As Integer)
           Dim cr As New Core, dt As New DataTable
 
@@ -488,11 +488,25 @@ Partial Class frmApplicationList
 		End If
 
 		'MsgBox("" & dt.Rows.Count)
-		Me.cbErrorCheckList.DataSource = dt
-		cbErrorCheckList.DataValueField = "intErrorID"
-		cbErrorCheckList.DataTextField = "txtDescription"
 
-		cbErrorCheckList.DataBind()
+
+		Me.cbErrorCheckList.Items.Clear()
+
+		Do While i < dt.Rows.Count
+			If i = 0 Then
+				cbErrorCheckList.Items.Add("")
+				cbErrorCheckList.Items.Add(dt.Rows(i).Item("txtDescription"))
+			Else
+				cbErrorCheckList.Items.Add(dt.Rows(i).Item("txtDescription"))
+			End If
+			i = i + 1
+		Loop
+
+		'Me.cbErrorCheckList.DataSource = dt
+		'cbErrorCheckList.DataValueField = "intErrorID"
+		'cbErrorCheckList.DataTextField = "txtDescription"
+
+		'cbErrorCheckList.DataBind()
 
 
 	End Sub
@@ -618,10 +632,10 @@ Partial Class frmApplicationList
           
           Dim ApplicationProperties As New List(Of ApplicationProperties), dt As New DataTable, cr As New Core, dtPDetails As New DataTable, dtDocuments As New DataTable
           Dim selectedRowIndex As Integer
-
           selectedRowIndex = Me.gridProcessing.SelectedRow.RowIndex
 
-          Dim row As GridViewRow = gridProcessing.Rows(selectedRowIndex)
+			Dim row As GridViewRow = gridProcessing.Rows(selectedRowIndex)
+
 
 			'locking the record for review for the user
 			'cr.PMLocKRecord(row.Cells(2).Text.ToString(), Session("user"))
@@ -629,7 +643,6 @@ Partial Class frmApplicationList
 
 			imgPassport.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 1, Server.MapPath("~/Logs"))
 			imgSignature.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 2, Server.MapPath("~/Logs"))
-
 
 			dt = cr.PMgetApplicationByCode(row.Cells(2).Text.ToString())
 
@@ -679,7 +692,8 @@ Partial Class frmApplicationList
                pnlLeftGrid.Height = Nothing
           End If
           Catch ex As Exception
-               MsgBox("" & ex.Message)
+			'  MsgBox("" & ex.Message)
+
           End Try
      End Sub
 
@@ -1104,11 +1118,13 @@ Partial Class frmApplicationList
 
      Protected Sub btnAppCommentAdd_Click(sender As Object, e As ImageClickEventArgs) Handles btnAppCommentAdd.Click
 
+
 		Dim cr As New Core
 
 		If Not IsNothing(Session("user")) = True Then
 
-			cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, cbErrorCheckList.SelectedValue)
+			cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, cr.getPMCommentTypeID(cbErrorCheckList.Text))
+
 			txtApplicationComment.Text = ""
 			refreshCommentList(txtApplicationID.Text)
 
@@ -1162,4 +1178,8 @@ Partial Class frmApplicationList
           
 
      End Sub
+
+	Protected Sub gridSubmittedDocuments_SelectedIndexChanging(sender As Object, e As GridViewSelectEventArgs) Handles gridSubmittedDocuments.SelectedIndexChanging
+
+	End Sub
 End Class

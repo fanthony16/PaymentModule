@@ -1,0 +1,1 @@
+﻿06/02/2019 08:21:54 : PAYMENT MODULE : Thread was being aborted.

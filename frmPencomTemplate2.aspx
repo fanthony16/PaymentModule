@@ -10,9 +10,6 @@
           <div id="dvSubbodyMainDiv" class ="SubbodyMainDiv" style="text-align:center ; float :left ;">
                
                <div id="dvSideBox" style="float:left; width:320px; height :300px;  padding :8px;" >
-
-
-
             
         </div>
                <div class="dvMiddleBox" style="border-radius :25px 25px 0px 0px; border :2px solid; margin-top :10px; padding  :5px 10px 0px 10px; " >
@@ -36,7 +33,7 @@
 
                                                <div style ="text-align :left ;">
 
-                                                   <asp:TextBox ID="txtReviewDate" Width ="300px" runat="server" Enabled="true" Text="2016-12-31" ReadOnly ="true"  ></asp:TextBox>
+                                                   <asp:TextBox ID="txtReviewDate" Width ="300px" runat="server" Enabled="true" Text="2019-10-31" ReadOnly ="true"  ></asp:TextBox>
 
                                                </div>
                               
@@ -63,7 +60,7 @@
 
                                                <div style ="text-align :left ;">
 
-                                                   <asp:TextBox ID="txtRetirementDate" Width ="300px" runat="server" Enabled="true" Text="2016-12-31" ReadOnly ="true"  ></asp:TextBox>
+                                                   <asp:TextBox ID="txtRetirementDate" Width ="300px" runat="server" Enabled="true" Text="2019-10-31" ReadOnly ="true"  ></asp:TextBox>
 
                                                </div>
                               
@@ -78,7 +75,7 @@
 
                                                <div style ="text-align :left ;">
 
-                                                   <asp:TextBox ID="txtDOB" Width ="300px" runat="server" Enabled="true" Text="2016-12-31" ReadOnly ="true"  ></asp:TextBox>
+                                                   <asp:TextBox ID="txtDOB" Width ="300px" runat="server" Enabled="true" Text="2019-10-31" ReadOnly ="true"  ></asp:TextBox>
 
                                                </div>
                               
@@ -194,7 +191,7 @@
                                                     <span style ="font-size : medium;">Frequency :</span>
                                                </div>
                                                <div style ="text-align :left ;">
-                                                    <asp:TextBox ID="txtFreq" Width ="300px" runat="server" Enabled="false" Text ="12" ></asp:TextBox>
+                                                    <asp:TextBox ID="txtFreq" Width ="300px" runat="server" Enabled="false" Text ="0" ></asp:TextBox>
                                                </div>
                         </div>
 
@@ -264,9 +261,13 @@
              <div style="float:left; ">
                   <%--<asp:Button ID="btnUnTagAll" runat="server" Text="Un-Tag All" />--%>
              </div>
-              <div style="float:left; padding-right :560px; ">
-                  <%--<asp:Button ID="btnUnTagAll" runat="server" Text="Un-Tag All" />--%>
+              <div style="float:left; padding-right :560px; width : 300px; ">
+                  
                    <asp:ImageButton ID="btnSNR" runat ="server" ImageUrl="~/images/pdf.png" ToolTip="DownLoad Request Form" CausesValidation="False"/>
+
+                   <asp:Button ID="btnUpDateEligibility" runat="server" Text="Update Eligibility List" Visible ="false"  />
+                   <span id="spUpdateStatus" runat ="server" style ="color :red ;" visible ="false"  >lblUpdateStatus</span>
+                   
              </div>
              <div>
                   <%--<asp:Button ID="btnComfirmProcessing" runat ="server" Text ="Confirm" />--%>

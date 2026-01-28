@@ -101,15 +101,27 @@ Partial Class frmPencomTemplate
 		Dim mycon As New SqlClient.SqlConnection, db As New DbConnection
 		mycon = db.getConnection("PaymentModule")
 
-		txtFreqq = 12
+		'txtFreqq = 12
 		dt = cr.PMgetRetireeForEnhencement()
 
-		'MsgBox("" & dt.Rows.Count)
+
+		
+
 
 		Do While i < dt.Rows.Count
 
 			Dim newBERow As DataRow, dtPersion As New DataTable
 			dtPersion = cr.getPMPersonInformation(dt.Rows(i).Item(1).ToString)
+
+			If dtPersion.Rows(0).Item("Frequency") = 1 Then
+				txtFreqq = 12
+			ElseIf dtPersion.Rows(0).Item("Frequency") = 3 Then
+				txtFreqq = 4
+			Else
+				txtFreqq = 0
+			End If
+
+
 
 			txtMonthPencomm = dtPersion.Rows(0).Item("LastPensionAmount")
 			txtSexx = dtPersion.Rows(0).Item("sex").ToString
@@ -117,13 +129,13 @@ Partial Class frmPencomTemplate
 			txtAgee = dtPersion.Rows(0).Item("AgeAtRetirement")
 			txtNetInterestt = FormatNumber(calInterateBatch(CInt(dtPersion.Rows(0).Item("AgeAtRetirement")), "5.00%", "0.30%") * 100, 2)
 			If txtSexx = "M" Then
-				txtNxDxx = FormatNumber(cr.getNxDx(1, CInt(txtAgee)), 10)
+				txtNxDxx = FormatNumber(cr.getNxDx(1, CInt(txtAgee), txtFreqq), 10)
 
-				txtYearNumber = FormatNumber((cr.getNxDx(1, CInt(txtAgee))) + (txtNxDxx - (11 / 24)), 10)
+				txtYearNumber = FormatNumber((cr.getNxDx(1, CInt(txtAgee), txtFreqq)) + (txtNxDxx - (11 / 24)), 10)
 			Else
-				txtNxDxx = FormatNumber(cr.getNxDx(0, CInt(txtAgee)), 10)
+				txtNxDxx = FormatNumber(cr.getNxDx(0, CInt(txtAgee), txtFreqq), 10)
 
-				txtYearNumber = FormatNumber((cr.getNxDx(0, CInt(txtAgee))) + (txtNxDxx - (11 / 24)), 10)
+				txtYearNumber = FormatNumber((cr.getNxDx(0, CInt(txtAgee), txtFreqq)) + (txtNxDxx - (11 / 24)), 10)
 
 			End If
 
@@ -301,9 +313,9 @@ Partial Class frmPencomTemplate
 
 
 		If Me.txtSex.Text = "M" Then
-			Me.txtNxDx.Text = FormatNumber(cr.getNxDx(1, CInt(txtAge.Text)), 10)
+			Me.txtNxDx.Text = FormatNumber(cr.getNxDx(1, CInt(txtAge.Text), txtFreq.Text), 10)
 		Else
-			Me.txtNxDx.Text = FormatNumber(cr.getNxDx(0, CInt(txtAge.Text)), 10)
+			Me.txtNxDx.Text = FormatNumber(cr.getNxDx(0, CInt(txtAge.Text), txtFreq.Text), 10)
 		End If
 
 		Me.txtNc.Text = FormatNumber(Me.txtNxDx.Text - (11 / 24), 10)

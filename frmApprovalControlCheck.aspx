@@ -9,10 +9,9 @@
      <asp:UpdatePanel ID="updFormPanel" runat="server">
           <ContentTemplate>
                          
-               <div class ="bodyMainDiv" style ="width :1750px; height : 1100px; " >
+          <div class ="bodyMainDiv" style ="width :1750px; height : 1100px; " >
           <div id="dvMainDvTitle" style ="padding-left :20px;"><h2><span>Pencom Approval Comfirmation...</span></h2></div>
           <div id="dvSubbodyMainDiv" class ="SubbodyMainDiv" style="text-align:center ; float :left ; height :1020px;">
-               
                <div id="dvSideBox" style="float:left; width:320px; height :300px;  padding :8px;" >
 
 
@@ -336,10 +335,7 @@
     </asp:Panel>
 
 
-
-
-
-
+               
                 <asp:Button id="btnShowApplicationCommentPopup" runat="server" style="display:none" />
        <asp:ModalPopupExtender ID="mpApplicationComments" runat="server" PopupControlID="pnlApplicationComments" TargetControlID="btnShowApplicationCommentPopup" CancelControlID="btnMPApplicationComments" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>            
       
@@ -396,8 +392,7 @@
     </asp:Panel>
 
 
-
-
+               
                     <asp:Button id="btnShowIACCommentPopup" runat="server" style="display:none" />
    <asp:ModalPopupExtender ID="mpAppIACComments" runat="server" PopupControlID="pnlAppIACComments" TargetControlID="btnShowIACCommentPopup" CancelControlID="btnMPAppComments" BackgroundCssClass="modalBackground" ></asp:ModalPopupExtender>                
    <asp:Panel ID="pnlAppIACComments" runat="server" CssClass="modalPopup" align="center" style = "display:none" Height ="530px">

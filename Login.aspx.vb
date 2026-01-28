@@ -24,14 +24,15 @@ Partial Class Login
 					Dim uPrincipal As UserPrincipal
 					uPrincipal = UserPrincipal.FindByIdentity(pc, IdentityType.SamAccountName, RTrim(LTrim(Me.txtUserName.Text)))
 					UFullName = uPrincipal.DisplayName
+					Session("UserFullName") = UFullName
 					dtUser = cr.PMCheckUserIn(RTrim(LTrim(Me.txtUserName.Text)))
 
-					Session("RoleID") = dtUser.Rows(0).Item("fkiRoleID")
+					'Session("RoleID") = dtUser.Rows(0).Item("fkiRoleID")
 
 					If IsNothing(pc) = False Then
 
 						If cr.PMCheckUserIn(RTrim(LTrim(Me.txtUserName.Text))).Rows.Count < 1 Then
-							'cr.PMInsertNewUserLogin(RTrim(LTrim(Me.txtUserName.Text)), UFullName, cr.PMGetHash(RTrim(LTrim(Me.txtPassword.Text))))
+							cr.PMInsertNewUserLogin(RTrim(LTrim(Me.txtUserName.Text)), UFullName, cr.PMGetHash(RTrim(LTrim(Me.txtPassword.Text))))
 						Else
 							'cr.PMUpdateUserLogin(RTrim(LTrim(Me.txtUserName.Text)), cr.PMGetHash(RTrim(LTrim(Me.txtPassword.Text))))
 						End If

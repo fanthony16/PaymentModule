@@ -34,6 +34,35 @@
 
 
 
+                    <div style=" width :100%; padding : 0px; border-color:#3a4f63; border :2px solid ; margin-bottom :20px; border-radius :25px 25px 0px 0px; height :470px;">
+                        <div id="Div8" style ="text-align:center ; background-color:#3a4f63; font-size :14px; height :25px; border-radius :25px 25px 0px 0px;">
+                             <span style ="color :#dde4ec;"><strong>Passport and Signature</strong></span> 
+                        </div>
+                        
+                    <div id="dvPersonalPassport" style="float:left ; width :80%;  ">
+                                          <div style="padding: 8px; margin: 10px; border-style: solid; border-width: thin; float: left; width: 100%; height: 200px; border-radius: 25px;">
+                                               <div style="height : 180px"><asp:Image ID="imgPassport" runat="server" Width="90%" Height ="165px" ImageUrl="~/Images/untitled.png" /></div>
+                                               <div style="float: left; width: 100%;"><span >Passort Photograph</span></div>
+                                               
+                                          </div>
+                                          
+                                          <div style="text-align :center; width :90%"><asp:Image ID="imgSignature" runat="server" ImageUrl="~/Images/signature.jpg" /></div>
+                                          
+                                     </div>
+                   
+                       
+            <asp:Panel ID="Panel1" runat ="server" Visible="False"><div style ="padding:5PX;"><span id="Span1" runat ="server" >.</span></div></asp:Panel>
+            
+            
+                  </div>
+
+
+
+
+
+
+
+
             
         </div>
                <div class="dvMiddleBox" style="border-radius :25px 25px 0px 0px; border :2px solid; margin-top :10px; padding  :5px 10px 0px 10px; " >
@@ -225,6 +254,14 @@
                     
                      <asp:TextBox id="txtApplicationComment" runat ="server" TextMode ="MultiLine" ValidationGroup  ="AppComment" Height="80px" Width="100%" MaxLength="70"></asp:TextBox>
                 </div>
+
+
+                 <div class="dvBoxRows" style =" width :300px; padding-top :10px; ">
+                    <div style ="float :left "><span>Error Type :</span></div>
+                    <asp:DropDownList ID="cbErrorCheckList"  runat ="server" Width ="220px" ></asp:DropDownList>
+                    
+                </div>
+
 
                  <div id="Div6"  class="dvBoxRows" style =" width :300px; float :left  ;text-align :right ; padding :10px;">
                    <asp:ImageButton ID="btnAppCommentAdd" runat ="server" ImageUrl="~/images/add.png" ToolTip="Add To Comment" CausesValidation="true" ValidationGroup  ="AppComment"  />

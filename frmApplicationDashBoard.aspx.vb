@@ -243,9 +243,11 @@ Partial Class frmApplicationDashBoard
 				mpApplicationSummary.Show()
 
 				If Not Context.Request.QueryString("IsReturn") Is Nothing Then
+
 					Me.loadAllLoggedApplication(Now.Date, Now.Date)
 					Me.txtStartDate.Text = Now.Date
 					Me.txtEndDate.Text = Now.Date
+
 				Else
 
 				End If
@@ -372,6 +374,8 @@ Partial Class frmApplicationDashBoard
 
 			Else
 			End If
+
+
 		Catch ex As Exception
 
 		End Try
@@ -576,6 +580,7 @@ Partial Class frmApplicationDashBoard
           typeID = (CInt(ApprovalTypeCollection.Item(Me.gridApplicationSummary.Rows(i.RowIndex).Cells(4).Text)))
 
           Response.Redirect(String.Format("frmEditApplication.aspx?ApplicationCode={0}&ApplicationTypeID={1}&ReadOnly={2}&ReturnPage={3}", Server.UrlEncode(appCode), Server.UrlEncode(typeID), 0, Server.UrlEncode("ApplicationDashBoard")))
+
 
 
           '  Response.Redirect(String.Format("frmApplicationConfirmation.aspx?ApplicationCode={0}&ReturnPage={1}", Server.UrlEncode(appDetail.ApplicationID), Server.UrlEncode("ApplicationDashBoard")))

@@ -299,6 +299,7 @@
           </div>
      </div>
 
+
                <asp:Button id="btnShowAVCDetailsPopup" runat="server" style="display:none" />
                  <asp:Button id="btnShowCommentPopup" runat="server" style="display:none" />
                <asp:Button id="btnShowNSITFDetailsPopup" runat="server" style="display:none" />

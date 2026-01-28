@@ -1,0 +1,2 @@
+﻿27/06/2018 11:14:23 : PAYMENT MODULE : Thread was being aborted.: Error Generating LPW Schedule
+27/06/2018 11:14:23 : PAYMENT MODULE : Thread was being aborted.: Error Generating LPW Schedule

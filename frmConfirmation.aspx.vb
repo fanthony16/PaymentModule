@@ -17,7 +17,7 @@ Partial Class frmConfirmation
           Try
 
 			dt = cr.PMgetApplicationByTpye(typeID, "Confirmation")
-			If dt.Rows.Count > 10 Then
+			If dt.Rows.Count > 5 Then
 				Me.pnlGrid.Height = Nothing
 			Else
 
@@ -172,40 +172,102 @@ Partial Class frmConfirmation
 
      Protected Sub ViewDocumentDetails_Click(sender As Object, e As EventArgs)
 
-          Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
-          btnViewDocumentLog = sender
-          Dim i As GridViewRow
-          i = btnViewDocumentLog.NamingContainer
-          '       appCode = Me.gridProcessing.Rows(i.RowIndex).Cells(0).Text
+		'Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
+		'btnViewDocumentLog = sender
+		'Dim i As GridViewRow
+		'i = btnViewDocumentLog.NamingContainer
+		''       appCode = Me.gridProcessing.Rows(i.RowIndex).Cells(0).Text
 
-          If Not IsNothing(ViewState("Documents")) = True Then
-
-               Dim dt As DataTable = ViewState("Documents")
-               'retrieving the location of the scanned document
-               documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
-
-               'testing if the file still exist in the saved file path
-               If File.Exists(documentPath) = True Then
-
-                    DownLoadDocument(documentPath)
-
-               ElseIf File.Exists(documentPath) = False Then
-
-                    '            DownLoadDocument(documentPath)
-
-			End If
+		'If Not IsNothing(ViewState("Documents")) = True Then
 
 
+		'	Dim dt As DataTable = ViewState("Documents"), dmsDocumentID As String, dmsDocumentExt As String
+		'	'retrieving the location of the scanned document
+		'	documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
 
-			''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+		'	'testing if the file still exist in the saved file path
+		'	If File.Exists(documentPath) = True Then
+
+		'		DownLoadDocument(documentPath)
+
+		'	ElseIf File.Exists(documentPath) = False Then
 
 
-			Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
-			If IsNothing(ViewState("Documents")) = False Then
+		'		documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+		'		dmsDocumentID = dt.Rows(i.RowIndex).Item("DocumentID")
+		'		dmsDocumentExt = dt.Rows(i.RowIndex).Item("DocumentExtension")
 
-				dtDocs = ViewState("Documents")
-				dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID")
-				dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension")
+		'		Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+		'		Dim uName As String, uPWD As String, uRI As String
+
+		'		uName = ConfigurationManager.AppSettings("FileNetUName")
+		'		uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+		'		uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+		'		dms.getConnection(uName, uPWD, uRI)
+		'		DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+		'		DownLoadDocument(DMSDocumentPath)
+
+
+		'	End If
+
+
+
+		'	''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+		'	'Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
+		'	'If IsNothing(ViewState("Documents")) = False Then
+
+		'	'	dtDocs = ViewState("Documents")
+		'	'	dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID")
+		'	'	dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension")
+
+		'	'	Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+		'	'	Dim uName As String, uPWD As String, uRI As String
+
+		'	'	uName = ConfigurationManager.AppSettings("FileNetUName")
+		'	'	uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+		'	'	uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+		'	'	dms.getConnection(uName, uPWD, uRI)
+		'	'	DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+		'	'	DownLoadDocument(DMSDocumentPath)
+
+		'	'Else
+		'	'End If
+
+
+		'	'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+		'Else
+
+		'End If
+
+
+		Dim btnViewDocumentLog As New ImageButton, appCode As String, documentPath As String
+		btnViewDocumentLog = sender
+		Dim i As GridViewRow
+		i = btnViewDocumentLog.NamingContainer
+
+
+		If Not IsNothing(ViewState("Documents")) = True Then
+
+			Dim dt As DataTable = ViewState("Documents"), dmsDocumentID As String, dmsDocumentExt As String
+			'retrieving the location of the scanned document
+			documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+
+			'testing if the file still exist in the saved file path
+			If File.Exists(documentPath) = True Then
+
+				DownLoadDocument(documentPath)
+
+			ElseIf File.Exists(documentPath) = False Then
+
+				'DownLoadDocument(documentPath)
+				documentPath = dt.Rows(i.RowIndex).Item("DocumentPath").ToString()
+				dmsDocumentID = dt.Rows(i.RowIndex).Item("DocumentID").ToString()
+				dmsDocumentExt = dt.Rows(i.RowIndex).Item("DocumentExtension").ToString()
 
 				Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
 				Dim uName As String, uPWD As String, uRI As String
@@ -215,11 +277,37 @@ Partial Class frmConfirmation
 				uRI = ConfigurationManager.AppSettings("FileNetURI")
 
 				dms.getConnection(uName, uPWD, uRI)
-				DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+				DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA_BPD", "." & dmsDocumentExt)
 				DownLoadDocument(DMSDocumentPath)
 
-			Else
+
 			End If
+
+
+
+			''''dms integration addition'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+
+			'Dim dtDocs As New DataTable, dmsDocumentID As String, dmsDocumentExt As String
+			'If IsNothing(ViewState("Documents")) = False Then
+
+			'	dtDocs = ViewState("Documents")
+			'	dmsDocumentID = dtDocs.Rows(i.RowIndex).Item("DocumentID").ToString
+			'	dmsDocumentExt = dtDocs.Rows(i.RowIndex).Item("DocumentExtension").ToString
+
+			'	Dim dms As New PaymentModuleDMSWindow.CEEntry, DMSDocumentPath As String
+			'	Dim uName As String, uPWD As String, uRI As String
+
+			'	uName = ConfigurationManager.AppSettings("FileNetUName")
+			'	uPWD = ConfigurationManager.AppSettings("FileNetUPWD")
+			'	uRI = ConfigurationManager.AppSettings("FileNetURI")
+
+			'	dms.getConnection(uName, uPWD, uRI)
+			'	DMSDocumentPath = dms.GetDocument(Server.MapPath("~/FileDownLoads"), dmsDocumentID, "LPPFA", "." & dmsDocumentExt)
+			'	DownLoadDocument(DMSDocumentPath)
+
+			'Else
+			'End If
 
 
 			'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -231,12 +319,18 @@ Partial Class frmConfirmation
 
 
 
-          Else
-
-          End If
 
 
-     End Sub
+
+		Else
+
+		End If
+
+
+
+
+
+	End Sub
 
 
      Public Function getApprovalType() As List(Of String)
@@ -369,7 +463,8 @@ Partial Class frmConfirmation
 					Dim cr As New Core
                          dtusers = Session("userDetails")
                          getUserAccessMenu(Session("user"))
-                         getApprovalTypes()
+					getApprovalTypes()
+					getCheckLists(0)
                          PopulateApplicationStatus()
 					getApplicationForProcessing(0)
 
@@ -519,7 +614,29 @@ Partial Class frmConfirmation
 
 	End Sub
 
+	Protected Sub getCheckLists(AppTypeID As Integer)
 
+		Dim i As Integer = 0, cr As New Core, dt As New DataTable
+
+		If AppTypeID = 5 Then
+			dt = cr.PMgetCheckList(AppTypeID)
+		Else
+			dt = cr.PMgetCheckList(1)
+		End If
+
+		Me.cbErrorCheckList.Items.Clear()
+
+		Do While i < dt.Rows.Count
+			If i = 0 Then
+				cbErrorCheckList.Items.Add("")
+				cbErrorCheckList.Items.Add(dt.Rows(i).Item("txtDescription"))
+			Else
+				cbErrorCheckList.Items.Add(dt.Rows(i).Item("txtDescription"))
+			End If
+			i = i + 1
+		Loop
+
+	End Sub
      Protected Sub gridProcessing_SelectedIndexChanged(sender As Object, e As EventArgs) Handles gridProcessing.SelectedIndexChanged
 
 
@@ -528,9 +645,19 @@ Partial Class frmConfirmation
 
           selectedRowIndex = Me.gridProcessing.SelectedRow.RowIndex
 
-          Dim row As GridViewRow = gridProcessing.Rows(selectedRowIndex)
+		Dim row As GridViewRow = gridProcessing.Rows(selectedRowIndex)
 
-          dt = cr.PMgetApplicationByCode(row.Cells(2).Text.ToString())
+
+		imgPassport.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 1, Server.MapPath("~/Logs"))
+
+		imgSignature.ImageUrl = String.Format("ShowPassportImage.ashx?sToolGUID={0}&Gridid={1}&LogLocation={2}", row.Cells(4).Text.ToString(), 2, Server.MapPath("~/Logs"))
+
+
+		dt = cr.PMgetApplicationByCode(row.Cells(2).Text.ToString())
+
+		getCheckLists(dt.Rows(0).Item("fkiAppTypeId"))
+
+
           ' getting the submitted application docunments
           'dtDocuments = cr.PMgetSubmittedDocument(row.Cells(4).Text.ToString(), CInt(row.Cells(2).Text.ToString().Split("-")(1)))
           dtDocuments = cr.PMgetSubmittedDocument(row.Cells(4).Text.ToString(), CStr(row.Cells(2).Text.ToString()))
@@ -740,7 +867,10 @@ Partial Class frmConfirmation
           lstComments.Items.Clear()
           Do While j < dt.Rows.Count
 
-               lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString)
+			'	lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString)
+
+			lstComments.Items.Add(dt.Rows(j).Item(2).ToString & " : " & dt.Rows(j).Item(1).ToString & " : " & dt.Rows(j).Item(0).ToString & " (" & dt.Rows(j).Item(3).ToString & " )")
+
                j = j + 1
 
           Loop
@@ -752,20 +882,20 @@ Partial Class frmConfirmation
 
           Dim cr As New Core
           Try
-               If IsNothing(Session("UserName")) = False Then
-                    Dim UName As String = CStr(Session("UserName"))
-                    Dim str() As String = Me.lstComments.SelectedItem.Text.Split(":")
-                    If UName = LTrim(RTrim(CStr(str(1)))) Then
+			If IsNothing(Session("user")) = False Then
+				Dim UName As String = CStr(Session("user"))
+				Dim str() As String = Me.lstComments.SelectedItem.Text.Split(":")
+				If UName = LTrim(RTrim(CStr(str(1)))) Then
 
-                         cr.PMRemoveComment(CInt(str(0)))
-                         refreshCommentList(txtApplicationID.Text)
+					cr.PMRemoveComment(CInt(str(0)))
+					refreshCommentList(txtApplicationID.Text)
 
-                    Else
-                         Me.mpAppComments.Show()
-                    End If
-               Else
+				Else
+					Me.mpAppComments.Show()
+				End If
+			Else
 
-               End If
+			End If
 
           Catch ex As Exception
 
@@ -777,7 +907,9 @@ Partial Class frmConfirmation
 
 		Dim cr As New Core
 		'the first 1 indicate pre-approval comment while the  second 1 indicate a default checklist code
-		cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, 1)
+		'cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, 1)
+		cr.PMUpdateApplicationComment(Me.txtApplicationComment.Text, Me.txtApplicationID.Text, Session("user"), 1, cr.getPMCommentTypeID(cbErrorCheckList.Text))
+		'
           txtApplicationComment.Text = ""
           refreshCommentList(txtApplicationID.Text)
           Me.mpAppComments.Show()
@@ -1035,6 +1167,10 @@ Partial Class frmConfirmation
 
 		'pops up the comment dialogue
 		mpAppIACComments.Show()
+
+	End Sub
+
+	Protected Sub gridSubmittedDocuments_SelectedIndexChanged(sender As Object, e As EventArgs) Handles gridSubmittedDocuments.SelectedIndexChanged
 
 	End Sub
 End Class

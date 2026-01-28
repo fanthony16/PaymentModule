@@ -1089,13 +1089,6 @@ Partial Class frmApplicationApprovals
                ddApplicationBatchNumber.Items.Clear()
                Me.lstBatches.Items.Clear()
 
-               '  gridRMAS.Columns.Clear()
-
-               'Dim rCount As Integer = gridRMAS.Columns.Count
-               'Do While rCount > 1
-               '     gridRMAS.Columns.RemoveAt(gridRMAS.Columns.Count - 1)
-               '     rCount = gridRMAS.Columns.Count
-               'Loop
 
           Dim cr As New Core, dt As New DataTable, lstBatches As List(Of String), i As Integer
           ApprovalTypeCollection = ViewState("ApprovalTypeCollection")
@@ -1412,7 +1405,6 @@ Partial Class frmApplicationApprovals
 					lstApprovalPIN.Items.Add(lstApprovalPeople(l).PIN)
 					l = l + 1
 				Loop
-
 
 				'BindGrid(lstApprovalPeople, AppType)
 
@@ -1827,7 +1819,6 @@ Partial Class frmApplicationApprovals
 			Else
 			End If
 
-
                For Each grow As GridViewRow In Me.gridRMAS.Rows
 
                     cb = grow.FindControl("ChkRMASApproval")
@@ -2144,7 +2135,7 @@ Partial Class frmApplicationApprovals
 				End If
 
 			End If
-			
+
 
 			Dim dtApproval As New DataTable
 			dtApproval = ViewState("Applications")
@@ -2181,7 +2172,9 @@ Partial Class frmApplicationApprovals
 
 		End Try
 
-     End Sub
+	End Sub
+
+
      Private Sub Refresh()
           Dim str As String, cr As New Core
 

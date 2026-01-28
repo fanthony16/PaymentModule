@@ -964,8 +964,11 @@ Partial Class frmApprovalFinanceAuthority
      End Sub
 
 
-	Protected Sub PMUpdateApprovalControlCheck(appCode As String, uName As String, stage As String)
+	Protected Sub PMUpdateApprovalControlCheck(appCode As String, uName As String, stage As String, txtFinApprovalBatch As String)
 		Try
+
+			
+
 
 			Dim db As New DbConnection
 			Dim mycon As New SqlClient.SqlConnection
@@ -997,20 +1000,22 @@ Partial Class frmApprovalFinanceAuthority
 				'updating the approvalS for finance authorisation for payment
 			ElseIf stage = "Authorize" Then
 
-				myComm.CommandText = "update tblApplicationApprovalPayee set  txtControlAuthorisedBy = '" & uName & "',dteAuthorised = '" & DateTime.Parse(Now).ToString("yyyy-MM-dd HH:MM") & "' where txtApplicationCode = '" & appCode & "'"
+
+				myComm.CommandText = "update tblApplicationApprovalPayee set  txtControlAuthorisedBy = '" & uName & "', dteAuthorised = '" & DateTime.Parse(Now).ToString("yyyy-MM-dd HH:MM") & "', txtFinanceApprovalBatch = '" & txtFinApprovalBatch & "' where txtApplicationCode = '" & appCode & "'"
 				command.CommandType = CommandType.Text
 				myComm.ExecuteNonQuery()
 
 
-				myComm.CommandText = "insert into tblSIPensioneer (txtPIN,txtFullName,numPWAmount,numPension,intBankID,intBankBranchID,txtBankAccount,txtFrequency,dteAnniversary,txtStatus,txtApplicationcode) select a.txtPIN,replace(a.txtfullName,'|','') as FullName, Enpowerv4.[dbo].[GetFundBalanceByDate](a.fkiMemberID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance ,numApplicationAmount,a.fkibankid,a.fkibranchid,a.txtAccountNo,1 as Frequency,cast(getdate() as date) as Anniversary,'P',b.txtApplicationcode from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c where a.txtapplicationcode = b.txtapplicationcode and c.txtPIN = a.txtPIN  AND b.txtapplicationcode = '" & appCode & "' AND fkiAppTypeId = 17 and not exists (select * from tblSIPensioneer where txtpin = a.txtPencomBatch )"
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+
+				'myComm.CommandText = "insert into tblSIPensioneer (txtPIN,txtFullName,numPWAmount,numPension,intBankID,intBankBranchID,txtBankAccount,txtFrequency,dteAnniversary,txtStatus,txtApplicationcode) select a.txtPIN,replace(a.txtfullName,'|','') as FullName, Enpowerv4.[dbo].[GetFundBalanceByDate](a.fkiMemberID,2,(select max(ValueDate) from Enpowerv4.dbo.UnitPrice where FundID = 2)) RFBalance ,numApplicationAmount,a.fkibankid,a.fkibranchid,a.txtAccountNo,1 as Frequency,cast(getdate() as date) as Anniversary,'P',b.txtApplicationcode from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c where a.txtapplicationcode = b.txtapplicationcode and c.txtPIN = a.txtPIN  AND b.txtapplicationcode = '" & appCode & "' AND fkiAppTypeId = 17 and not exists (select * from tblSIPensioneer where txtpin = a.txtPencomBatch )"
+				'command.CommandType = CommandType.Text
+				'myComm.ExecuteNonQuery()
 
 
 
-				myComm.CommandText = "update d set d.numPension = a.numApplicationAmount,d.intBankID = a.fkibankid,d.intBankBranchID = a.fkibranchid,d.txtBankAccount = a.txtAccountNo,txtFrequency = 1,dteAnniversary = cast(getdate() as date),txtStatus = 'P',txtApplicationcode = a.txtApplicationcode,txtFullName = replace(a.txtfullName,'|','') from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c,tblSIPensioneer d where a.txtapplicationcode = b.txtapplicationcode and c.txtPIN = a.txtPIN and d.txtpin = a.txtpin AND b.txtapplicationcode = '" & appCode & "' AND fkiAppTypeId = 17"
-				command.CommandType = CommandType.Text
-				myComm.ExecuteNonQuery()
+				'myComm.CommandText = "update d set d.numPension = a.numApplicationAmount,d.intBankID = a.fkibankid,d.intBankBranchID = a.fkibranchid,d.txtBankAccount = a.txtAccountNo,txtFrequency = 1,dteAnniversary = cast(getdate() as date),txtStatus = 'P',txtApplicationcode = a.txtApplicationcode,txtFullName = replace(a.txtfullName,'|','') from tblMemberApplication a,tblApplicationApprovalPayee b, tblPensionEnhancement c,tblSIPensioneer d where a.txtapplicationcode = b.txtapplicationcode and c.txtPIN = a.txtPIN and d.txtpin = a.txtpin AND b.txtapplicationcode = '" & appCode & "' AND fkiAppTypeId = 17"
+				'command.CommandType = CommandType.Text
+				'myComm.ExecuteNonQuery()
 
 
 			End If
@@ -1032,7 +1037,8 @@ Partial Class frmApprovalFinanceAuthority
 		Dim apptypeID As Integer = getApprovalType(Me.ddApplicationType.SelectedValue)
           Dim batchNum As String = Me.ddExportedBatches.SelectedItem.Text
           '  Dim filePath As String = "\\p-midas2\mlive\TradeMandate\" & batchNum & ".pdf"
-          Dim filePath As String = Server.MapPath("~/FileDownLoads/" & batchNum.Replace("/", "") & ".pdf")
+		Dim filePath As String = Server.MapPath("~/FileDownLoads/" & batchNum.Replace("/", "") & ".pdf")
+
 		generateFiles(Me.ddExportedBatches.SelectedItem.Text, filePath, apptypeID, "PDF")
           If File.Exists(filePath) = True Then
                DownLoadDocument(filePath)
@@ -1096,7 +1102,18 @@ Partial Class frmApprovalFinanceAuthority
 		Dim cr As New Core, dtApplicationSchedule As New DataTable, i As Integer = 0
 		'dtApplicationSchedule = cr.PMgetApprovalPaymentSchedule(approvalBatchNum, "", apptype)
 
-		dtApplicationSchedule = cr.PMgetApprovalPaymentSchedule(approvalBatchNum, apptype, "F")
+		If Not IsNothing(ViewState("FinApprovalBatch")) = True Then
+			'generating the schedule for currently approved application by finance
+			dtApplicationSchedule = cr.PMgetApprovalPaymentSchedule(approvalBatchNum, apptype, "F", CStr(ViewState("FinApprovalBatch")))
+		Else
+			'generating the schedule for all approved application by finance
+			dtApplicationSchedule = cr.PMgetApprovalPaymentSchedule(approvalBatchNum, apptype, "F")
+		End If
+
+
+
+
+
 
 		'PMgetApprovalPaymentSchedule()
 		Dim ds As New dsApprovalSchedule
@@ -1237,28 +1254,37 @@ Partial Class frmApprovalFinanceAuthority
      Protected Sub btnAuthorised_Click(sender As Object, e As EventArgs) Handles btnAuthorised.Click
 
 
-          Dim cb As CheckBox, chk As Integer = 0, cr As New Core, dt As New DataTable
+		Dim cb As CheckBox, chk As Integer = 0, cr As New Core, dt As New DataTable
+		'creating the approval batch string 
+
+		Dim txtFinApprovalBatch As String
+		txtFinApprovalBatch = UCase(Year(Now.Date).ToString & Month(Now.Date).ToString & Day(Now.Date).ToString & Second(Now).ToString)
+		ViewState("FinApprovalBatch") = txtFinApprovalBatch
 
           Try
-               If IsNothing(Session("user")) = True Then
-                    Response.Redirect("Login.aspx")
-               Else
-                    For Each grow As GridViewRow In Me.gridApplications.Rows
 
-                         cb = grow.FindControl("ChkPINApprovalAuthorised")
+			If IsNothing(Session("user")) = True Then
 
-                         If cb.Checked = True And cb.Enabled = True Then
-                              PMUpdateApprovalControlCheck(grow.Cells(4).Text, CStr(Session("user")), "Authorize")
-                         Else
-                         End If
+				Response.Redirect("Login.aspx")
 
-                    Next
+			Else
+
+				For Each grow As GridViewRow In Me.gridApplications.Rows
+
+					cb = grow.FindControl("ChkPINApprovalAuthorised")
+
+					If cb.Checked = True And cb.Enabled = True Then
+						PMUpdateApprovalControlCheck(grow.Cells(4).Text, CStr(Session("user")), "Authorize", txtFinApprovalBatch)
+					Else
+					End If
+
+				Next
 				Dim apptypeID As Integer = getApprovalType(Me.ddApplicationType.SelectedValue)
 				dt = cr.PMgetPencomApprovalBatchByType(apptypeID, Me.ddExportedBatches.SelectedItem.Text, True)
-                    ViewState("BatchApprovals") = dt
-                    BindGrid(dt)
+				ViewState("BatchApprovals") = dt
+				BindGrid(dt)
 
-               End If
+			End If
 
 
 
